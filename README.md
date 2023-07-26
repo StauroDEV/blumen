@@ -12,6 +12,10 @@ Node.js 18+ is required.
 
 ```sh
 pnpm install -g blumen
+```
+
+### Deploying a static app
+
 blumen deploy
 # > Packing example_app (4.32MB)
 # > IPFS CID: baq...
