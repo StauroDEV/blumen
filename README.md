@@ -16,6 +16,7 @@ pnpm install -g blumen
 
 ### Deploying a static app
 
+```sh
 blumen deploy
 # > Packing example_app (4.32MB)
 # > IPFS CID: baq...
