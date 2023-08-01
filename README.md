@@ -4,6 +4,12 @@
 
 > Blumen, compared Stauro CLI, is fully self-custodial and is not tied to the Stauro platform.
 
+## Features
+
+- Multi-provider IPFS pinning
+- ENS integration
+- Gnosis API support
+
 ## Getting Started
 
 ### Installation
@@ -21,16 +27,22 @@ blumen deploy
 # > Packing example_app (4.32MB)
 # > IPFS CID: baq...
 # > Deploying across multiple providers: Estuary, Filebase, Gateway3
-# > Estuary  [====--------------] 20%
-# > Filebase [======------------] 32%
-# > Gateway3 [==----------------] 10%
+# ◉-----◌-----◌-----◌ 0%
+# Uploading to Estuary
+# ◉=====◉-----◌-----◌ 25%
+# Pinning on Filebase
+# ◉=====◉=====◉-----◌ 50%
+# Pinning on Gateway3
+# ◉=====◉=====◉=====◉
+# Deployed on all providers!
 # > Updating ENS Content Hash (mywebsite.eth)
 # > Pending transaction:
 # > https://etherscan.io/tx/...
-# > Success! Pinned on 3 providers and updated ENS
-# > Open in the browser:
+# > Success!
+# > Open in a browser:
 # > IPFS: https://baq....dweb.link
 # > ENS: https://mywebsite.eth.limo
+# > IPFS Scan: https://ipfs-scan.com/...
 ```
 
 ### Environment setup
@@ -42,12 +54,6 @@ BLUMEN_ESTUARY_TOKEN=
 BLUMEN_FILEBASE_TOKEN=
 BLUMEN_GW3_TOKEN=
 BLUMEN_ETH_PK=
-```
-
-or as CLI arguments:
-
-```sh
-blumen deploy --estuary-token=<...> --filebase-token=<...>
 ```
 
 ### Documentation

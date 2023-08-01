@@ -1,0 +1,26 @@
+{
+  "name": "blumen",
+  "version": "0.0.0",
+  "description": "🌸 Self-custodial decentralized deployments",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@ipld/car": "^5.2.0",
+    "ascii-bar": "^1.0.3",
+    "cac": "^6.7.14",
+    "globby": "^13.2.2",
+    "ipfs-car": "^1.0.0",
+    "kleur": "^4.1.5",
+    "multiformats": "^12.0.1",
+    "undici": "^5.22.1"
+  },
+  "devDependencies": {
+    "@tsconfig/node18": "^18.2.0",
+    "@types/node": "^20.4.5"
+  }
+}
