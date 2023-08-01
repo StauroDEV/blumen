@@ -24,25 +24,15 @@ pnpm install -g blumen
 
 ```sh
 blumen deploy
-# > Packing example_app (4.32MB)
-# > IPFS CID: baq...
-# > Deploying across multiple providers: Estuary, Filebase, Gateway3
-# ◉-----◌-----◌-----◌ 0%
-# Uploading to Estuary
-# ◉=====◉-----◌-----◌ 25%
-# Pinning on Filebase
-# ◉=====◉=====◉-----◌ 50%
-# Pinning on Gateway3
-# ◉=====◉=====◉=====◉
-# Deployed on all providers!
-# > Updating ENS Content Hash (mywebsite.eth)
-# > Pending transaction:
-# > https://etherscan.io/tx/...
-# > Success!
-# > Open in a browser:
-# > IPFS: https://baq....dweb.link
-# > ENS: https://mywebsite.eth.limo
-# > IPFS Scan: https://ipfs-scan.com/...
+#📦 Packing blumen (37.03KB)
+#🌱 Root CID: bafy...
+#📡 Deploying with providers: web3.storage, Estuary
+#✓ [>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>] Finished in 2s
+#🌍 Deployed across all providers
+#Success!
+#Open in a browser:
+#🪐  IPFS:      https://<CID>.ipfs.dweb.link
+#🛰️  IPFS Scan: https://ipfs-scan.io/?cid=<CID>
 ```
 
 ### Environment setup
