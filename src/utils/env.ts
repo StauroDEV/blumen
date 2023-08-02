@@ -20,7 +20,7 @@ export const tokensToProviderNames = (keys: IterableIterator<string>) => {
   for (const key of keys) {
     const provider = PROVIDERS[key]
     if (provider) providers.push(provider.name)
-    else {
+    else if (key.includes(`_TOKEN`)) {
       throw new UnknownProviderError(key)
     }
   }

@@ -35,7 +35,7 @@ export class GatewayError extends Error {
 }
 
 export class DeployError extends Error {
-  name = 'UploadError'
+  name = 'DeployError'
   providerName: string
   constructor(providerName: string, originalMessage: string) {
     super(`Failed to deploy on ${providerName}: ${originalMessage}`)
@@ -47,5 +47,12 @@ export class NoProvidersError extends Error {
   name = 'NoProvidersError'
   constructor() {
     super('No providers detected.')
+  }
+}
+
+export class MissingKeyError extends Error {
+  name = 'MissingKeyError'
+  constructor(key: string) {
+    super(`BLUMEN_${key} is missing.`)
   }
 }

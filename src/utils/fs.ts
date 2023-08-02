@@ -35,7 +35,7 @@ export function fileSize(bytes: number, digits = 1): string {
     return bytes + 'B'
   }
 
-  const units = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+  const units = ['KB', 'MB', 'GB', 'TB', 'PB']
   let u = -1
   const r = 10 ** digits
 

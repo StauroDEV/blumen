@@ -61,7 +61,7 @@ cli
           name,
           car: blob,
           token,
-          accessKey: apiTokens.get('GW3_ACCESS_TOKEN'),
+          accessKey: apiTokens.get('GW3_ACCESS_KEY'),
         })
       } else {
         bar.update(total++, `Pinning to ${provider}`)
@@ -70,7 +70,7 @@ cli
           name,
           cid: rootCID.toString(),
           token,
-          accessKey: apiTokens.get('GW3_ACCESS_TOKEN'),
+          accessKey: apiTokens.get('GW3_ACCESS_KEY'),
         })
       }
     }

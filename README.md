@@ -20,24 +20,12 @@ Node.js 18+ is required.
 pnpm install -g blumen
 ```
 
-### Deploying a static app
-
-```sh
-blumen deploy
-#📦 Packing blumen (37.03KB)
-#🌱 Root CID: bafy...
-#📡 Deploying with providers: web3.storage, Estuary
-#✓ [>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>] Finished in 2s
-#🌍 Deployed across all providers
-#Success!
-#Open in a browser:
-#🪐  IPFS:      https://<CID>.ipfs.dweb.link
-#🛰️  IPFS Scan: https://ipfs-scan.io/?cid=<CID>
-```
 
 ### Environment setup
 
-You can either pass provider API tokens to the environment:
+Grab API keys from the services you use and define them in your environment (e.g. `.env`).
+
+> All env variables used by Blumen must be prefixed with `BLUMEN_`
 
 ```env
 BLUMEN_ESTUARY_TOKEN=
@@ -46,6 +34,22 @@ BLUMEN_GW3_TOKEN=
 BLUMEN_ETH_PK=
 ```
 
-### Documentation
+
+### Deployment
+
+```sh
+blumen deploy
+# 📦 Packing blumen (37.03KB)
+# 🌱 Root CID: bafy...
+# 📡 Deploying with providers: web3.storage, Estuary
+# ✓ [>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>] Finished in 2s
+# 🌍 Deployed across all providers
+# Success!
+# Open in a browser:
+# 🪐  IPFS:      https://<CID>.ipfs.dweb.link
+# 🛰️  IPFS Scan: https://ipfs-scan.io/?cid=<CID>
+```
+
+## Documentation
 
 TBD

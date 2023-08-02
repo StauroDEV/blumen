@@ -15,14 +15,14 @@ export const packCAR = async (files: FileEntry[], name: string) => {
 
   const placeholderCID = CID.parse(
     'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi'
-  ) as CID<unknown, number, number, 1>
+  )
   let rootCID = placeholderCID
 
   await createDirectoryEncoderStream(files)
     .pipeThrough(
       new TransformStream({
         transform(block, controller) {
-          rootCID = block.cid as CID<unknown, number, number, 1>
+          rootCID = block.cid
           controller.enqueue(block)
         },
       })
