@@ -22,7 +22,7 @@ export const uploadOnW3S: UploadFunction = async ({ token, car, cid }) => {
   if (!res.ok) {
     throw new DeployError(
       providerName,
-      (json as { error: { details: string } }).error.details
+      (json as { message: string; code: string }).message
     )
   }
 

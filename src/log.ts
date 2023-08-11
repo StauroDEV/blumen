@@ -16,12 +16,21 @@ const uploadFinished = () => console.log(`🌍 Deployed across all providers`)
 
 const deployFinished = (cid: string) =>
   console.log(
-    `${kleur.cyan('Success!')}\nOpen in a browser:\n${kleur.bold(
-      '🪐 IPFS'
-    )}:      ${kleur.underline(`https://${cid}.ipfs.dweb.link`)}\n${kleur.bold(
-      '🛰️  IPFS Scan'
-    )}: ${kleur.underline(`https://ipfs-scan.io/?cid=${cid}`)}`
+    `\nOpen in a browser:\n${kleur.bold('🪐 IPFS')}:      ${kleur.underline(
+      `https://${cid}.ipfs.dweb.link`
+    )}\n${kleur.bold('🛰️  IPFS Scan')}: ${kleur.underline(
+      `https://ipfs-scan.io/?cid=${cid}`
+    )}`
   )
+
+const uploadPartiallyFailed = (errors: Error[]) => {
+  console.log(`\n⚠️  There were some problems with deploying:`)
+  for (const error of errors) console.error(`❌ ${kleur.red(error.message)}`)
+}
+const deployFailed = (errors: Error[]) => {
+  console.log(`\n😞 Deploy failed:`)
+  for (const error of errors) console.error(`❌ ${kleur.red(error.message)}`)
+}
 
 const pinStatus = (
   provider: string,
@@ -60,4 +69,6 @@ export {
   uploadFinished,
   deployFinished,
   pinStatus,
+  uploadPartiallyFailed,
+  deployFailed,
 }

@@ -25,7 +25,10 @@ const cli = cac()
 
 cli
   .command('deploy [dir]', 'Deploy web content on IPFS')
-  .action(async (dir, {}) => {
+  .option('--strict', 'Stop deploying if one of the providers fails', {
+    default: true,
+  })
+  .action(async (dir, { strict }: { strict: boolean }) => {
     if (!dir) {
       if (await exists('dist')) dir = 'dist'
       else dir = '.'
@@ -35,8 +38,6 @@ cli
     const [size, files] = await dirData(normalizedPath)
 
     if (size === 0) throw new MissingDirectoryError(dir)
-
-    console.log(files)
 
     log.packing(dir === '.' ? name : dir, fileSize(size, 2))
 
@@ -62,31 +63,47 @@ cli
       width: process.stdout.columns - 30,
     })
 
+    const errors: Error[] = []
+
     for (const provider of providers) {
       const envVar = findEnvVarProviderName(provider)!
       const token = apiTokens.get(envVar)!
+
       if (providers.indexOf(provider) === 0) {
         bar.update(total++, `Uploading to ${provider}`)
 
-        await PROVIDERS[envVar]!.upload({
-          name,
-          car: blob,
-          token,
-          accessKey: apiTokens.get('GW3_ACCESS_KEY'),
-        })
+        try {
+          await PROVIDERS[envVar]!.upload({
+            name,
+            car: blob,
+            token,
+            accessKey: apiTokens.get('GW3_ACCESS_KEY'),
+          })
+        } catch (e) {
+          if (strict) throw e
+          else errors.push(e as Error)
+        }
       } else {
         bar.update(total++, `Pinning to ${provider}`)
 
-        await PROVIDERS[envVar]!.upload({
-          name,
-          cid: rootCID.toString(),
-          token,
-          accessKey: apiTokens.get('GW3_ACCESS_KEY'),
-        })
+        try {
+          await PROVIDERS[envVar]!.upload({
+            name,
+            cid: rootCID.toString(),
+            token,
+            accessKey: apiTokens.get('GW3_ACCESS_KEY'),
+          })
+        } catch (e) {
+          if (strict) throw e
+          else errors.push(e as Error)
+        }
       }
     }
     bar.update(total) // finish
-    log.uploadFinished()
+
+    if (errors.length === providers.length) return log.deployFailed(errors)
+    else if (errors.length) log.uploadPartiallyFailed(errors)
+    else log.uploadFinished()
 
     /* WIP ENS + GNOSIS INTEGRATION */
 
@@ -119,5 +136,5 @@ cli
   })
 
 cli.help()
-cli.version('0.0.0')
+cli.version('0.0.0-dev.0')
 cli.parse()
