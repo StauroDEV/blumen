@@ -157,5 +157,5 @@ cli
   )
 
 cli.help()
-cli.version('0.0.0-dev.0')
+cli.version('0.0.0-dev.1')
 cli.parse()
