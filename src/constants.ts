@@ -1,4 +1,4 @@
-import { uploadOnEstuary } from './providers/estuary.js'
+// import { uploadOnEstuary } from './providers/estuary.js'
 import { statusOnGW3, uploadOnGW3 } from './providers/gw3.js'
 import { statusOnW3S, uploadOnW3S } from './providers/w3s.js'
 import type { StatusFunction, UploadFunction } from './types.js'

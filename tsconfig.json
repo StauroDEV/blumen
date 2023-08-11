@@ -1,6 +1,19 @@
 {
-  "extends": "@tsconfig/node18/tsconfig.json",
- 
+  "compilerOptions": {
+    "lib": ["es2023", "DOM"],
+    "module": "Node16",
+    "target": "es2022",
+
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node16",
+
+    "outDir": "dist",
+    "declaration": true,
+    "declarationDir": "dist"
+  },
   "exclude": [
     "node_modules",
     "**/node_modules/*"

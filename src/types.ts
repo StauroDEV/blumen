@@ -1,4 +1,4 @@
-import { ReadableStream } from 'node:stream/web'
+import { Blob } from 'node:buffer'
 
 export type FileEntry = {
   name: string

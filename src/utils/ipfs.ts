@@ -6,7 +6,7 @@ import { createWriteStream } from 'node:fs'
 import { CID } from 'multiformats/cid'
 import { CarWriter } from '@ipld/car/writer'
 import type { FileEntry } from '../types.js'
-import { TransformStream } from 'node:stream/web'
+import { Blob } from 'node:buffer'
 
 const tmp = tmpdir()
 
@@ -22,7 +22,7 @@ export const packCAR = async (files: FileEntry[], name: string) => {
     .pipeThrough(
       new TransformStream({
         transform(block, controller) {
-          rootCID = block.cid
+          rootCID = block.cid as CID
           controller.enqueue(block)
         },
       })

@@ -1,4 +1,4 @@
-import { access, constants, opendir, readFile, stat } from 'node:fs/promises'
+import { access, constants, stat } from 'node:fs/promises'
 import { FileEntry } from '../types.js'
 import { Readable } from 'node:stream'
 import { createReadStream } from 'node:fs'
@@ -13,7 +13,7 @@ export const dirData = async (dir: string) => {
     files.push({
       name: dir === '.' ? path : path.replace(dir, ''),
       size,
-      stream: () => Readable.toWeb(createReadStream(path)),
+      stream: () => Readable.toWeb(createReadStream(path)) as ReadableStream,
     })
   }
   return [total, files] as const

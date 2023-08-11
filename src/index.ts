@@ -1,6 +1,7 @@
+#!/usr/bin/env node
+
 import { cac } from 'cac'
 import { dirData, exists, fileSize } from './utils/fs.js'
-import kleur from 'kleur'
 import { packCAR } from './utils/ipfs.js'
 import path from 'node:path'
 import {
@@ -13,7 +14,6 @@ import { PROVIDERS } from './constants.js'
 import mod from 'ascii-bar'
 import { InvalidCIDError, NoProvidersError } from './errors.js'
 import { CID } from 'multiformats/cid'
-import { PinStatus } from './types.js'
 
 const AsciiBar = mod.default
 

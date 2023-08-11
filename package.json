@@ -3,8 +3,12 @@
   "version": "0.0.0",
   "description": "🌸 Self-custodial decentralized deployments",
   "type": "module",
+  "bin": {
+    "blumen": "./dist/index.js"
+  },
   "scripts": {
-    "dev": "tsc src/index.ts"
+    "dev": "tsx src/index.ts",
+    "build": "esbuild src/index.ts --outdir=dist --platform=node --target=node18 --format=esm --packages=external --bundle"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +25,7 @@
     "undici": "^5.23.0"
   },
   "devDependencies": {
-    "@tsconfig/node18": "^18.2.0",
-    "@types/node": "^20.4.9"
+    "@types/node": "^20.4.9",
+    "esbuild": "^0.19.0"
   }
 }

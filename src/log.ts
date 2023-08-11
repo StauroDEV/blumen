@@ -38,7 +38,8 @@ const pinStatus = (
       statusText = kleur.cyan(status)
       break
     case 'unknown':
-      statusText = kleur.gray(status)
+    default:
+      statusText = kleur.gray(status || 'unknown')
       break
   }
 
