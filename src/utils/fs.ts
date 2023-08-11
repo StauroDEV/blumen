@@ -7,7 +7,7 @@ import { globby } from 'globby'
 export const dirData = async (dir: string) => {
   let total = 0
   const files: FileEntry[] = []
-  for (const path of await globby([dir], { gitignore: true })) {
+  for (const path of await globby([dir], { ignore: ['node_modules'] })) {
     const size = (await stat(path)).size
     total += size
     files.push({

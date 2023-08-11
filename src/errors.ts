@@ -63,3 +63,10 @@ export class InvalidCIDError extends Error {
     super(`${cid} is invalid IPFS CID.`)
   }
 }
+
+export class MissingDirectoryError extends Error {
+  name = 'MissingDirectory'
+  constructor(dir: string) {
+    super(`Directory ${dir} is missing.`)
+  }
+}

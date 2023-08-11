@@ -12,7 +12,11 @@ import {
 import * as log from './log.js'
 import { PROVIDERS } from './constants.js'
 import mod from 'ascii-bar'
-import { InvalidCIDError, NoProvidersError } from './errors.js'
+import {
+  InvalidCIDError,
+  MissingDirectoryError,
+  NoProvidersError,
+} from './errors.js'
 import { CID } from 'multiformats/cid'
 
 const AsciiBar = mod.default
@@ -26,8 +30,13 @@ cli
       if (await exists('dist')) dir = 'dist'
       else dir = '.'
     }
-    const name = path.basename(process.cwd())
-    const [size, files] = await dirData(dir)
+    const normalizedPath = path.join(process.cwd(), dir)
+    const name = path.basename(normalizedPath)
+    const [size, files] = await dirData(normalizedPath)
+
+    if (size === 0) throw new MissingDirectoryError(dir)
+
+    console.log(files)
 
     log.packing(dir === '.' ? name : dir, fileSize(size, 2))
 

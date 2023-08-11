@@ -1,17 +1,33 @@
 {
   "name": "blumen",
-  "version": "0.0.0",
+  "version": "0.0.0-dev.0",
   "description": "🌸 Self-custodial decentralized deployments",
   "type": "module",
   "bin": {
     "blumen": "./dist/index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StauroXYZ/blumen"
+  },
   "scripts": {
     "dev": "tsx src/index.ts",
-    "build": "esbuild src/index.ts --outdir=dist --platform=node --target=node18 --format=esm --packages=external --bundle"
+    "build": "esbuild src/index.ts --outdir=dist --platform=node --target=node18 --format=esm --packages=external --bundle",
+    "postbuild": "chmod +x dist/index.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "ipfs",
+    "filecoin",
+    "deploy",
+    "cli"
+  ],
+  "files": [
+    "dist"
+  ],
+  "author": "v1rtl <hi@v1rtl.site>",
+  "engines": {
+    "node": ">=18"
+  },
   "license": "MIT",
   "dependencies": {
     "@ipld/car": "^5.2.0",
