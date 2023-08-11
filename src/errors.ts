@@ -56,3 +56,10 @@ export class MissingKeyError extends Error {
     super(`BLUMEN_${key} is missing.`)
   }
 }
+
+export class InvalidCIDError extends Error {
+  name = 'InvalidCIDError'
+  constructor(cid: string) {
+    super(`${cid} is invalid IPFS CID.`)
+  }
+}

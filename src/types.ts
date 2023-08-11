@@ -6,21 +6,24 @@ export type FileEntry = {
   stream: () => ReadableStream
 }
 
-export type UploadArgs =
+type AuthArgs = {
+  token: string
+  accessKey?: string
+}
+
+export type UploadArgs = (
   | {
       car: Blob
-      token: string
-      accessKey?: string
       cid?: never
       name?: string
     }
   | {
       car?: never
-      token: string
-      accessKey?: string
       cid: string
       name: string
     }
+) &
+  AuthArgs
 
 export type UploadReturnType = {
   cid: string
@@ -31,3 +34,15 @@ export type UploadReturnType = {
 export type UploadFunction = (args: UploadArgs) => Promise<UploadReturnType>
 
 export type Supported = 'upload' | 'pin'
+
+export type PinStatus = 'queued' | 'pinned' | 'failed' | 'unpinning' | 'unknown'
+
+export type FilecoinDeal = { status: string; dealId: string }
+
+export type StatusFunction = (
+  cid: string,
+  auth?: Partial<AuthArgs>
+) => Promise<{
+  pin: PinStatus
+  deals?: FilecoinDeal[]
+}>

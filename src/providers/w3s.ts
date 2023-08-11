@@ -1,4 +1,4 @@
-import type { UploadFunction } from '../types.js'
+import type { PinStatus, StatusFunction, UploadFunction } from '../types.js'
 import { DeployError, PinningNotSupportedError } from '../errors.js'
 import { fetch } from 'undici'
 
@@ -27,4 +27,19 @@ export const uploadOnW3S: UploadFunction = async ({ token, car, cid }) => {
   }
 
   return json as { cid: string }
+}
+
+export const statusOnW3S: StatusFunction = async (cid) => {
+  const res = await fetch(new URL(`/status/${cid}`, baseURL))
+  const json = (await res.json()) as {
+    pins: [{ status: string }]
+    deals: { dealId: string; status: string }[]
+  }
+
+  return res.ok
+    ? {
+        pin: json.pins[0].status.toLowerCase() as PinStatus,
+        deal: { id: json.deals },
+      }
+    : { pin: 'unknown' }
 }

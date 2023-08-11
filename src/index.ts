@@ -11,7 +11,9 @@ import {
 import * as log from './log.js'
 import { PROVIDERS } from './constants.js'
 import mod from 'ascii-bar'
-import { NoProvidersError } from './errors.js'
+import { InvalidCIDError, NoProvidersError } from './errors.js'
+import { CID } from 'multiformats/cid'
+import { PinStatus } from './types.js'
 
 const AsciiBar = mod.default
 
@@ -80,6 +82,31 @@ cli
     /* WIP ENS + GNOSIS INTEGRATION */
 
     log.deployFinished(rootCID.toString())
+  })
+
+cli
+  .command('status <cid>', 'Check IPFS pinning status')
+  .action(async (cid: string) => {
+    const apiTokens = parseEnvs()
+
+    try {
+      CID.parse(cid)
+    } catch {
+      throw new InvalidCIDError(cid)
+    }
+
+    for (const token of apiTokens.keys()) {
+      const provider = PROVIDERS[token]
+      if (provider) {
+        if (provider.status) {
+          const { pin, deals } = await provider.status(cid, {
+            accessKey: apiTokens.get('GW3_ACCESS_KEY'),
+            token: apiTokens.get(token),
+          })
+          log.pinStatus(provider.name, pin, deals)
+        }
+      }
+    }
   })
 
 cli.help()
