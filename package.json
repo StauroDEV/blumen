@@ -8,8 +8,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/StauroXYZ/blumen"
+    "url": "https://github.com/StauroXYZ/blumen.git"
   },
+  "homepage": "https://github.com/StauroXYZ/blumen",
   "scripts": {
     "dev": "tsx src/index.ts",
     "build": "esbuild src/index.ts --outdir=dist --platform=node --target=node18 --format=esm --packages=external --bundle",
