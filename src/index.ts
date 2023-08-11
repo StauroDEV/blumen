@@ -6,7 +6,7 @@ import { packCAR } from './utils/ipfs.js'
 import path from 'node:path'
 import {
   findEnvVarProviderName,
-  parseEnvs,
+  parseEnv,
   tokensToProviderNames,
 } from './utils/env.js'
 import * as log from './log.js'
@@ -16,6 +16,7 @@ import {
   InvalidCIDError,
   MissingDirectoryError,
   NoProvidersError,
+  UnknownProviderError,
 } from './errors.js'
 import { CID } from 'multiformats/cid'
 
@@ -45,7 +46,7 @@ cli
 
     log.root(rootCID)
 
-    const apiTokens = parseEnvs()
+    const apiTokens = parseEnv()
 
     const providers = tokensToProviderNames(apiTokens.keys())
 
@@ -112,28 +113,48 @@ cli
 
 cli
   .command('status <cid>', 'Check IPFS pinning status')
-  .action(async (cid: string) => {
-    const apiTokens = parseEnvs()
+  .option('--providers [providers]', 'List providers to check status from')
+  .action(
+    async (
+      cid: string,
+      { providers: providersOptionList }: { providers: string }
+    ) => {
+      // Validate CID
+      try {
+        CID.parse(cid)
+      } catch {
+        throw new InvalidCIDError(cid)
+      }
 
-    try {
-      CID.parse(cid)
-    } catch {
-      throw new InvalidCIDError(cid)
-    }
+      const env = parseEnv()
+      const tokens: string[] = []
 
-    for (const token of apiTokens.keys()) {
-      const provider = PROVIDERS[token]
-      if (provider) {
-        if (provider.status) {
-          const { pin, deals } = await provider.status(cid, {
-            accessKey: apiTokens.get('GW3_ACCESS_KEY'),
-            token: apiTokens.get(token),
-          })
-          log.pinStatus(provider.name, pin, deals)
+      for (const option of env.keys()) tokens.push(option)
+
+      if (providersOptionList) {
+        for (const option of providersOptionList
+          .split(',')
+          .map((s) => s.trim())) {
+          const tokenName = findEnvVarProviderName(option)
+          if (tokenName) tokens.push(tokenName)
+          else throw new UnknownProviderError(option)
+        }
+      }
+
+      for (const token of tokens) {
+        const provider = PROVIDERS[token]
+        if (provider) {
+          if (provider.status) {
+            const { pin, deals } = await provider.status(cid, {
+              accessKey: env.get('GW3_ACCESS_KEY'),
+              token: env.get(token),
+            })
+            log.pinStatus(provider.name, pin, deals)
+          }
         }
       }
     }
-  })
+  )
 
 cli.help()
 cli.version('0.0.0-dev.0')

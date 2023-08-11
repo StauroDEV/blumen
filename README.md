@@ -72,3 +72,9 @@ $ blumen status bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4
 web3.storage: pinned
 Gateway3: pinned
 ```
+
+By default, providers are fetched from environment like with the `deploy` command. You can manually specify providers via `--providers` flag, comma separated:
+
+```sh
+$ blumen deploy --providers=web3.storage,Gateway3
+```

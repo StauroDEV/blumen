@@ -2,7 +2,7 @@ import { PROVIDERS } from '../constants.js'
 import { UnknownProviderError } from '../errors.js'
 import * as log from '../log.js'
 
-export const parseEnvs = () => {
+export const parseEnv = () => {
   const tokens = new Map<string, string>()
 
   for (const [key, value] of Object.entries(process.env)) {
@@ -15,7 +15,9 @@ export const parseEnvs = () => {
 }
 
 // ESTUARY_TOKEN => Estuary
-export const tokensToProviderNames = (keys: IterableIterator<string>) => {
+export const tokensToProviderNames = (
+  keys: IterableIterator<string> | string[]
+) => {
   const providers: string[] = []
   for (const key of keys) {
     const provider = PROVIDERS[key]
@@ -27,7 +29,9 @@ export const tokensToProviderNames = (keys: IterableIterator<string>) => {
   return providers
 }
 
-// Estuary => ESTUARY_TOKEN
+/**
+ * Estuary => ESTUARY_TOKEN
+ */
 export const findEnvVarProviderName = (provider: string) => {
   for (const [token, { name }] of Object.entries(PROVIDERS)) {
     if (provider === name) return token
