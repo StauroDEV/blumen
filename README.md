@@ -64,7 +64,7 @@ $ blumen status /path/to/directory
 
 ### `blumen status <pin>`
 
-Retrieves pin statuses from providers.
+Retrieves pin status from providers.
 
 ```sh
 $ blumen status bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4
@@ -76,5 +76,5 @@ Gateway3: pinned
 By default, providers are fetched from environment like with the `deploy` command. You can manually specify providers via `--providers` flag, comma separated:
 
 ```sh
-$ blumen deploy --providers=web3.storage,Gateway3
+$ blumen status --providers=web3.storage,Gateway3 bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4
 ```
