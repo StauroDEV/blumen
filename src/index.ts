@@ -56,13 +56,15 @@ cli
 
     let total = 0
 
-    const bar = new AsciiBar({
-      total: providers.length,
-      formatString: '#spinner #bar #message',
-      hideCursor: true,
-      enableSpinner: true,
-      width: process.stdout.columns - 30,
-    })
+    const bar = process.stdout.isTTY
+      ? new AsciiBar({
+          total: providers.length,
+          formatString: '#spinner #bar #message',
+          hideCursor: true,
+          enableSpinner: true,
+          width: process.stdout.columns - 30,
+        })
+      : undefined
 
     const errors: Error[] = []
 
@@ -71,7 +73,7 @@ cli
       const token = apiTokens.get(envVar)!
 
       if (providers.indexOf(provider) === 0) {
-        bar.update(total++, `Uploading to ${provider}`)
+        bar?.update(total++, `Uploading to ${provider}`)
 
         try {
           await PROVIDERS[envVar]!.upload({
@@ -85,7 +87,7 @@ cli
           else errors.push(e as Error)
         }
       } else {
-        bar.update(total++, `Pinning to ${provider}`)
+        bar?.update(total++, `Pinning to ${provider}`)
 
         try {
           await PROVIDERS[envVar]!.upload({
@@ -100,7 +102,7 @@ cli
         }
       }
     }
-    bar.update(total) // finish
+    bar?.update(total) // finish
 
     if (errors.length === providers.length) return log.deployFailed(errors)
     else if (errors.length) log.uploadPartiallyFailed(errors)
