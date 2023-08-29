@@ -22,7 +22,7 @@ import { CID } from 'multiformats/cid'
 
 const AsciiBar = mod.default
 
-const cli = cac()
+const cli = cac('blumen')
 
 cli
   .command('deploy [dir]', 'Deploy web content on IPFS')
@@ -160,4 +160,5 @@ cli
 
 cli.help()
 cli.version('0.0.0-dev.1')
+cli.example('blumen deploy --strict ./dist')
 cli.parse()
