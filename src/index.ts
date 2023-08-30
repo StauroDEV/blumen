@@ -119,7 +119,7 @@ cli
   .action(
     async (
       cid: string,
-      { providers: providersOptionList }: { providers: string }
+      { providers: providersOptionList }: { providers: string },
     ) => {
       // Validate CID
       try {
@@ -143,6 +143,8 @@ cli
         }
       }
 
+      if (tokens.length === 0) throw new NoProvidersError()
+
       for (const token of tokens) {
         const provider = PROVIDERS[token]
         if (provider) {
@@ -155,7 +157,7 @@ cli
           }
         }
       }
-    }
+    },
   )
 
 cli.help()
