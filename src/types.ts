@@ -1,9 +1,21 @@
 import { Blob } from 'node:buffer'
 
-export type FileEntry = {
-  name: string
-  size: number
+export interface BlobLike {
+  /**
+   * Returns a ReadableStream which yields the Blob data.
+   */
   stream: () => ReadableStream
+}
+
+export interface FileLike extends BlobLike {
+  /**
+   * Name of the file. May include path information.
+   */
+  name: string
+}
+
+export interface FileEntry extends FileLike {
+  size: number
 }
 
 type AuthArgs = {
@@ -41,7 +53,7 @@ export type FilecoinDeal = { status: string; dealId: string }
 
 export type StatusFunction = (
   cid: string,
-  auth?: Partial<AuthArgs>
+  auth?: Partial<AuthArgs>,
 ) => Promise<{
   pin: PinStatus
   deals?: FilecoinDeal[]

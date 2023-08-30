@@ -13,7 +13,7 @@
   "homepage": "https://github.com/StauroXYZ/blumen",
   "scripts": {
     "dev": "tsx src/index.ts",
-    "build": "esbuild \"./src/**/*.ts\" --outdir=dist --inject:./inject.js --bundle --platform=node --target=node16 --format=esm --external:*",
+    "build": "node ./build.js",
     "postbuild": "chmod +x dist/index.js"
   },
   "keywords": [
@@ -32,17 +32,21 @@
   "license": "MIT",
   "dependencies": {
     "@ipld/car": "^5.2.0",
+    "@ipld/dag-cbor": "^9.0.4",
+    "@ipld/unixfs": "^2.1.1",
     "ascii-bar": "^1.0.3",
     "cac": "^6.7.14",
     "globby": "^13.2.2",
-    "ipfs-car": "^1.0.0",
     "kleur": "^4.1.5",
     "multiformats": "^12.0.1",
     "table": "^6.8.1",
-    "undici": "^5.23.0"
+    "undici": "^5.23.0",
+    "varint": "^6.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.4.9",
-    "esbuild": "^0.19.2"
+    "@types/varint": "^6.0.1",
+    "esbuild": "^0.19.2",
+    "prettier": "^3.0.3"
   }
 }
