@@ -1,11 +1,12 @@
 {
   "name": "blumen",
-  "version": "0.0.0-dev.5",
+  "version": "0.0.0-dev.6",
   "description": "🌸 Self-custodial decentralized deployments",
   "type": "module",
   "bin": {
-    "blumen": "./dist/index.js"
+    "blumen": "./dist/cli.js"
   },
+  "exports": "./dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/StauroXYZ/blumen.git"
@@ -14,7 +15,7 @@
   "scripts": {
     "dev": "tsx src/index.ts",
     "build": "node ./build.js",
-    "postbuild": "chmod +x dist/index.js"
+    "postbuild": "chmod +x dist/index.js && tsc --emitDeclarationOnly"
   },
   "keywords": [
     "ipfs",

@@ -1,8 +1,6 @@
 # blumen
 
-**Blumen** is a CLI to deploy websites on IPFS in a decentralized manner, fully managed by the user.
-
-> Blumen, compared Stauro CLI, is fully self-custodial and is not tied to the Stauro platform.
+**Blumen** is a tool to deploy websites on IPFS in a decentralized manner, fully managed by the user.
 
 ## Features
 
@@ -34,7 +32,7 @@ BLUMEN_GW3_ACCESS_KEY=9e01ce24...
 
 ### Deployment
 
-Running `deploy` will try to use the `dist` folder, otherwise the current directory. 
+Running `deploy` will try to use the `dist` folder, otherwise the current directory.
 
 ```sh
 $ blumen deploy
@@ -52,7 +50,9 @@ $ blumen deploy
 
 ## Documentation
 
-### `blumen deploy`
+### CLI
+
+#### `blumen deploy`
 
 Deploys a directory on IPFS to specified providers and outputs a web-friendly gateway link, along with other useful information.
 
@@ -62,7 +62,7 @@ Upload a custom path:
 $ blumen status /path/to/directory
 ```
 
-### `blumen status <pin>`
+#### `blumen status <pin>`
 
 Retrieves pin status from providers.
 
@@ -77,4 +77,25 @@ By default, providers are fetched from environment like with the `deploy` comman
 
 ```sh
 $ blumen status --providers=web3.storage,Gateway3 bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4
+```
+
+### API
+
+Blumen exposes some of the functionality as well.
+
+```js
+import { walk, packCAR, uploadOnW3S } from 'blumen'
+import { assert } from 'node:assert/strict'
+
+const [files, total] = await walk('./dist')
+
+const { blob, cid: actualCid } = await packCAR(files)
+
+const { cid } = await uploadOnW3S({ token: process.env.W3S_TOKEN, car: blob })
+
+assert.equal(cid, actualCid)
+
+const { pin } = await statusOnW3S(cid)
+
+console.log(`Pin status: ${pin}, CID: ${cid}`)
 ```

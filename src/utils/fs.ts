@@ -4,7 +4,7 @@ import { Readable } from 'node:stream'
 import { createReadStream } from 'node:fs'
 import { globby } from 'globby'
 
-export const dirData = async (dir: string) => {
+export const walk = async (dir: string) => {
   let total = 0
   const files: FileEntry[] = []
   for (const path of await globby(dir, {
