@@ -7,6 +7,7 @@
 - Multi-provider IPFS pinning
 - ENS integration
 - Gnosis API support
+- Supports Node.js 16 and newer
 
 ## Getting Started
 
