@@ -5,6 +5,7 @@ import {
   TransformStream,
   ReadableStream,
   QueuingStrategy,
+  WritableStream,
 } from 'node:stream/web'
 import { BlobLike, FileLike } from '../types.js'
 

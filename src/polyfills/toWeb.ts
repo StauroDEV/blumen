@@ -1,10 +1,16 @@
-import { Writable, finished } from 'node:stream'
-import { WritableStreamDefaultController } from 'node:stream/web'
+import { Readable, Writable, finished } from 'node:stream'
+import {
+  type WritableStreamDefaultController,
+  type ReadableStreamDefaultController,
+  WritableStream,
+  ReadableStream,
+  CountQueuingStrategy,
+} from 'node:stream/web'
 import { destroy } from './destroy.js'
 
 const kDestroyed = Symbol('kDestroyed')
 
-function isDestroyed(stream: Writable) {
+function isDestroyed(stream: Writable | Readable) {
   const wState = (stream as any)._writableState
   const rState = (stream as any)._readableState
 
@@ -130,6 +136,117 @@ export function writableToWeb(streamWritable: Writable) {
 
         controller = undefined
         return Promise.resolve()
+      },
+    },
+    strategy,
+  )
+}
+
+function isReadableFinished(stream: Readable, strict?: boolean) {
+  const rState = (stream as any)._readableState
+  if (rState !== null && rState !== void 0 && rState.errored) {
+    return false
+  }
+  if (
+    typeof (rState === null || rState === void 0
+      ? void 0
+      : rState.endEmitted) !== 'boolean'
+  ) {
+    return null
+  }
+  return !!(
+    rState.endEmitted ||
+    (strict === false && rState.ended === true && rState.length === 0)
+  )
+}
+
+function isReadable(stream: Readable) {
+  if (stream && stream.readable != null) {
+    return stream.readable
+  }
+  if (
+    typeof (stream === null || stream === void 0 ? void 0 : stream.readable) !==
+    'boolean'
+  ) {
+    return null
+  }
+  if (isDestroyed(stream)) {
+    return false
+  }
+  return stream.readable && !isReadableFinished(stream)
+}
+
+export function readableToWeb(streamReadable: Readable) {
+  if (isDestroyed(streamReadable) || !isReadable(streamReadable)) {
+    const readable = new ReadableStream()
+    readable.cancel()
+    return readable
+  }
+
+  const objectMode = streamReadable.readableObjectMode
+  const highWaterMark = streamReadable.readableHighWaterMark
+
+  const evaluateStrategyOrFallback = () => {
+    if (objectMode) {
+      // When running in objectMode explicitly but no strategy, we just fall
+      // back to CountQueuingStrategy
+      return new CountQueuingStrategy({ highWaterMark })
+    }
+
+    // When not running in objectMode explicitly, we just fall
+    // back to a minimal strategy that just specifies the highWaterMark
+    // and no size algorithm. Using a ByteLengthQueuingStrategy here
+    // is unnecessary.
+    return { highWaterMark }
+  }
+
+  const strategy = evaluateStrategyOrFallback()
+
+  let controller: ReadableStreamDefaultController
+
+  function onData(chunk: Uint8Array) {
+    // Copy the Buffer to detach it from the pool.
+    if (Buffer.isBuffer(chunk) && !objectMode) {
+      chunk = new Uint8Array(chunk)
+    }
+    controller.enqueue(chunk)
+    if (controller.desiredSize! <= 0) {
+      streamReadable.pause()
+    }
+  }
+
+  streamReadable.pause()
+
+  const cleanup = finished(streamReadable, (error) => {
+    if (error?.code === 'ERR_STREAM_PREMATURE_CLOSE') {
+      const err = new AbortError(undefined, { cause: error })
+      error = err
+    }
+
+    cleanup()
+    // This is a protection against non-standard, legacy streams
+    // that happen to emit an error event again after finished is called.
+    streamReadable.on('error', () => {})
+    if (error) {
+      return controller.error(error)
+    }
+    controller.close()
+  })
+
+  streamReadable.on('data', onData)
+
+  return new ReadableStream(
+    {
+      start(c) {
+        controller = c
+      },
+
+      pull() {
+        streamReadable.resume()
+      },
+
+      cancel(reason) {
+        destroy(streamReadable, reason)
       },
     },
     strategy,

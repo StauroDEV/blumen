@@ -1,8 +1,10 @@
-import { access, constants, stat } from 'node:fs/promises'
+import { access, stat } from 'node:fs/promises'
+import { constants } from 'node:fs'
 import { FileEntry } from '../types.js'
 import { Readable } from 'node:stream'
 import { createReadStream } from 'node:fs'
 import { globby } from 'globby'
+import { readableToWeb } from '../polyfills/toWeb.js'
 
 export const walk = async (dir: string) => {
   let total = 0
@@ -15,7 +17,7 @@ export const walk = async (dir: string) => {
     files.push({
       name: dir === '.' ? path : path.replace(dir, ''),
       size,
-      stream: () => Readable.toWeb(createReadStream(path)) as ReadableStream,
+      stream: () => readableToWeb(createReadStream(path)),
     })
   }
 
