@@ -1,19 +1,19 @@
 # blumen
 
-**Blumen** is a tool to deploy websites on IPFS in a decentralized manner, fully managed by the user.
+**Blumen** is a powerful CLI and API library to deploy web apps on IPFS in a self-custodial manner.
 
 ## Features
 
-- Multi-provider IPFS pinning
-- ENS integration
-- Gnosis API support
-- Supports Node.js 16 and newer
+- **Multi-Provider Deployment**: Deploy your web app simultaneously on multiple IPFS providers, including web3.storage and Gateway3, ensuring redundancy and availability.
+- **ENS Integration**: Seamlessly integrate with ENS to update your Content-Hash, making it easier for users to access your web app via ENS.
+- **Gnosis Integration**: Update your ENS Content-Hash using a multisig contract on the Gnosis platform, adding an extra layer of security and decentralization.
+- **Node.js 16.8+ Support**: Compatible up until Node.js v16.8
 
 ## Getting Started
 
 ### Installation
 
-Node.js 18+ is required.
+Node.js 16.8+ is required.
 
 ```sh
 pnpm install -g blumen
@@ -100,3 +100,5 @@ const { pin } = await statusOnW3S(cid)
 
 console.log(`Pin status: ${pin}, CID: ${cid}`)
 ```
+
+This example demonstrates how to use the "Blumen" API to walk through a directory, prepare your files for upload, upload it to web3.storage, and check the IPFS pinning status.

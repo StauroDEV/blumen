@@ -25,8 +25,8 @@ const AsciiBar = mod.default
 const cli = cac('blumen')
 
 cli
-  .command('deploy [dir]', 'Deploy web content on IPFS')
-  .option('--strict', 'Stop deploying if one of the providers fails', {
+  .command('deploy [dir]', 'Deploy a web app on IPFS')
+  .option('--strict', 'Throw if one of the providers fails', {
     default: true,
   })
   .action(async (dir, { strict }: { strict: boolean }) => {
