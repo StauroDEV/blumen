@@ -62,6 +62,12 @@ Upload a custom path:
 $ blumen status /path/to/directory
 ```
 
+You can update your ENS domain record in-place by passing a domain (and optionally a chain) and a `BLUMEN_PK` environment variable:
+
+```sh
+$ BLUMEN_W3S_TOKEN=eyJhbG... BLUMEN_PK=0x2... ./dist/cli.js deploy dist --ens v1rtl.eth --chain goerli
+```
+
 #### `blumen status <pin>`
 
 Retrieves pin status from providers.
@@ -83,8 +89,8 @@ $ blumen status --providers=web3.storage,Gateway3 bafybeibp54tslsez36quqptgzwyda
 
 Update ENS Content-Hash from the CLI. Requires a `BLUMEN_PK` environment variable (for private key).
 
-```
-$ BLUMEN_PK=your_pk ./dist/cli.js ens ipfs_hash v1rtl.eth
+```sh
+$ BLUMEN_PK=0x2... ./dist/cli.js ens bafy... v1rtl.eth
 ```
 
 If you are doing testing, you can pass `--chain goerli` to use Goerli network instead of mainnet.
