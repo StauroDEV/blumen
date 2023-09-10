@@ -56,7 +56,7 @@ export const ensAction = async (
 
   const receipt = await publicClient.waitForTransactionReceipt({
     hash,
-    timeout: 20_000,
+    timeout: 1000 * 60 * 30, // 30 minutes
   })
 
   if (receipt.status === 'reverted')
