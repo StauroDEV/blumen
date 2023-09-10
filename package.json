@@ -16,7 +16,7 @@
   "scripts": {
     "dev": "tsx src/index.ts",
     "build": "node ./build.js",
-    "postbuild": "chmod +x dist/index.js && tsc --emitDeclarationOnly"
+    "postbuild": "chmod +x dist/cli.js && tsc --emitDeclarationOnly"
   },
   "keywords": [
     "ipfs",
@@ -33,20 +33,24 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@ipld/car": "^5.2.0",
+    "@ensdomains/content-hash": "^3.0.0",
+    "@ipld/car": "^5.2.2",
     "@ipld/dag-cbor": "^9.0.4",
-    "@ipld/unixfs": "^2.1.1",
+    "@ipld/unixfs": "^2.1.2",
+    "abitype": "^0.9.8",
     "ascii-bar": "^1.0.3",
     "cac": "^6.7.14",
     "globby": "^13.2.2",
     "kleur": "^4.1.5",
-    "multiformats": "^12.0.1",
+    "multiformats": "^12.1.1",
+    "node-fetch": "^3.3.2",
     "table": "^6.8.1",
-    "undici": "^5.23.0",
-    "varint": "^6.0.0"
+    "undici": "^5.24.0",
+    "varint": "^6.0.0",
+    "viem": "^1.10.8"
   },
   "devDependencies": {
-    "@types/node": "^20.4.9",
+    "@types/node": "^20.6.0",
     "@types/varint": "^6.0.1",
     "esbuild": "^0.19.2",
     "prettier": "^3.0.3"

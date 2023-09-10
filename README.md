@@ -7,7 +7,6 @@
 - **Multi-Provider Deployment**: Deploy your web app simultaneously on multiple IPFS providers, including web3.storage and Gateway3, ensuring redundancy and availability.
 - **ENS Integration**: Seamlessly integrate with ENS to update your Content-Hash, making it easier for users to access your web app via ENS.
 - **Gnosis Integration**: Update your ENS Content-Hash using a multisig contract on the Gnosis platform, adding an extra layer of security and decentralization.
-- **Node.js 16.8+ Support**: Compatible up until Node.js v16.8
 
 ## Getting Started
 
@@ -79,6 +78,16 @@ By default, providers are fetched from environment like with the `deploy` comman
 ```sh
 $ blumen status --providers=web3.storage,Gateway3 bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4
 ```
+
+#### `blumen ens <cid> <ens>`
+
+Update ENS Content-Hash from the CLI. Requires a `BLUMEN_PK` environment variable (for private key).
+
+```
+$ BLUMEN_PK=your_pk ./dist/cli.js ens ipfs_hash v1rtl.eth
+```
+
+If you are doing testing, you can pass `--chain goerli` to use Goerli network instead of mainnet.
 
 ### API
 
