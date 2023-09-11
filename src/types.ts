@@ -59,3 +59,5 @@ export type StatusFunction = (
   pin: PinStatus
   deals?: FilecoinDeal[]
 }>
+
+export type Chain = 'mainnet' | 'goerli'

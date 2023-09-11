@@ -13,6 +13,7 @@ import { exists } from '../utils/fs.js'
 import mod from 'ascii-bar'
 import * as log from '../log.js'
 import { ensAction } from './ens.js'
+import { Chain } from '../types.js'
 
 const AsciiBar = mod.default
 
@@ -23,7 +24,7 @@ export const deployAction = async (
     ens,
     chain,
     ...opts
-  }: { strict: boolean; chain: 'mainnet' | 'goerli'; ens: string },
+  }: { strict: boolean; chain: Chain; ens: string },
 ) => {
   if (!dir) {
     if (await exists('dist')) dir = 'dist'

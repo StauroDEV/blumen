@@ -18,7 +18,7 @@ const deployFinished = (cid: string) =>
   console.log(
     `\nOpen in a browser:\n${kleur.bold('🪐 IPFS')}:      ${kleur.underline(
       `https://${cid}.ipfs.dweb.link`,
-    )}\n${kleur.bold('🛰️  IPFS Scan')}: ${kleur.underline(
+    )}\n${kleur.bold('🛰️ IPFS Scan')}: ${kleur.underline(
       `https://ipfs-scan.io/?cid=${cid}`,
     )}`,
   )

@@ -2,19 +2,13 @@ import { encode } from '@ensdomains/content-hash'
 import { namehash, normalize } from 'viem/ens'
 import { parseAbi } from 'viem/abi'
 import { PrivateKeyAccount, privateKeyToAccount } from 'viem/accounts'
-import {
-  createPublicClient,
-  http,
-  createWalletClient,
-  formatGwei,
-  parseGwei,
-} from 'viem'
+import { createPublicClient, http, createWalletClient } from 'viem'
 import { goerli, mainnet } from 'viem/chains'
 import { MissingKeyError } from '../errors.js'
 import { PublicClient } from 'viem'
 import { WalletClient } from 'viem'
 import { Hash } from 'viem'
-import { estimateGas } from 'viem/actions'
+import { Chain } from '../types.js'
 
 const abi = parseAbi([
   'function setContenthash(bytes32 node, bytes calldata hash) external',
@@ -28,7 +22,7 @@ const PUBLIC_RESOLVER_ADDRESS = {
 export const initializeEthereum = ({
   chain,
 }: {
-  chain: 'mainnet' | 'goerli'
+  chain: Chain
 }): {
   walletClient: WalletClient
   account: PrivateKeyAccount
@@ -64,7 +58,7 @@ export const encodeIpfsHashAndUpdateEns = async ({
 }: {
   cid: string
   domain: string
-  chain: 'goerli' | 'mainnet'
+  chain: Chain
   account: PrivateKeyAccount
   publicClient: PublicClient
   walletClient: WalletClient

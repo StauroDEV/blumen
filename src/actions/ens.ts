@@ -2,11 +2,12 @@ import { Hash, formatEther, TransactionExecutionError } from 'viem'
 import { MissingKeyError } from '../errors.js'
 import { initializeEthereum, encodeIpfsHashAndUpdateEns } from '../utils/ens.js'
 import * as log from '../log.js'
+import { Chain } from '../types.js'
 
 export const ensAction = async (
   cid: string,
   domain: string,
-  { chain }: { chain: 'mainnet' | 'goerli' },
+  { chain }: { chain: Chain },
 ) => {
   const { walletClient, account, publicClient } = initializeEthereum({
     chain,
