@@ -1,10 +1,18 @@
-import { Hash, formatEther, TransactionExecutionError, Address } from 'viem'
+import {
+  Hash,
+  formatEther,
+  TransactionExecutionError,
+  Address,
+  SendTransactionParameters,
+} from 'viem'
 import { MissingKeyError } from '../errors.js'
 import { initializeEthereum, encodeIpfsHashAndUpdateEns } from '../utils/ens.js'
 import * as log from '../log.js'
 import { Chain } from '../types.js'
-import { initializeSafe } from '../safe/safe.js'
-import { SafeTransactionData } from '../safe/types.js'
+import { SafeApiKit } from '../safe/ApiKit.js'
+import { OperationType } from '../safe/types.js'
+import { mainnet } from 'viem/chains'
+import { sendTransaction } from 'viem/actions'
 
 export const ensAction = async (
   cid: string,
@@ -15,20 +23,10 @@ export const ensAction = async (
     chain,
   })
 
-  let hash: Hash = '0x'
-
-  const balance = formatEther(
-    await publicClient.getBalance({ address: account.address }),
-  )
-
-  log.transactionPrepared(account.address, balance.slice(0, 4))
-
-  if (safeAddress) {
-    const safe = initializeSafe({ chain, safeAddress })
-  }
+  let request: SendTransactionParameters
 
   try {
-    hash = await encodeIpfsHashAndUpdateEns({
+    request = await encodeIpfsHashAndUpdateEns({
       cid,
       domain,
       chain,
@@ -37,21 +35,14 @@ export const ensAction = async (
       publicClient,
     })
   } catch (e) {
-    if (e instanceof TransactionExecutionError) {
-      if (e.details?.includes('insufficient funds')) {
-        log.insufficientFunds(e.details)
-      } else {
-        log.transactionError(e.message)
-      }
-    } else if (e instanceof MissingKeyError) {
-      log.missingKeyError(e.message)
-    } else if (e instanceof Error) {
+    if (e instanceof MissingKeyError) log.missingKeyError(e.message)
+    else if (e instanceof Error) {
       if (e.message.includes('disallowed character'))
         log.invalidEnsDomain(domain, e.message)
       else if (e.message.includes('Incorrect length')) {
         log.invalidIpfsHash(cid)
       } else {
-        log.unknownError(e.message)
+        log.unknownError(e)
       }
     } else {
       log.unknownError(e)
@@ -59,15 +50,59 @@ export const ensAction = async (
     return
   }
 
-  log.transactionPending(hash, chain)
+  const balance = formatEther(
+    await publicClient.getBalance({ address: account.address }),
+  )
 
-  const receipt = await publicClient.waitForTransactionReceipt({
-    hash,
-    timeout: 1000 * 60 * 30, // 30 minutes
-  })
+  log.transactionPrepared(account.address, balance.slice(0, 4))
 
-  if (receipt.status === 'reverted')
-    return log.transactionReverted(receipt.transactionHash, chain)
+  if (safeAddress) {
+    const apiKit = new SafeApiKit({
+      chainId: await walletClient.getChainId(),
+      txServiceUrl: 'https://safe-transaction-mainnet.safe.global',
+    })
+
+    const tx = { operation: OperationType.Call }
+
+    const sig = await walletClient.signTransaction({
+      account,
+      chain: mainnet,
+    })
+
+    await apiKit.proposeTransaction({
+      safeAddress,
+      senderAddress: account.address,
+      safeTransactionData: tx,
+      senderSignature: sig,
+    })
+  } else {
+    let hash: Hash = '0x'
+
+    try {
+      hash = await sendTransaction(walletClient, request)
+    } catch (e) {
+      if (e instanceof TransactionExecutionError) {
+        if (e.details?.includes('insufficient funds')) {
+          log.insufficientFunds(e.details)
+        } else {
+          log.transactionError(e.message)
+        }
+      } else {
+        log.unknownError(e)
+      }
+      return
+    }
+
+    log.transactionPending(hash, chain)
+
+    const receipt = await publicClient.waitForTransactionReceipt({
+      hash,
+      timeout: 1000 * 60 * 30, // 30 minutes
+    })
+
+    if (receipt.status === 'reverted')
+      return log.transactionReverted(receipt.transactionHash, chain)
+  }
 
   log.transactionSucceeded()
   return log.ensFinished(domain)

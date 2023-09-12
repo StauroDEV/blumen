@@ -37,8 +37,6 @@
     "@ipld/car": "^5.2.2",
     "@ipld/dag-cbor": "^9.0.4",
     "@ipld/unixfs": "^2.1.2",
-    "@safe-global/api-kit": "^1.3.1",
-    "@safe-global/protocol-kit": "^1.3.0",
     "abitype": "^0.9.8",
     "ascii-bar": "^1.0.3",
     "cac": "^6.7.14",

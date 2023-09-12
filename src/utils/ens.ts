@@ -9,6 +9,7 @@ import { PublicClient } from 'viem'
 import { WalletClient } from 'viem'
 import { Hash } from 'viem'
 import { Chain } from '../types.js'
+import { SimulateContractReturnType } from 'viem/contract'
 
 const abi = parseAbi([
   'function setContenthash(bytes32 node, bytes calldata hash) external',
@@ -62,7 +63,7 @@ export const encodeIpfsHashAndUpdateEns = async ({
   account: PrivateKeyAccount
   publicClient: PublicClient
   walletClient: WalletClient
-}): Promise<Hash> => {
+}): Promise<SimulateContractReturnType['request']> => {
   const contentHash = encode('ipfs', cid) as `0x${string}`
 
   const node = namehash(normalize(domain))
@@ -75,6 +76,5 @@ export const encodeIpfsHashAndUpdateEns = async ({
     args: [node, `0x${contentHash}`],
     chain: chain === 'mainnet' ? mainnet : goerli,
   })
-
-  return await walletClient.writeContract(request)
+  return request
 }

@@ -1,6 +1,9 @@
-import { PublicClient } from 'viem'
+import { isAddress, isHash } from 'viem'
 import { SafeTransactionData } from './types.js'
 import { getEip3770Address } from './utils.js'
+import { Address } from 'viem'
+import { Hash } from 'viem'
+import { InvalidSafeAddress, InvalidTxHashError } from './errors.js'
 
 enum HttpMethod {
   Get = 'get',
@@ -61,10 +64,10 @@ async function sendRequest<T>({ url, method, body }: HttpRequest): Promise<T> {
 }
 
 type ProposeTransactionProps = {
-  safeAddress: string
+  safeAddress: Address
   safeTransactionData: SafeTransactionData
-  safeTxHash: string
-  senderAddress: string
+  safeTxHash: Hash
+  senderAddress: Address
   senderSignature: string
   origin?: string
 }
@@ -76,17 +79,16 @@ function getTxServiceBaseUrl(txServiceUrl: string): string {
 interface SafeApiKitConfig {
   /** txServiceUrl - Safe Transaction Service URL */
   txServiceUrl: string
-  /** ethAdapter - Ethereum adapter */
-  ethAdapter: PublicClient
+  chainId: number
 }
 
 export class SafeApiKit {
   #txServiceBaseUrl: string
-  #ethAdapter: PublicClient
+  chainId: number
 
-  constructor({ txServiceUrl, ethAdapter }: SafeApiKitConfig) {
+  constructor({ txServiceUrl, chainId }: SafeApiKitConfig) {
     this.#txServiceBaseUrl = getTxServiceBaseUrl(txServiceUrl)
-    this.#ethAdapter = ethAdapter
+    this.chainId = chainId
   }
   /**
    * Creates a new multi-signature transaction with its confirmations and stores it in the Safe Transaction Service.
@@ -106,20 +108,20 @@ export class SafeApiKit {
     senderSignature,
     origin,
   }: ProposeTransactionProps): Promise<void> {
-    if (safeAddress === '') {
-      throw new Error('Invalid Safe address')
+    if (!isAddress(safeAddress)) {
+      throw new InvalidSafeAddress(safeAddress)
     }
-    const chainId = await this.#ethAdapter.getChainId()
+
     const { address: safe } = await getEip3770Address({
       fullAddress: safeAddress,
-      chainId,
+      chainId: this.chainId,
     })
     const { address: sender } = await getEip3770Address({
       fullAddress: senderAddress,
-      chainId,
+      chainId: this.chainId,
     })
-    if (safeTxHash === '') {
-      throw new Error('Invalid safeTxHash')
+    if (!isHash(safeTxHash)) {
+      throw new InvalidTxHashError(safeTxHash)
     }
     return sendRequest({
       url: `${this.#txServiceBaseUrl}/v1/safes/${safe}/multisig-transactions/`,

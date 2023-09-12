@@ -14,6 +14,7 @@ import mod from 'ascii-bar'
 import * as log from '../log.js'
 import { ensAction } from './ens.js'
 import { Chain } from '../types.js'
+import { Address } from 'viem'
 
 const AsciiBar = mod.default
 
@@ -23,8 +24,8 @@ export const deployAction = async (
     strict,
     ens,
     chain,
-    ...opts
-  }: { strict: boolean; chain: Chain; ens: string },
+    safe,
+  }: { strict: boolean; chain: Chain; ens: string; safe: Address },
 ) => {
   if (!dir) {
     if (await exists('dist')) dir = 'dist'
@@ -110,6 +111,6 @@ export const deployAction = async (
 
   if (typeof ens === 'string') {
     console.log('\n')
-    await ensAction(rootCID.toString(), ens, { chain })
+    await ensAction(rootCID.toString(), ens, { chain, safe })
   }
 }
