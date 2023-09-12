@@ -1,11 +1,10 @@
 import { isAddress } from 'viem/utils'
 import { Eip3770Address } from './types.js'
-import { networks } from './chains.js'
 
-type ValidInputTypes = Uint8Array | bigint | string | number | boolean
-
-const isHexStrict = (hex: ValidInputTypes) =>
-  typeof hex === 'string' && /^((-)?0x[0-9a-f]+|(0x))$/i.test(hex)
+const networks = [
+  { chainId: 1, shortName: 'eth' },
+  { chainId: 5, shortName: 'gor' },
+]
 
 function parseEip3770Address(fullAddress: string): Eip3770Address {
   const parts = fullAddress.split(':')
@@ -14,16 +13,8 @@ function parseEip3770Address(fullAddress: string): Eip3770Address {
   return { prefix, address }
 }
 
-function getEip3770NetworkPrefixFromChainId(chainId: number): string {
-  const network = networks.find((network) => chainId === network.chainId)
-  if (!network) {
-    throw new Error('No network prefix supported for the current chainId')
-  }
-  return network.shortName
-}
-
 function validateEthereumAddress(address: string): void {
-  const isValidAddress = isHexStrict(address) && isAddress(address)
+  const isValidAddress = isAddress(address)
   if (!isValidAddress) {
     throw new Error(`Invalid Ethereum address ${address}`)
   }
@@ -31,6 +22,14 @@ function validateEthereumAddress(address: string): void {
 
 function isValidEip3770NetworkPrefix(prefix: string): boolean {
   return networks.some(({ shortName }) => shortName === prefix)
+}
+
+function getEip3770NetworkPrefixFromChainId(chainId: number): string {
+  const network = networks.find((network) => chainId === network.chainId)
+  if (!network) {
+    throw new Error('No network prefix supported for the current chainId')
+  }
+  return network.shortName
 }
 
 function validateEip3770NetworkPrefix(
@@ -57,11 +56,11 @@ function validateEip3770Address(
 }
 
 export async function getEip3770Address({
-  chainId,
   fullAddress,
+  chainId,
 }: {
-  chainId: number
   fullAddress: string
+  chainId: number
 }): Promise<Eip3770Address> {
   return validateEip3770Address(fullAddress, chainId)
 }

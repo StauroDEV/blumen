@@ -6,7 +6,7 @@
 
 - **Multi-Provider Deployment**: Deploy your web app simultaneously on multiple IPFS providers, including web3.storage and Gateway3, ensuring redundancy and availability.
 - **ENS Integration**: Seamlessly integrate with ENS to update your Content-Hash, making it easier for users to access your web app via ENS.
-- **Gnosis Integration**: Update your ENS Content-Hash using a multisig contract on the Gnosis platform, adding an extra layer of security and decentralization.
+- **Safe Integration**: Update your ENS Content-Hash using a multisig contract on the Safe platform, adding an extra layer of security and decentralization.
 
 ## Getting Started
 

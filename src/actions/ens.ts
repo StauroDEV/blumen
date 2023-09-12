@@ -1,13 +1,15 @@
-import { Hash, formatEther, TransactionExecutionError } from 'viem'
+import { Hash, formatEther, TransactionExecutionError, Address } from 'viem'
 import { MissingKeyError } from '../errors.js'
 import { initializeEthereum, encodeIpfsHashAndUpdateEns } from '../utils/ens.js'
 import * as log from '../log.js'
 import { Chain } from '../types.js'
+import { initializeSafe } from '../safe/safe.js'
+import { SafeTransactionData } from '../safe/types.js'
 
 export const ensAction = async (
   cid: string,
   domain: string,
-  { chain }: { chain: Chain },
+  { chain, safe: safeAddress }: { chain: Chain; safe: Address },
 ) => {
   const { walletClient, account, publicClient } = initializeEthereum({
     chain,
@@ -20,6 +22,10 @@ export const ensAction = async (
   )
 
   log.transactionPrepared(account.address, balance.slice(0, 4))
+
+  if (safeAddress) {
+    const safe = initializeSafe({ chain, safeAddress })
+  }
 
   try {
     hash = await encodeIpfsHashAndUpdateEns({

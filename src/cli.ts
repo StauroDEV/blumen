@@ -14,12 +14,12 @@ cli
     default: true,
   })
   .option('--ens <domain>', 'Update Content-Hash of an ENS domain')
-  .option('--chain [chain]', 'Chain to use for ENS', { default: 'mainnet' })
+  .option('--chain <chain>', 'Chain to use for ENS', { default: 'mainnet' })
   .action(deployAction)
 
 cli
   .command('status <cid>', 'Check IPFS pinning status')
-  .option('--providers [providers]', 'List providers to check status from')
+  .option('--providers <providers>', 'List providers to check status from')
   .action(statusAction)
 
 cli
@@ -27,7 +27,8 @@ cli
     'ens <cid> <domain>',
     'Update ENS name Content-Hash with an IFPS CID',
   )
-  .option('--chain [chain]', 'Chain to use', { default: 'mainnet' })
+  .option('--chain <chain>', 'Chain to use', { default: 'mainnet' })
+  .option('--safe <safe>', 'Deploy using a Gnosis Safe')
   .action(ensAction)
 
 cli.help()
