@@ -6,7 +6,7 @@ import * as log from '../log.js'
 export const ensAction = async (
   cid: string,
   domain: string,
-  { chain }: { chain: 'mainnet' | 'goerli' },
+  { chain = 'mainnet' }: { chain?: 'mainnet' | 'goerli' },
 ) => {
   const { walletClient, account, publicClient } = initializeEthereum({
     chain,

@@ -21,23 +21,30 @@ export const deployAction = async (
   {
     strict,
     ens,
-    chain,
-    ...opts
-  }: { strict: boolean; chain: 'mainnet' | 'goerli'; ens: string },
+    chain = 'mainnet',
+    name,
+    dist,
+  }: {
+    strict: boolean
+    chain?: 'mainnet' | 'goerli'
+    ens?: string
+    name?: string
+    dist?: string
+  },
 ) => {
   if (!dir) {
     if (await exists('dist')) dir = 'dist'
     else dir = '.'
   }
   const normalizedPath = path.join(process.cwd(), dir)
-  const name = path.basename(normalizedPath)
+  name = name || path.basename(normalizedPath)
   const [size, files] = await walk(normalizedPath)
 
   if (size === 0) throw new MissingDirectoryError(dir)
 
   log.packing(dir === '.' ? name : dir, fileSize(size, 2))
 
-  const { rootCID, blob } = await packCAR(files, name)
+  const { rootCID, blob } = await packCAR(files, name, dist)
 
   log.root(rootCID)
 

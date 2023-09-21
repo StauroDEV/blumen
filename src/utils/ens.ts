@@ -2,19 +2,12 @@ import { encode } from '@ensdomains/content-hash'
 import { namehash, normalize } from 'viem/ens'
 import { parseAbi } from 'viem/abi'
 import { PrivateKeyAccount, privateKeyToAccount } from 'viem/accounts'
-import {
-  createPublicClient,
-  http,
-  createWalletClient,
-  formatGwei,
-  parseGwei,
-} from 'viem'
+import { createPublicClient, http, createWalletClient } from 'viem'
 import { goerli, mainnet } from 'viem/chains'
 import { MissingKeyError } from '../errors.js'
 import { PublicClient } from 'viem'
 import { WalletClient } from 'viem'
 import { Hash } from 'viem'
-import { estimateGas } from 'viem/actions'
 
 const abi = parseAbi([
   'function setContenthash(bytes32 node, bytes calldata hash) external',
@@ -36,7 +29,7 @@ export const initializeEthereum = ({
 } => {
   const publicClient = createPublicClient({
     transport: http(),
-    chain: chain === 'mainnet' ? mainnet : goerli,
+    chain: chain === 'goerli' ? goerli : mainnet,
   })
 
   const pk = process.env.BLUMEN_PK
@@ -47,7 +40,7 @@ export const initializeEthereum = ({
 
   const walletClient = createWalletClient({
     transport: http(),
-    chain: chain === 'mainnet' ? mainnet : goerli,
+    chain: chain === 'goerli' ? goerli : mainnet,
     account,
   })
 
@@ -79,7 +72,7 @@ export const encodeIpfsHashAndUpdateEns = async ({
     account,
     address: PUBLIC_RESOLVER_ADDRESS[chain],
     args: [node, `0x${contentHash}`],
-    chain: chain === 'mainnet' ? mainnet : goerli,
+    chain: chain === 'goerli' ? goerli : mainnet,
   })
 
   return await walletClient.writeContract(request)
