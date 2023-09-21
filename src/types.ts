@@ -60,4 +60,4 @@ export type StatusFunction = (
   deals?: FilecoinDeal[]
 }>
 
-export type Chain = 'mainnet' | 'goerli'
+export type ChainName = 'mainnet' | 'goerli'

@@ -1,26 +1,19 @@
-import {
-  Hash,
-  formatEther,
-  TransactionExecutionError,
-  Address,
-  SendTransactionParameters,
-} from 'viem'
+import { Hash, formatEther, TransactionExecutionError, Address, SendTransactionParameters } from 'viem'
 import { MissingKeyError } from '../errors.js'
 import { initializeEthereum, encodeIpfsHashAndUpdateEns } from '../utils/ens.js'
 import * as log from '../log.js'
-import { Chain } from '../types.js'
+import { ChainName } from '../types.js'
 import { SafeApiKit } from '../safe/ApiKit.js'
 import { OperationType } from '../safe/types.js'
-import { mainnet } from 'viem/chains'
 import { sendTransaction } from 'viem/actions'
 
 export const ensAction = async (
   cid: string,
   domain: string,
-  { chain, safe: safeAddress }: { chain: Chain; safe: Address },
+  { chain: chainName, safe: safeAddress }: { chain: ChainName; safe: Address },
 ) => {
-  const { walletClient, account, publicClient } = initializeEthereum({
-    chain,
+  const { walletClient, account, publicClient, chain } = initializeEthereum({
+    chainName,
   })
 
   let request: SendTransactionParameters
@@ -37,8 +30,7 @@ export const ensAction = async (
   } catch (e) {
     if (e instanceof MissingKeyError) log.missingKeyError(e.message)
     else if (e instanceof Error) {
-      if (e.message.includes('disallowed character'))
-        log.invalidEnsDomain(domain, e.message)
+      if (e.message.includes('disallowed character')) log.invalidEnsDomain(domain, e.message)
       else if (e.message.includes('Incorrect length')) {
         log.invalidIpfsHash(cid)
       } else {
@@ -50,9 +42,7 @@ export const ensAction = async (
     return
   }
 
-  const balance = formatEther(
-    await publicClient.getBalance({ address: account.address }),
-  )
+  const balance = formatEther(await publicClient.getBalance({ address: account.address }))
 
   log.transactionPrepared(account.address, balance.slice(0, 4))
 
@@ -65,8 +55,8 @@ export const ensAction = async (
     const tx = { operation: OperationType.Call }
 
     const sig = await walletClient.signTransaction({
-      account,
-      chain: mainnet,
+      operation: OperationType.Call,
+      ...request,
     })
 
     await apiKit.proposeTransaction({
@@ -93,15 +83,14 @@ export const ensAction = async (
       return
     }
 
-    log.transactionPending(hash, chain)
+    log.transactionPending(hash, chainName)
 
     const receipt = await publicClient.waitForTransactionReceipt({
       hash,
       timeout: 1000 * 60 * 30, // 30 minutes
     })
 
-    if (receipt.status === 'reverted')
-      return log.transactionReverted(receipt.transactionHash, chain)
+    if (receipt.status === 'reverted') return log.transactionReverted(receipt.transactionHash, chain)
   }
 
   log.transactionSucceeded()

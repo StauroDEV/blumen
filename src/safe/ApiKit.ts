@@ -95,10 +95,6 @@ export class SafeApiKit {
    *
    * @param proposeTransactionConfig - The configuration of the proposed transaction
    * @returns The hash of the Safe transaction proposed
-   * @throws "Invalid Safe address"
-   * @throws "Invalid safeTxHash"
-   * @throws "Invalid data"
-   * @throws "Invalid ethereum address/User is not an owner/Invalid signature/Nonce already executed/Sender is not an owner"
    */
   async proposeTransaction({
     safeAddress,
@@ -108,9 +104,7 @@ export class SafeApiKit {
     senderSignature,
     origin,
   }: ProposeTransactionProps): Promise<void> {
-    if (!isAddress(safeAddress)) {
-      throw new InvalidSafeAddress(safeAddress)
-    }
+    if (!isAddress(safeAddress)) throw new InvalidSafeAddress(safeAddress)
 
     const { address: safe } = await getEip3770Address({
       fullAddress: safeAddress,
@@ -120,9 +114,8 @@ export class SafeApiKit {
       fullAddress: senderAddress,
       chainId: this.chainId,
     })
-    if (!isHash(safeTxHash)) {
-      throw new InvalidTxHashError(safeTxHash)
-    }
+    if (!isHash(safeTxHash)) throw new InvalidTxHashError(safeTxHash)
+
     return sendRequest({
       url: `${this.#txServiceBaseUrl}/v1/safes/${safe}/multisig-transactions/`,
       method: HttpMethod.Post,

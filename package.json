@@ -37,6 +37,7 @@
     "@ipld/car": "^5.2.2",
     "@ipld/dag-cbor": "^9.0.4",
     "@ipld/unixfs": "^2.1.2",
+    "@safe-global/safe-deployments": "^1.27.0",
     "abitype": "^0.9.8",
     "ascii-bar": "^1.0.3",
     "cac": "^6.7.14",
@@ -53,6 +54,7 @@
     "@types/node": "^20.6.0",
     "@types/varint": "^6.0.1",
     "esbuild": "^0.19.2",
-    "prettier": "^3.0.3"
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
   }
 }

@@ -2,36 +2,34 @@ import { encode } from '@ensdomains/content-hash'
 import { namehash, normalize } from 'viem/ens'
 import { parseAbi } from 'viem/abi'
 import { PrivateKeyAccount, privateKeyToAccount } from 'viem/accounts'
-import { createPublicClient, http, createWalletClient } from 'viem'
+import { createPublicClient, http, createWalletClient, PublicClient, WalletClient } from 'viem'
 import { goerli, mainnet } from 'viem/chains'
 import { MissingKeyError } from '../errors.js'
-import { PublicClient } from 'viem'
-import { WalletClient } from 'viem'
-import { Hash } from 'viem'
-import { Chain } from '../types.js'
+import { ChainName } from '../types.js'
 import { SimulateContractReturnType } from 'viem/contract'
+import { Chain } from 'viem'
 
-const abi = parseAbi([
-  'function setContenthash(bytes32 node, bytes calldata hash) external',
-])
+const abi = parseAbi(['function setContenthash(bytes32 node, bytes calldata hash) external'])
 
 const PUBLIC_RESOLVER_ADDRESS = {
-  mainnet: '0x4976fb03C32e5B8cfe2b6cCB31c09Ba78EBaBa41',
-  goerli: '0xd7a4F6473f32aC2Af804B3686AE8F1932bC35750',
+  1: '0x4976fb03C32e5B8cfe2b6cCB31c09Ba78EBaBa41',
+  5: '0xd7a4F6473f32aC2Af804B3686AE8F1932bC35750',
 } as const
 
 export const initializeEthereum = ({
-  chain,
+  chainName,
 }: {
-  chain: Chain
+  chainName: ChainName
 }): {
   walletClient: WalletClient
   account: PrivateKeyAccount
   publicClient: PublicClient
+  chain: Chain
 } => {
+  const chain = chainName === 'mainnet' ? mainnet : goerli
   const publicClient = createPublicClient({
     transport: http(),
-    chain: chain === 'mainnet' ? mainnet : goerli,
+    chain,
   })
 
   const pk = process.env.BLUMEN_PK
@@ -42,11 +40,11 @@ export const initializeEthereum = ({
 
   const walletClient = createWalletClient({
     transport: http(),
-    chain: chain === 'mainnet' ? mainnet : goerli,
+    chain,
     account,
   })
 
-  return { walletClient, account, publicClient }
+  return { walletClient, account, publicClient, chain }
 }
 
 export const encodeIpfsHashAndUpdateEns = async ({
@@ -72,9 +70,9 @@ export const encodeIpfsHashAndUpdateEns = async ({
     abi,
     functionName: 'setContenthash',
     account,
-    address: PUBLIC_RESOLVER_ADDRESS[chain],
+    address: PUBLIC_RESOLVER_ADDRESS[chain.id as 1 | 5],
     args: [node, `0x${contentHash}`],
-    chain: chain === 'mainnet' ? mainnet : goerli,
+    chain,
   })
   return request
 }

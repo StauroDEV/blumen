@@ -1,5 +1,7 @@
 import { isAddress } from 'viem/utils'
-import { Eip3770Address } from './types.js'
+import { Eip3770Address, SafeConfig, SafeConfigWithPredictedSafe } from './types.js'
+import { zeroAddress } from 'viem'
+import { SENTINEL_ADDRESS } from './constants.js'
 
 const networks = [
   { chainId: 1, shortName: 'eth' },
@@ -32,21 +34,14 @@ function getEip3770NetworkPrefixFromChainId(chainId: number): string {
   return network.shortName
 }
 
-function validateEip3770NetworkPrefix(
-  prefix: string,
-  currentChainId: number,
-): void {
-  const isCurrentNetworkPrefix =
-    prefix === getEip3770NetworkPrefixFromChainId(currentChainId)
+function validateEip3770NetworkPrefix(prefix: string, currentChainId: number): void {
+  const isCurrentNetworkPrefix = prefix === getEip3770NetworkPrefixFromChainId(currentChainId)
   if (!isValidEip3770NetworkPrefix(prefix) || !isCurrentNetworkPrefix) {
     throw new Error('The network prefix must match the current network')
   }
 }
 
-function validateEip3770Address(
-  fullAddress: string,
-  currentChainId: number,
-): Eip3770Address {
+function validateEip3770Address(fullAddress: string, currentChainId: number): Eip3770Address {
   const { address, prefix } = parseEip3770Address(fullAddress)
   validateEthereumAddress(address)
   if (prefix) {
@@ -63,4 +58,24 @@ export async function getEip3770Address({
   chainId: number
 }): Promise<Eip3770Address> {
   return validateEip3770Address(fullAddress, chainId)
+}
+
+export function isSafeConfigWithPredictedSafe(config: SafeConfig): config is SafeConfigWithPredictedSafe {
+  return (config as unknown as SafeConfigWithPredictedSafe).predictedSafe !== undefined
+}
+
+export function sameString(str1: string, str2: string): boolean {
+  return str1.toLowerCase() === str2.toLowerCase()
+}
+
+export function isZeroAddress(address: string): boolean {
+  return sameString(address, zeroAddress)
+}
+
+function isSentinelAddress(address: string): boolean {
+  return sameString(address, SENTINEL_ADDRESS)
+}
+
+export function isRestrictedAddress(address: string): boolean {
+  return isZeroAddress(address) || isSentinelAddress(address)
 }
