@@ -1,6 +1,6 @@
 {
   "name": "blumen",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "🌸 Self-custodial decentralized deployments",
   "type": "module",
   "bin": {
