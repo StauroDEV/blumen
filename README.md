@@ -90,7 +90,7 @@ $ blumen status --providers=web3.storage,Gateway3 bafybeibp54tslsez36quqptgzwyda
 Update ENS Content-Hash from the CLI. Requires a `BLUMEN_PK` environment variable (for private key).
 
 ```sh
-$ BLUMEN_PK=0x2... ./dist/cli.js ens bafy... v1rtl.eth
+$ BLUMEN_PK=0x2... blumen ens bafy... v1rtl.eth
 ```
 
 If you are doing testing, you can pass `--chain goerli` to use Goerli network instead of mainnet.
