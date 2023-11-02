@@ -111,9 +111,9 @@ const transactionReverted = (hash: string, chain: 'mainnet' | 'goerli') => {
 
 const transactionPrepared = (address: string, balance: string) => {
   console.log(
-    `🧑‍🍳 Preparing transaction for wallet ${kleur.cyan(
+    `🍳 Prepared transaction for wallet ${kleur.cyan(
       address,
-    )} with ${kleur.bold(balance)}ETH`,
+    )} with ${kleur.bold(balance)}ETH balance`,
   )
 }
 

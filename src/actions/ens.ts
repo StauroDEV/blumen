@@ -29,10 +29,9 @@ export const ensAction = async (
 ) => {
   const chain = chainName === 'mainnet' ? mainnet : goerli
   const publicClient = createPublicClient({
-    transport: http(),
+    transport: http(chain.id === 1 ? 'https://rpc.ankr.com/eth' : 'https://rpc.ankr.com/eth_goerli'),
     chain
   })
-
 
   const pk = process.env.BLUMEN_PK
 
@@ -46,13 +45,13 @@ export const ensAction = async (
     account
   })
 
-  const contentHash: Hex = '0x',
+  let contentHash ='',
     node: Hex = '0x'
 
   try {
     const result = await prepareUpdateEnsArgs({ cid, domain })
-    result.contentHash = contentHash
-    result.node = node
+    contentHash = result.contentHash
+    node = result.node
   } catch (e) {
     if ((e as Error).message.includes('disallowed character')) log.invalidEnsDomain(domain, (e as Error).message)
     else if ((e as Error).message.includes('Incorrect length')) {
@@ -60,7 +59,6 @@ export const ensAction = async (
     } else {
       log.unknownError(e as Error)
     }
-    
     return
   }
 
@@ -92,25 +90,25 @@ export const ensAction = async (
         args: [node, `0x${contentHash}`]
       }),
       operation: operationType ?? OperationType.Call,
-      gasPrice: request.gasPrice!
+      gasPrice: request.gasPrice ?? 0n,
+      nonce
     }
 
     const safeTxGas = await safePublicClient.estimateSafeTransactionGas(txData)
 
     const baseGas = await safePublicClient.estimateSafeTransactionBaseGas({ ...txData, safeTxGas })
 
-    const safeTxHash = await safePublicClient.getSafeTransactionHash({ ...txData, safeTxGas, baseGas, nonce })
+    const safeTxHash = await safePublicClient.getSafeTransactionHash({ ...txData, safeTxGas, baseGas })
 
     log.generatingSafeSignature()
 
     const senderSignature = await safeWalletClient.generateSafeTransactionSignature({
       ...txData,
-      nonce,
       safeTxGas,
       baseGas
     })
 
-    const apiClient = new ApiClient({ url: chainIdToSafeApiUrl(chain.id), safeAddress })
+    const apiClient = new ApiClient({ url: chainIdToSafeApiUrl(chain.id), safeAddress, chainId:chain.id })
 
     try {
       await apiClient.proposeTransaction({
@@ -119,18 +117,19 @@ export const ensAction = async (
         safeTxHash,
         senderSignature,
         chainId: chain.id,
-        origin: 'Piggybank',
-        nonce
+        origin: 'Piggybank'
       })
+      log.proposalSucceeded(safeAddress)
     } catch (e) {
       log.proposalError(e as Error)
       return
     }
+
   } else {
     let hash: Hash = '0x'
 
     try {
-      hash = await walletClient.sendTransaction(request)
+      hash = await walletClient.writeContract(request)
     } catch (e) {
       if (e instanceof TransactionExecutionError) {
         if (e.details?.includes('insufficient funds')) {
@@ -152,8 +151,10 @@ export const ensAction = async (
     })
 
     if (receipt.status === 'reverted') return log.transactionReverted(receipt.transactionHash, chainName)
-  }
 
-  log.transactionSucceeded()
-  return log.ensFinished(domain)
+
+    log.transactionSucceeded()
+    log.ensFinished(domain)
+  }
+  return process.exit()
 }

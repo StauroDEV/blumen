@@ -3,8 +3,8 @@ import { parseAbi } from 'viem/abi'
 import { namehash, normalize } from 'viem/ens'
 
 export const prepareUpdateEnsArgs = async ({ cid, domain }: { cid: string; domain: string }) => {
-  const contentHash = encode('ipfs', cid) as `0x${string}`
-
+  const contentHash = encode('ipfs', cid)
+ 
   const node = namehash(normalize(domain))
 
   return { contentHash, node }
