@@ -12,8 +12,8 @@ import { writableToWeb } from '../polyfills/toWeb.js'
 
 const tmp = tmpdir()
 
-export const packCAR = async (files: FileEntry[], name: string) => {
-  const output = `${tmp}/${name}.car`
+export const packCAR = async (files: FileEntry[], name: string, dir = tmp) => {
+  const output = `${dir}/${name}.car`
 
   const placeholderCID = CID.parse(
     'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi',

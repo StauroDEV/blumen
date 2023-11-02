@@ -14,6 +14,8 @@ cli
   .option('--strict', 'Throw if one of the providers fails', { default: true })
   .option('--ens <domain>', 'Update Content-Hash of an ENS domain')
   .option('--chain <chain>', 'Chain to use for ENS', { default: 'mainnet' })
+  .option('--name <name>', 'Name of the distribution (without file extension)')
+  .option('--dist <dist>', 'Directory to store the distribution file')
   .action(deployAction)
 
 cli
