@@ -26,17 +26,17 @@ type AuthArgs = {
 
 export type UploadArgs = (
   | {
-      car: Blob
-      cid?: never
-      name?: string
-    }
+    car: Blob
+    cid?: never
+    name?: string
+  }
   | {
-      car?: never
-      cid: string
-      name: string
-    }
+    car?: never
+    cid: string
+    name: string
+  }
 ) &
-  AuthArgs
+AuthArgs
 
 export type UploadReturnType = {
   cid: string

@@ -1,7 +1,6 @@
 import { access, stat } from 'node:fs/promises'
 import { constants } from 'node:fs'
 import { FileEntry } from '../types.js'
-import { Readable } from 'node:stream'
 import { createReadStream } from 'node:fs'
 import { globby } from 'globby'
 import { readableToWeb } from '../polyfills/toWeb.js'
@@ -9,15 +8,13 @@ import { readableToWeb } from '../polyfills/toWeb.js'
 export const walk = async (dir: string) => {
   let total = 0
   const files: FileEntry[] = []
-  for (const path of await globby(dir, {
-    ignore: ['**/node_modules'],
-  })) {
+  for (const path of await globby(dir, { ignore: ['**/node_modules'] })) {
     const size = (await stat(path)).size
     total += size
     files.push({
       name: dir === '.' ? path : path.replace(dir, ''),
       size,
-      stream: () => readableToWeb(createReadStream(path)),
+      stream: () => readableToWeb(createReadStream(path)) 
     })
   }
 

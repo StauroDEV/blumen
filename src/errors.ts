@@ -6,7 +6,6 @@ export class UploadNotSupportedError extends Error {
     this.providerName = providerName
   }
 }
-
 export class PinningNotSupportedError extends Error {
   name = 'PinningNotSupportedError'
   providerName: string

@@ -1,16 +1,12 @@
 import { tmpdir } from 'node:os'
 import { readFile, open } from 'node:fs/promises'
-import { Writable } from 'node:stream'
 import { createWriteStream } from 'node:fs'
 import { CID } from 'multiformats/cid'
 import { CarWriter } from '@ipld/car/writer'
 import type { FileEntry } from '../types.js'
 import { Blob } from 'node:buffer'
 import { TransformStream } from 'node:stream/web'
-import {
-  createDirectoryEncoderStream,
-  CAREncoderStream,
-} from '../ipfs-car/index.js'
+import { createDirectoryEncoderStream, CAREncoderStream } from '../ipfs-car/index.js'
 import { Block } from '@ipld/unixfs'
 import { writableToWeb } from '../polyfills/toWeb.js'
 
@@ -30,7 +26,7 @@ export const packCAR = async (files: FileEntry[], name: string) => {
         transform(block, controller) {
           rootCID = block.cid as CID
           controller.enqueue(block)
-        },
+        }
       }),
     )
     .pipeThrough(new CAREncoderStream([placeholderCID]))

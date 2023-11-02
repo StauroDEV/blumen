@@ -1,31 +1,19 @@
 import path from 'node:path'
 import { PROVIDERS } from '../constants.js'
 import { MissingDirectoryError, NoProvidersError } from '../errors.js'
-import {
-  walk,
-  fileSize,
-  packCAR,
-  parseTokensFromEnv,
-  tokensToProviderNames,
-  findEnvVarProviderName,
-} from '../index.js'
+import { walk, fileSize, packCAR, parseTokensFromEnv, tokensToProviderNames, findEnvVarProviderName } from '../index.js'
 import { exists } from '../utils/fs.js'
 import mod from 'ascii-bar'
 import * as log from '../log.js'
 import { ensAction } from './ens.js'
-import { Chain } from '../types.js'
+import { ChainName } from '../types.js'
 import { Address } from 'viem'
 
 const AsciiBar = mod.default
 
 export const deployAction = async (
   dir: string,
-  {
-    strict,
-    ens,
-    chain,
-    safe,
-  }: { strict: boolean; chain: Chain; ens: string; safe: Address },
+  { strict, ens, chain, safe }: { strict: boolean; chain: ChainName; ens: string; safe: Address },
 ) => {
   if (!dir) {
     if (await exists('dist')) dir = 'dist'
@@ -55,12 +43,12 @@ export const deployAction = async (
 
   const bar = process.stdout.isTTY
     ? new AsciiBar({
-        total: providers.length,
-        formatString: '#spinner #bar #message',
-        hideCursor: false,
-        enableSpinner: true,
-        width: process.stdout.columns - 30,
-      })
+      total: providers.length,
+      formatString: '#spinner #bar #message',
+      hideCursor: false,
+      enableSpinner: true,
+      width: process.stdout.columns - 30
+    })
     : undefined
 
   const errors: Error[] = []
@@ -77,7 +65,7 @@ export const deployAction = async (
           name,
           car: blob,
           token,
-          accessKey: apiTokens.get('GW3_ACCESS_KEY'),
+          accessKey: apiTokens.get('GW3_ACCESS_KEY')
         })
       } catch (e) {
         if (strict) throw e
@@ -91,7 +79,7 @@ export const deployAction = async (
           name,
           cid: rootCID.toString(),
           token,
-          accessKey: apiTokens.get('GW3_ACCESS_KEY'),
+          accessKey: apiTokens.get('GW3_ACCESS_KEY')
         })
       } catch (e) {
         if (strict) throw e

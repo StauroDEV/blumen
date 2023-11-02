@@ -4,7 +4,7 @@ import { PROVIDERS } from '../constants.js'
 import {
   InvalidCIDError,
   UnknownProviderError,
-  NoProvidersError,
+  NoProvidersError
 } from '../errors.js'
 import { parseTokensFromEnv, findEnvVarProviderName } from '../index.js'
 
@@ -40,7 +40,7 @@ export const statusAction = async (
       if (provider.status) {
         const { pin, deals } = await provider.status(cid, {
           accessKey: env.get('GW3_ACCESS_KEY'),
-          token: env.get(token),
+          token: env.get(token)
         })
         log.pinStatus(provider.name, pin, deals)
       }

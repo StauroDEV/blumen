@@ -2,7 +2,7 @@ import type { PinStatus, StatusFunction, UploadFunction } from '../types.js'
 import {
   DeployError,
   MissingKeyError,
-  UploadNotSupportedError,
+  UploadNotSupportedError
 } from '../errors.js'
 import { fetch } from 'undici'
 
@@ -21,17 +21,17 @@ const mapGw3StatusToGenericStatus = (status: GW3PinStatus): PinStatus => {
   }
 }
 
-const baseURL = `https://gw3.io`
+const baseURL = 'https://gw3.io'
 const providerName = 'Gateway3'
 
 export const uploadOnGW3: UploadFunction = async ({
   token,
   car,
   cid,
-  accessKey,
+  accessKey
 }) => {
   if (car) throw new UploadNotSupportedError(providerName)
-  if (!accessKey) throw new MissingKeyError(`GW3_ACCESS_KEY`)
+  if (!accessKey) throw new MissingKeyError('GW3_ACCESS_KEY')
 
   const res = await fetch(
     new URL(`/api/v0/pin/add?arg=${cid}&ts=${getTs()}`, baseURL),
@@ -41,9 +41,9 @@ export const uploadOnGW3: UploadFunction = async ({
         'Content-Type': 'application/json',
         Accept: 'application/json',
         'X-Access-Key': accessKey,
-        'X-Access-Secret': token,
+        'X-Access-Secret': token
       },
-      body: car,
+      body: car
     }
   )
 
@@ -69,8 +69,8 @@ export const statusOnGW3: StatusFunction = async (cid, auth) => {
         'Content-Type': 'application/json',
         Accept: 'application/json',
         'X-Access-Key': auth?.accessKey,
-        'X-Access-Secret': auth?.token,
-      },
+        'X-Access-Secret': auth?.token
+      }
     }
   )
   const json = (await res.json()) as {

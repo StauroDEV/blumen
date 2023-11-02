@@ -1,7 +1,13 @@
 import kleur from 'kleur'
-import { table } from 'table'
-import type { CID } from 'multiformats/cid'
-import { FilecoinDeal, PinStatus } from './types.js'
+import {
+  table 
+} from 'table'
+import type {
+  CID 
+} from 'multiformats/cid'
+import {
+  FilecoinDeal, PinStatus 
+} from './types.js'
 
 const packing = (dir: string, size: string) =>
   console.log(`📦 Packing ${kleur.cyan(dir)} (${size})`)
@@ -12,7 +18,7 @@ const root = (cid: CID) =>
 const providersList = (providers: string[]) =>
   console.log(`📡 Deploying with providers: ${providers.join(', ')}`)
 
-const uploadFinished = () => console.log(`🌍 Deployed across all providers`)
+const uploadFinished = () => console.log('🌍 Deployed across all providers')
 
 const deployFinished = (cid: string) =>
   console.log(
@@ -24,11 +30,11 @@ const deployFinished = (cid: string) =>
   )
 
 const uploadPartiallyFailed = (errors: Error[]) => {
-  console.log(`\n⚠️  There were some problems with deploying:`)
+  console.log('\n⚠️  There were some problems with deploying:')
   for (const error of errors) console.error(`❌ ${kleur.red(error.message)}`)
 }
 const deployFailed = (errors: Error[]) => {
-  console.log(`\n😞 Deploy failed:`)
+  console.log('\n😞 Deploy failed:')
   for (const error of errors) console.error(`❌ ${kleur.red(error.message)}`)
 }
 
@@ -56,7 +62,9 @@ const pinStatus = (
 
   if (deals) {
     table(
-      deals.map(({ dealId, status }) => [dealId, status]),
+      deals.map(({
+        dealId, status 
+      }) => [dealId, status]),
       { header: { alignment: 'left', content: 'Filecoin deals' } },
     )
   }
@@ -114,7 +122,7 @@ const transactionPending = (hash: string, chain: 'mainnet' | 'goerli') => {
 }
 
 const transactionSucceeded = () => {
-  console.log(`✅ Transaction succeeded`)
+  console.log('✅ Transaction succeeded')
 }
 
 const ensFinished = (domain: string) => {
@@ -123,6 +131,14 @@ const ensFinished = (domain: string) => {
       `https://${domain}.limo`,
     )}`,
   )
+}
+
+const preparingSafeTransaction = () => {
+  console.log('Preparing a transaction for Safe')
+}
+
+const generatingSafeSignature = () => {
+  console.log('Generating a transaction signature for Safe')
 }
 
 export {
@@ -145,4 +161,6 @@ export {
   transactionPending,
   ensFinished,
   transactionSucceeded,
+  preparingSafeTransaction,
+  generatingSafeSignature
 }
