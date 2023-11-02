@@ -8,6 +8,8 @@ import type {
 import {
   FilecoinDeal, PinStatus 
 } from './types.js'
+import { EIP3770Address } from '@stauro/piggybank/types'
+import { Address } from 'viem'
 
 const packing = (dir: string, size: string) =>
   console.log(`📦 Packing ${kleur.cyan(dir)} (${size})`)
@@ -92,8 +94,8 @@ const missingKeyError = (message: string) => {
   console.error(`\n${kleur.red(`❌ ${message}`)}`)
 }
 
-const unknownError = (message: unknown) => {
-  console.error(`\n${kleur.red(`❌ Unknown error: ${message}`)}`)
+const unknownError = (error: Error) => {
+  console.error(`\n${kleur.red(`❌ Unknown error: ${error.message}`)}`, error)
 }
 
 const etherscanUrl = (hash: string, chain: 'mainnet' | 'goerli') =>
@@ -133,12 +135,24 @@ const ensFinished = (domain: string) => {
   )
 }
 
-const preparingSafeTransaction = () => {
-  console.log('Preparing a transaction for Safe')
+const preparingSafeTransaction = (safeAddress: EIP3770Address | Address) => {
+  console.log(`⏳ Preparing a transaction for Safe: ${safeAddress}`)
 }
 
 const generatingSafeSignature = () => {
-  console.log('Generating a transaction signature for Safe')
+  console.log('🖋️ Generating a transaction signature for Safe')
+}
+
+const proposingTransaction = () => {
+  console.log('✉️ Proposing a transaction to a Safe wallet')
+}
+
+const proposalError = (error: Error) => {
+  console.error(`Error proposing transaction to a Safe wallet: \n${kleur.red(`❌ ${error.message}`)}`)
+}
+
+const proposalSucceeded = (safeAddress: EIP3770Address| Address) => {
+  console.log(`✅ Transaction proposed to a Safe wallet.\nOpen in a browser: ${kleur.underline(`https://app.safe.global/transactions/history?safe=${safeAddress}`)}`)
 }
 
 export {
@@ -162,5 +176,8 @@ export {
   ensFinished,
   transactionSucceeded,
   preparingSafeTransaction,
-  generatingSafeSignature
+  generatingSafeSignature,
+  proposingTransaction,
+  proposalError,
+  proposalSucceeded
 }

@@ -16,7 +16,7 @@ import { ChainName } from '../types.js'
 import { privateKeyToAccount } from 'viem/accounts'
 import { goerli, mainnet } from 'viem/chains'
 import { walletSafeActions, publicSafeActions } from '@stauro/piggybank/actions'
-import { OperationType } from '@stauro/piggybank/types'
+import { EIP3770Address, OperationType } from '@stauro/piggybank/types'
 import { ApiClient } from '@stauro/piggybank/api'
 import { chainIdToSafeApiUrl } from '../utils/safe.js'
 
@@ -25,13 +25,14 @@ export const ensAction = async (
   domain: string,
   {
     chain: chainName, safe: safeAddress, operationType 
-  }: { chain: ChainName; } & Partial<{ safe: Address, operationType: OperationType }>,
+  }: { chain: ChainName; } & Partial<{ safe: Address | EIP3770Address, operationType: OperationType }>,
 ) => {
   const chain = chainName === 'mainnet' ? mainnet : goerli
   const publicClient = createPublicClient({
     transport: http(),
     chain
   })
+
 
   const pk = process.env.BLUMEN_PK
 
@@ -50,20 +51,16 @@ export const ensAction = async (
 
   try {
     const result = await prepareUpdateEnsArgs({ cid, domain })
-
     result.contentHash = contentHash
     result.node = node
   } catch (e) {
-    if (e instanceof Error) {
-      if (e.message.includes('disallowed character')) log.invalidEnsDomain(domain, e.message)
-      else if (e.message.includes('Incorrect length')) {
-        log.invalidIpfsHash(cid)
-      } else {
-        log.unknownError(e)
-      }
+    if ((e as Error).message.includes('disallowed character')) log.invalidEnsDomain(domain, (e as Error).message)
+    else if ((e as Error).message.includes('Incorrect length')) {
+      log.invalidIpfsHash(cid)
     } else {
-      log.unknownError(e)
+      log.unknownError(e as Error)
     }
+    
     return
   }
 
@@ -81,7 +78,7 @@ export const ensAction = async (
   log.transactionPrepared(account.address, balance.slice(0, 4))
 
   if (safeAddress) {
-    log.preparingSafeTransaction()
+    log.preparingSafeTransaction(safeAddress)
     const safeWalletClient = walletClient.extend(walletSafeActions(safeAddress))
     const safePublicClient = publicClient.extend(publicSafeActions(safeAddress))
 
@@ -104,23 +101,31 @@ export const ensAction = async (
 
     const safeTxHash = await safePublicClient.getSafeTransactionHash({ ...txData, safeTxGas, baseGas, nonce })
 
+    log.generatingSafeSignature()
+
     const senderSignature = await safeWalletClient.generateSafeTransactionSignature({
       ...txData,
       nonce,
       safeTxGas,
       baseGas
     })
+
     const apiClient = new ApiClient({ url: chainIdToSafeApiUrl(chain.id), safeAddress })
 
-    await apiClient.proposeTransaction({
-      safeTransactionData: { ...txData, safeTxGas, baseGas, nonce },
-      senderAddress: walletClient.account.address,
-      safeTxHash,
-      senderSignature,
-      chainId: chain.id,
-      origin: 'Piggybank',
-      nonce
-    })
+    try {
+      await apiClient.proposeTransaction({
+        safeTransactionData: { ...txData, safeTxGas, baseGas, nonce },
+        senderAddress: walletClient.account.address,
+        safeTxHash,
+        senderSignature,
+        chainId: chain.id,
+        origin: 'Piggybank',
+        nonce
+      })
+    } catch (e) {
+      log.proposalError(e as Error)
+      return
+    }
   } else {
     let hash: Hash = '0x'
 
@@ -134,7 +139,7 @@ export const ensAction = async (
           log.transactionError(e.message)
         }
       } else {
-        log.unknownError(e)
+        log.unknownError(e as Error)
       }
       return
     }

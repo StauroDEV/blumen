@@ -28,7 +28,7 @@ cli
   )
   .option('--chain <chain>', 'Chain to use', { default: 'mainnet' })
   .option('--safe <safe>', 'Deploy using a Safe multisig wallet')
-  .option('--operation-type <safe>', 'Operation type to use for a Safe multisig wallet', { default: OperationType.Call })
+  .option('--operation-type <number>', 'Operation type to use for a Safe multisig wallet (0 - Call, 1 - DelegateCall)', { default: OperationType.Call })
   .action(ensAction)
 
 cli.help()
