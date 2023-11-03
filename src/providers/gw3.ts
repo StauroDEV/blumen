@@ -4,7 +4,6 @@ import {
   MissingKeyError,
   UploadNotSupportedError
 } from '../errors.js'
-import { fetch } from 'undici'
 
 type GW3PinStatus = 'pinned' | 'unpinning' | 'failure' | 'pinning'
 

@@ -1,6 +1,5 @@
 import {
   Hash,
-  formatEther,
   TransactionExecutionError,
   Address,
   createWalletClient,
@@ -63,9 +62,7 @@ export const ensAction = async (
     return
   }
 
-  const balance = formatEther(await publicClient.getBalance({ address: account.address }))
-
-  logger.info(`Validating transaction for wallet ${account.address} with balance ${balance}`)
+  logger.info(`Validating transaction for wallet ${account.address}`)
 
   const { request } = await publicClient.simulateContract({
     abi,
@@ -122,7 +119,7 @@ export const ensAction = async (
         chainId: chain.id,
         origin: 'Piggybank'
       })
-      logger.success(`Transaction proposed to a Safe wallet.\nOpen in a browser: ${colors.underline(`https://app.safe.global/transactions/history?safe=${safeAddress}`)}`)
+      logger.success(`Transaction proposed to a Safe wallet.\nOpen in a browser: ${colors.underline(`https://app.safe.global/transactions/queue?safe=${safeAddress}`)}`)
     } catch (e) {
       logger.error('Failed to propose a transaction', e)
       return

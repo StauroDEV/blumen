@@ -1,6 +1,5 @@
 import type { UploadFunction } from '../types.js'
 import { DeployError, GatewayError } from '../errors.js'
-import { fetch } from 'undici'
 
 const baseURL = 'https://api.estuary.tech'
 const providerName = 'Estuary'

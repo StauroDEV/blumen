@@ -7,6 +7,8 @@ import { statusAction } from './actions/status.js'
 import { deployAction } from './actions/deploy.js'
 import { OperationType } from '@stauro/piggybank/types'
 
+import './polyfills/fetch.js'
+
 const cli = cac('blumen')
 
 cli

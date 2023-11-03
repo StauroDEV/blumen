@@ -1,6 +1,5 @@
 import type { PinStatus, StatusFunction, UploadFunction } from '../types.js'
 import { DeployError, PinningNotSupportedError } from '../errors.js'
-import { fetch } from 'undici'
 
 const baseURL = 'https://api.web3.storage'
 const providerName = 'web3.storage'

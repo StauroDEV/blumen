@@ -1,8 +1,15 @@
-# blumen
+<div align="center">
+
+<img src="logo.png" height="200" width="200" />
+<h1>Blumen</h1>
+<sub>Self-custodial decentralized deployments</sub>
+</div>
 
 [![CI](https://github.com/StauroXYZ/blumen/actions/workflows/ci.yml/badge.svg)](https://github.com/StauroXYZ/blumen/actions/workflows/ci.yml)
 
-**Blumen** is a powerful CLI and API library to deploy web apps on IPFS in a self-custodial manner.
+**Blumen** is a CLI and API library to deploy apps on the decentralized web using IPFS and Ethereum.
+
+> Blumen is in an alpha stage and has been neither audited nor tested yet. Use with caution!
 
 ## Features
 
@@ -41,11 +48,11 @@ Running `deploy` will try to use the `dist` folder, otherwise the current direct
 ```sh
 $ blumen deploy
 
-◐ Packing dist (56.27KB)                                                                                                            
-ℹ Root CID: bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4                                                          
-ℹ Deploying with providers: web3.storage                                                                                           
-✓ [>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>] Finished in 3s
-✔ Deployed across all providers
+# ◐ Packing dist (56.27KB)                                                                                                            
+# ℹ Root CID: bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4                                                          
+# ℹ Deploying with providers: web3.storage                                                                                           
+# ✓ [>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>] Finished in 3s
+# ✔ Deployed across all providers
 ```
 
 ## Documentation
@@ -59,7 +66,7 @@ Deploys a directory on IPFS to specified providers and outputs a web-friendly ga
 Upload a custom path:
 
 ```sh
-$ blumen status /path/to/directory
+$ blumen deploy /path/to/directory
 ```
 
 You can update your ENS domain record in-place by passing a domain (and optionally a chain) and a `BLUMEN_PK` environment variable:
@@ -97,9 +104,20 @@ If you are doing testing, you can pass `--chain goerli` to use Goerli network in
 
 You can also update your ENS name as a [Safe](https://safe.global) owner or delegate by specifying the safe's address and the operation type (0 - (default) for owners, 1 - for delegates).
 
+> [EIP-3770](https://eips.ethereum.org/EIPS/eip-3770) addresses are also supported.
+
 ```sh
-$  BLUMEN_PK=0x2... blumen ens bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 v1rtl.eth --safe gor:0x0000000000000000000000000000000000000000 --operation-type 1
+$  BLUMEN_PK=0x2... blumen ens bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 v1rtl.eth --safe eth:0x0000000000000000000000000000000000000000 --operation-type 1
+
+# ℹ Validating transaction for wallet 0x0000000000000000000000000000000000000000 with balance 0.284910788000486236
+# ℹ Preparing a transaction for Safe eth:0x0000000000000000000000000000000000000000                             
+# ℹ Signing a Safe transaction                                                                                  
+# ℹ Proposing a Safe transaction                                                                                
+# ✔ Transaction proposed to a Safe wallet.                                                                      
+# Open in a browser: https://app.safe.global/transactions/queue?safe=eth:0x0000000000000000000000000000000000000000
 ```
+
+After submitting the transaction, open your Safe app and approve it.
 
 ### API
 
