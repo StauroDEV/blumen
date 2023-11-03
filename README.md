@@ -4,15 +4,17 @@
 
 ## Features
 
-- **Multi-Provider Deployment**: Deploy your web app simultaneously on multiple IPFS providers, including web3.storage and Gateway3, ensuring redundancy and availability.
-- **ENS Integration**: Seamlessly integrate with ENS to update your Content-Hash, making it easier for users to access your web app via ENS.
-- **Safe Integration**: Update your ENS Content-Hash using a multisig contract on the Safe platform, adding an extra layer of security and decentralization.
+- **Multi-Provider Deployment**: Deploy your web app simultaneously on multiple IPFS providers, including [web3.storage](https://web3.storage) and [Gateway3](https://gateway3.io), ensuring redundancy and availability.
+- **ENS Integration**: Seamlessly integrate with [ENS](https://ens.domains) to update your Content-Hash, making it easier for users to access your web app via ENS gateways.
+- **Safe Integration**: Update your ENS Content-Hash using a multisig [Safe](https://safe.global) contract, adding an extra layer of security and decentralization.
 
 ## Getting Started
 
 ### Installation
 
 Node.js 16.8+ is required.
+
+> Warning: Support for Node 16.8 will be removed in the future. Node 18 is recommended.
 
 ```sh
 pnpm install -g blumen
@@ -37,15 +39,11 @@ Running `deploy` will try to use the `dist` folder, otherwise the current direct
 ```sh
 $ blumen deploy
 
-# 📦 Packing blumen (37.03KB)
-# 🌱 Root CID: bafy...
-# 📡 Deploying with providers: web3.storage, Estuary
-# ✓ [>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>] Finished in 2s
-# 🌍 Deployed across all providers
-# Success!
-# Open in a browser:
-# 🪐  IPFS:      https://<CID>.ipfs.dweb.link
-# 🛰️  IPFS Scan: https://ipfs-scan.io/?cid=<CID>
+◐ Packing dist (56.27KB)                                                                                                            
+ℹ Root CID: bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4                                                          
+ℹ Deploying with providers: web3.storage                                                                                           
+✓ [>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>] Finished in 3s
+✔ Deployed across all providers
 ```
 
 ## Documentation
@@ -90,10 +88,16 @@ $ blumen status --providers=web3.storage,Gateway3 bafybeibp54tslsez36quqptgzwyda
 Update ENS Content-Hash from the CLI. Requires a `BLUMEN_PK` environment variable (for private key).
 
 ```sh
-$ BLUMEN_PK=0x2... blumen ens bafy... v1rtl.eth
+$ BLUMEN_PK=0x2... blumen ens bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 v1rtl.eth
 ```
 
 If you are doing testing, you can pass `--chain goerli` to use Goerli network instead of mainnet.
+
+You can also update your ENS name as a [Safe](https://safe.global) owner or delegate by specifying the safe's address and the operation type (0 - (default) for owners, 1 - for delegates).
+
+```sh
+$  BLUMEN_PK=0x2... blumen ens bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 v1rtl.eth --safe gor:0x0000000000000000000000000000000000000000 --operation-type 1
+```
 
 ### API
 
@@ -116,4 +120,4 @@ const { pin } = await statusOnW3S(cid)
 console.log(`Pin status: ${pin}, CID: ${cid}`)
 ```
 
-This example demonstrates how to use the "Blumen" API to walk through a directory, prepare your files for upload, upload it to web3.storage, and check the IPFS pinning status.
+This example demonstrates how to use the Blumen API to walk through a directory, prepare your files for upload, upload it to web3.storage, and check the IPFS pinning status.
