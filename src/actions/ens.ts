@@ -11,7 +11,6 @@ import {
 } from 'viem'
 import { MissingKeyError } from '../errors.js'
 import { PUBLIC_RESOLVER_ADDRESS, prepareUpdateEnsArgs, abi } from '../utils/ens.js'
-import * as log from '../log.js'
 import { ChainName } from '../types.js'
 import { privateKeyToAccount } from 'viem/accounts'
 import { goerli, mainnet } from 'viem/chains'
@@ -19,6 +18,8 @@ import { walletSafeActions, publicSafeActions } from '@stauro/piggybank/actions'
 import { EIP3770Address, OperationType } from '@stauro/piggybank/types'
 import { ApiClient } from '@stauro/piggybank/api'
 import { chainIdToSafeApiUrl } from '../utils/safe.js'
+import { colors } from 'consola/utils'
+import { logger } from '../utils/logger.js'
 
 export const ensAction = async (
   cid: string,
@@ -53,14 +54,18 @@ export const ensAction = async (
     contentHash = result.contentHash
     node = result.node
   } catch (e) {
-    if ((e as Error).message.includes('disallowed character')) log.invalidEnsDomain(domain, (e as Error).message)
+    if ((e as Error).message.includes('disallowed character')) logger.error(`Invalid ENS domain: ${domain}`, e)
     else if ((e as Error).message.includes('Incorrect length')) {
-      log.invalidIpfsHash(cid)
+      logger.error(`Invalid IPFS CID: ${cid}`, e)
     } else {
-      log.unknownError(e as Error)
+      logger.error(e)
     }
     return
   }
+
+  const balance = formatEther(await publicClient.getBalance({ address: account.address }))
+
+  logger.info(`Validating transaction for wallet ${account.address} with balance ${balance}`)
 
   const { request } = await publicClient.simulateContract({
     abi,
@@ -71,12 +76,8 @@ export const ensAction = async (
     chain
   })
 
-  const balance = formatEther(await publicClient.getBalance({ address: account.address }))
-
-  log.transactionPrepared(account.address, balance.slice(0, 4))
-
   if (safeAddress) {
-    log.preparingSafeTransaction(safeAddress)
+    logger.info(`Preparing a transaction for Safe ${safeAddress}`)
     const safeWalletClient = walletClient.extend(walletSafeActions(safeAddress))
     const safePublicClient = publicClient.extend(publicSafeActions(safeAddress))
 
@@ -100,13 +101,15 @@ export const ensAction = async (
 
     const safeTxHash = await safePublicClient.getSafeTransactionHash({ ...txData, safeTxGas, baseGas })
 
-    log.generatingSafeSignature()
+    logger.info('Signing a Safe transaction')
 
     const senderSignature = await safeWalletClient.generateSafeTransactionSignature({
       ...txData,
       safeTxGas,
       baseGas
     })
+
+    logger.info('Proposing a Safe transaction')
 
     const apiClient = new ApiClient({ url: chainIdToSafeApiUrl(chain.id), safeAddress, chainId:chain.id })
 
@@ -119,9 +122,9 @@ export const ensAction = async (
         chainId: chain.id,
         origin: 'Piggybank'
       })
-      log.proposalSucceeded(safeAddress)
+      logger.success(`Transaction proposed to a Safe wallet.\nOpen in a browser: ${colors.underline(`https://app.safe.global/transactions/history?safe=${safeAddress}`)}`)
     } catch (e) {
-      log.proposalError(e as Error)
+      logger.error('Failed to propose a transaction', e)
       return
     }
 
@@ -133,28 +136,27 @@ export const ensAction = async (
     } catch (e) {
       if (e instanceof TransactionExecutionError) {
         if (e.details?.includes('insufficient funds')) {
-          log.insufficientFunds(e.details)
+          logger.error('Insufficient funds', e)
         } else {
-          log.transactionError(e.message)
+          logger.error('Transaction failed', e)
         }
       } else {
-        log.unknownError(e as Error)
+        logger.error(e)
       }
       return
     }
 
-    log.transactionPending(hash, chainName)
-
+    logger.info(`Transaction pending: ${chain.blockExplorers.etherscan.url}/tx/${hash}`)
+   
     const receipt = await publicClient.waitForTransactionReceipt({
       hash,
       timeout: 1000 * 60 * 30 // 30 minutes
     })
 
-    if (receipt.status === 'reverted') return log.transactionReverted(receipt.transactionHash, chainName)
+    if (receipt.status === 'reverted') return logger.error('Transaction reverted')
 
-
-    log.transactionSucceeded()
-    log.ensFinished(domain)
+    logger.success('Transaction submitted')
+    logger.info(`Open in a browser: ${colors.underline(`https://${domain}.limo`)}`)
   }
   return process.exit()
 }

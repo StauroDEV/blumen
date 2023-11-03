@@ -1,4 +1,4 @@
-import * as log from '../log.js'
+
 import { CID } from 'multiformats'
 import { PROVIDERS } from '../constants.js'
 import {
@@ -7,6 +7,7 @@ import {
   NoProvidersError
 } from '../errors.js'
 import { parseTokensFromEnv, findEnvVarProviderName } from '../index.js'
+import { pinStatus } from '../utils/pin.js'
 
 export const statusAction = async (
   cid: string,
@@ -42,7 +43,7 @@ export const statusAction = async (
           accessKey: env.get('GW3_ACCESS_KEY'),
           token: env.get(token)
         })
-        log.pinStatus(provider.name, pin, deals)
+        pinStatus(provider.name, pin, deals)
       }
     }
   }
