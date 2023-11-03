@@ -3,9 +3,7 @@
   "version": "0.0.3",
   "description": "🌸 Self-custodial decentralized deployments",
   "type": "module",
-  "bin": {
-    "blumen": "./dist/cli.js"
-  },
+  "bin": { "blumen": "./dist/cli.js" },
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "repository": {
@@ -19,18 +17,13 @@
     "postbuild": "chmod +x dist/cli.js && tsc --emitDeclarationOnly"
   },
   "keywords": [
-    "ipfs",
-    "filecoin",
-    "deploy",
-    "cli"
+    "ipfs", "filecoin", "deploy", "cli"
   ],
   "files": [
     "dist"
   ],
   "author": "v1rtl <hi@v1rtl.site>",
-  "engines": {
-    "node": ">=16.8"
-  },
+  "engines": { "node": ">=16.8" },
   "license": "MIT",
   "dependencies": {
     "@ensdomains/content-hash": "^3.0.0",
