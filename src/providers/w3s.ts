@@ -20,7 +20,7 @@ export const uploadOnW3S: UploadFunction = async ({
       Authorization: `Bearer ${token}`,
       ...(name ? { 'X-NAME': encodeURIComponent(name) } : {})
     },
-    body: car
+    body: car as Blob
   })
 
   const json = await res.json()

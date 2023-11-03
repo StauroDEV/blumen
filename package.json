@@ -3,9 +3,7 @@
   "version": "0.1.0",
   "description": "🌸 Self-custodial decentralized deployments",
   "type": "module",
-  "bin": {
-    "blumen": "./dist/cli.js"
-  },
+  "bin": { "blumen": "./dist/cli.js" },
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "repository": {
@@ -15,22 +13,18 @@
   "homepage": "https://github.com/StauroXYZ/blumen",
   "scripts": {
     "dev": "tsx src/index.ts",
-    "build": "node ./build.js",
-    "postbuild": "chmod +x dist/cli.js && tsc --emitDeclarationOnly"
+    "build": "tsc",
+    "postbuild": "chmod +x ./dist/cli.js",
+    "prepublishOnly": "pnpm  build"
   },
   "keywords": [
-    "ipfs",
-    "filecoin",
-    "deploy",
-    "cli"
+    "ipfs", "filecoin", "deploy", "cli"
   ],
   "files": [
     "dist"
   ],
   "author": "v1rtl <hi@v1rtl.site>",
-  "engines": {
-    "node": ">=16.8"
-  },
+  "engines": { "node": ">=16.8" },
   "license": "MIT",
   "dependencies": {
     "@ensdomains/content-hash": "^3.0.0",
@@ -38,7 +32,6 @@
     "@ipld/dag-cbor": "^9.0.6",
     "@ipld/unixfs": "^2.1.2",
     "@stauro/piggybank": "^0.0.3",
-    "abitype": "^0.10.2",
     "ascii-bar": "^1.0.3",
     "cac": "^6.7.14",
     "consola": "^3.2.3",
@@ -57,8 +50,6 @@
     "@types/varint": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^6.9.1",
     "@typescript-eslint/parser": "^6.9.1",
-    "esbuild": "^0.19.5",
-    "prettier": "^3.0.3",
     "typescript": "^5.2.2"
   }
 }

@@ -22,7 +22,7 @@ export const uploadOnEstuary: UploadFunction = async ({
         Accept: 'application/json',
         Authorization: `Bearer ${token}`
       },
-      body: cid ? JSON.stringify({ cid, name }) : car
+      body: cid ? JSON.stringify({ cid, name }) : car as Blob
     }
   )
 

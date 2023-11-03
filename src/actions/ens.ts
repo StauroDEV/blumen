@@ -76,6 +76,8 @@ export const ensAction = async (
   if (safeAddress) {
     logger.info(`Preparing a transaction for Safe ${safeAddress}`)
     const safeWalletClient = walletClient.extend(walletSafeActions(safeAddress))
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const safePublicClient = publicClient.extend(publicSafeActions(safeAddress))
 
     const nonce = await safePublicClient.getSafeNonce()
