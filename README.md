@@ -1,5 +1,7 @@
 # blumen
 
+[![CI](https://github.com/StauroXYZ/blumen/actions/workflows/ci.yml/badge.svg)](https://github.com/StauroXYZ/blumen/actions/workflows/ci.yml)
+
 **Blumen** is a powerful CLI and API library to deploy web apps on IPFS in a self-custodial manner.
 
 ## Features
