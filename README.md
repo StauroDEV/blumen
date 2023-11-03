@@ -2,10 +2,12 @@
 
 <img src="logo.png" height="200" width="200" />
 <h1>Blumen</h1>
+
+[![CI](https://github.com/StauroXYZ/blumen/actions/workflows/ci.yml/badge.svg)](https://github.com/StauroXYZ/blumen/actions/workflows/ci.yml)
+
 <sub>Self-custodial decentralized deployments</sub>
 </div>
 
-[![CI](https://github.com/StauroXYZ/blumen/actions/workflows/ci.yml/badge.svg)](https://github.com/StauroXYZ/blumen/actions/workflows/ci.yml)
 
 **Blumen** is a CLI and API library to deploy apps on the decentralized web using IPFS and Ethereum.
 
