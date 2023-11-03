@@ -13,7 +13,8 @@
     "declaration": true,
     "declarationDir": "dist",
     "isolatedModules": true,
-    "preserveSymlinks": true
+    "preserveSymlinks": true,
+    "resolveJsonModule": true
   },
   "exclude": ["node_modules", "**/node_modules/*"],
   "include": ["src"]

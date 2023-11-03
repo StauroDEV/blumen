@@ -32,9 +32,8 @@ export class CAREncoderStream extends TransformStream<Block, Uint8Array> {
       transform: (block, controller) => {
         controller.enqueue(encodeBlock(block))
         this.finalBlock = block
-      },
+      }
     })
-    /** @type {import('@ipld/unixfs').Block?} */
     this.finalBlock = null
   }
 }

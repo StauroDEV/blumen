@@ -5,7 +5,7 @@ import {
   TransformStream,
   ReadableStream,
   QueuingStrategy,
-  WritableStream,
+  WritableStream
 } from 'node:stream/web'
 import { BlobLike, FileLike } from '../types.js'
 
@@ -15,7 +15,7 @@ const queuingStrategy = UnixFS.withCapacity()
 
 const defaultSettings = UnixFS.configure({
   fileChunkEncoder: raw,
-  smallFileEncoder: raw,
+  smallFileEncoder: raw
 })
 
 class UnixFSDirectoryBuilder {
@@ -26,7 +26,7 @@ class UnixFSDirectoryBuilder {
       this.entries.size <= SHARD_THRESHOLD
         ? UnixFS.createDirectoryWriter(writer)
         : /* c8 ignore next */
-          UnixFS.createShardedDirectoryWriter(writer)
+        UnixFS.createShardedDirectoryWriter(writer)
     for (const [name, entry] of this.entries) {
       const link = await entry.finalize(writer)
       dirWriter.set(name, link)
@@ -47,7 +47,7 @@ class UnixFsFileBuilder {
       new WritableStream({
         async write(chunk) {
           await unixfsFileWriter.write(chunk)
-        },
+        }
       }),
     )
     return unixfsFileWriter.close()
@@ -84,8 +84,8 @@ export function createDirectoryEncoderStream(
   }
 
   const { readable, writable } = new TransformStream<
-    UnixFS.Block,
-    UnixFS.Block
+  UnixFS.Block,
+  UnixFS.Block
   >({}, queuingStrategy as QueuingStrategy<UnixFS.Block>)
   const unixfsWriter = UnixFS.createWriter({ writable, settings })
   ;(async () => {

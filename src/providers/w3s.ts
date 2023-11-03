@@ -1,28 +1,27 @@
 import type { PinStatus, StatusFunction, UploadFunction } from '../types.js'
 import { DeployError, PinningNotSupportedError } from '../errors.js'
 import { fetch } from 'undici'
-import { Buffer } from 'node:buffer'
 
-const baseURL = `https://api.web3.storage`
+const baseURL = 'https://api.web3.storage'
 const providerName = 'web3.storage'
 
 export const uploadOnW3S: UploadFunction = async ({
   token,
   car,
   cid,
-  name,
+  name
 }) => {
   if (cid) throw new PinningNotSupportedError(providerName)
 
-  const res = await fetch(new URL(`/car`, baseURL), {
+  const res = await fetch(new URL('/car', baseURL), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization: `Bearer ${token}`,
-      ...(name ? { 'X-NAME': encodeURIComponent(name) } : {}),
+      ...(name ? { 'X-NAME': encodeURIComponent(name) } : {})
     },
-    body: car,
+    body: car
   })
 
   const json = await res.json()
@@ -45,8 +44,8 @@ export const statusOnW3S: StatusFunction = async (cid) => {
 
   return res.ok
     ? {
-        pin: json.pins[0].status.toLowerCase() as PinStatus,
-        deal: { id: json.deals },
-      }
+      pin: json.pins[0].status.toLowerCase() as PinStatus,
+      deal: { id: json.deals }
+    }
     : { pin: 'unknown' }
 }

@@ -1,36 +1,20 @@
 import path from 'node:path'
 import { PROVIDERS } from '../constants.js'
 import { MissingDirectoryError, NoProvidersError } from '../errors.js'
-import {
-  walk,
-  fileSize,
-  packCAR,
-  parseTokensFromEnv,
-  tokensToProviderNames,
-  findEnvVarProviderName,
-} from '../index.js'
+import { walk, fileSize, packCAR, parseTokensFromEnv, tokensToProviderNames, findEnvVarProviderName } from '../index.js'
 import { exists } from '../utils/fs.js'
 import mod from 'ascii-bar'
-import * as log from '../log.js'
 import { ensAction } from './ens.js'
+import { ChainName } from '../types.js'
+import { Address } from 'viem'
+import { colors } from 'consola/utils'
+import { logger } from '../utils/logger.js'
 
 const AsciiBar = mod.default
 
 export const deployAction = async (
   dir: string,
-  {
-    strict,
-    ens,
-    chain = 'mainnet',
-    name,
-    dist,
-  }: {
-    strict: boolean
-    chain?: 'mainnet' | 'goerli'
-    ens?: string
-    name?: string
-    dist?: string
-  },
+  { strict, ens, chain, safe, name, dist }: { strict: boolean; chain: ChainName; ens: string; safe: Address, name?: string; dist?: string },
 ) => {
   if (!dir) {
     if (await exists('dist')) dir = 'dist'
@@ -42,11 +26,12 @@ export const deployAction = async (
 
   if (size === 0) throw new MissingDirectoryError(dir)
 
-  log.packing(dir === '.' ? name : dir, fileSize(size, 2))
+  logger.start(`Packing ${colors.cyan(dir === '.' ? name : dir)} (${fileSize(size, 2)})`)
 
   const { rootCID, blob } = await packCAR(files, name, dist)
 
-  log.root(rootCID)
+  const cid = rootCID.toString()
+  logger.info(`Root CID: ${colors.white(cid)}`)
 
   const apiTokens = parseTokensFromEnv()
 
@@ -54,18 +39,18 @@ export const deployAction = async (
 
   if (!providers.length) throw new NoProvidersError()
 
-  log.providersList(providers)
-
+  logger.info(`Deploying with providers: ${providers.join(', ')}`)
+  
   let total = 0
 
   const bar = process.stdout.isTTY
     ? new AsciiBar({
-        total: providers.length,
-        formatString: '#spinner #bar #message',
-        hideCursor: false,
-        enableSpinner: true,
-        width: process.stdout.columns - 30,
-      })
+      total: providers.length,
+      formatString: '#spinner #bar #message',
+      hideCursor: false,
+      enableSpinner: true,
+      width: process.stdout.columns - 30
+    })
     : undefined
 
   const errors: Error[] = []
@@ -82,7 +67,7 @@ export const deployAction = async (
           name,
           car: blob,
           token,
-          accessKey: apiTokens.get('GW3_ACCESS_KEY'),
+          accessKey: apiTokens.get('GW3_ACCESS_KEY')
         })
       } catch (e) {
         if (strict) throw e
@@ -96,7 +81,7 @@ export const deployAction = async (
           name,
           cid: rootCID.toString(),
           token,
-          accessKey: apiTokens.get('GW3_ACCESS_KEY'),
+          accessKey: apiTokens.get('GW3_ACCESS_KEY')
         })
       } catch (e) {
         if (strict) throw e
@@ -106,16 +91,28 @@ export const deployAction = async (
   }
   bar?.update(total) // finish
 
-  if (errors.length === providers.length) return log.deployFailed(errors)
-  else if (errors.length) log.uploadPartiallyFailed(errors)
-  else log.uploadFinished()
+  if (errors.length === providers.length) {
+    logger.error('Deploy failed')
+    errors.forEach((e) => logger.error(e))
+    return
+  }
+  else if (errors.length) {
+    logger.warn('There were some problems with deploying')
+    errors.forEach((e) => logger.error(e))
+  }
+  else logger.success('Deployed across all providers')
 
-  /* WIP GNOSIS INTEGRATION */
-
-  log.deployFinished(rootCID.toString())
+  
+  console.log(
+    `\nOpen in a browser:\n${colors.bold('IPFS')}:      ${colors.underline(
+      `https://${cid}.ipfs.dweb.link`,
+    )}\n${colors.bold('IPFS Scan')}: ${colors.underline(
+      `https://ipfs-scan.io/?cid=${cid}`,
+    )}`,
+  )
 
   if (typeof ens === 'string') {
     console.log('\n')
-    await ensAction(rootCID.toString(), ens, { chain })
+    await ensAction(cid, ens, { chain, safe })
   }
 }

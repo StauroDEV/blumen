@@ -2,14 +2,14 @@ import type { UploadFunction } from '../types.js'
 import { DeployError, GatewayError } from '../errors.js'
 import { fetch } from 'undici'
 
-const baseURL = `https://api.estuary.tech`
+const baseURL = 'https://api.estuary.tech'
 const providerName = 'Estuary'
 
 export const uploadOnEstuary: UploadFunction = async ({
   token,
   car,
   cid,
-  name,
+  name
 }) => {
   const res = await fetch(
     new URL(
@@ -21,9 +21,9 @@ export const uploadOnEstuary: UploadFunction = async ({
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`
       },
-      body: cid ? JSON.stringify({ cid, name }) : car,
+      body: cid ? JSON.stringify({ cid, name }) : car
     }
   )
 
