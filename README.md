@@ -3,7 +3,8 @@
 <img src="logo.png" height="200" width="200" />
 <h1>Blumen</h1>
 
-[![CI](https://github.com/StauroXYZ/blumen/actions/workflows/ci.yml/badge.svg)](https://github.com/StauroXYZ/blumen/actions/workflows/ci.yml)
+[![CI](https://github.com/StauroXYZ/blumen/actions/workflows/ci.yml/badge.svg)](https://github.com/StauroXYZ/blumen/actions/workflows/ci.yml) ![npm](https://img.shields.io/npm/dt/blumen?style=for-the-badge&logo=npm&color=%232B4AD4&label)
+
 
 <sub>Self-custodial decentralized deployments</sub>
 </div>
