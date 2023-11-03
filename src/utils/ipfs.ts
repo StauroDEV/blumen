@@ -9,8 +9,11 @@ import { TransformStream } from 'node:stream/web'
 import { createDirectoryEncoderStream, CAREncoderStream } from '../ipfs-car/index.js'
 import { Block } from '@ipld/unixfs'
 import { writableToWeb } from '../polyfills/toWeb.js'
+import { Writable } from 'node:stream'
 
 const tmp = tmpdir()
+
+const toWeb = typeof Writable['toWeb'] === 'undefined' ?  writableToWeb : Writable['toWeb']
 
 export const packCAR = async (files: FileEntry[], name: string, dir = tmp) => {
   const output = `${dir}/${name}.car`
@@ -30,7 +33,7 @@ export const packCAR = async (files: FileEntry[], name: string, dir = tmp) => {
       }),
     )
     .pipeThrough(new CAREncoderStream([placeholderCID]))
-    .pipeTo(writableToWeb(createWriteStream(output)))
+    .pipeTo(toWeb(createWriteStream(output)))
 
   const fd = await open(output, 'r+')
   await CarWriter.updateRootsInFile(fd, [rootCID!])

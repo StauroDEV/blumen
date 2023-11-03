@@ -8,28 +8,7 @@ import {
   ReadableStream,
   CountQueuingStrategy
 } from 'node:stream/web'
-import { destroy } from './destroy.js'
-
-const kDestroyed = Symbol('kDestroyed')
-
-function isDestroyed(stream: Writable | Readable) {
-  const wState = (stream as any)._writableState
-  const rState = (stream as any)._readableState
-
-  const state = wState || rState
-
-  return !!(
-    stream.destroyed ||
-    // @ts-ignore
-    stream[kDestroyed] ||
-    (state !== null && state !== void 0 && state.destroyed)
-  )
-}
-
-function isWritable(stream: Writable) {
-  if (isDestroyed(stream)) return false
-  return stream.writable && !isWritableEnded(stream)
-}
+import { Buffer } from 'node:buffer'
 
 function createDeferredPromise() {
   let resolve: (val?: void) => void = () => {}
@@ -61,12 +40,6 @@ class AbortError extends Error {
 }
 
 export function writableToWeb(streamWritable: Writable) {
-  if (isDestroyed(streamWritable) || !isWritable(streamWritable)) {
-    const writable = new WritableStream()
-    writable.close()
-    return writable
-  }
-
   const highWaterMark = streamWritable.writableHighWaterMark
   const strategy = streamWritable.writableObjectMode
     ? new CountQueuingStrategy({ highWaterMark })
@@ -84,7 +57,6 @@ export function writableToWeb(streamWritable: Writable) {
 
   const cleanup = finished(streamWritable, (error) => {
     cleanup()
-    streamWritable.on('error', () => {})
     if (error != null) {
       if (backpressurePromise !== undefined) {
         backpressurePromise.reject(error)
@@ -115,7 +87,6 @@ export function writableToWeb(streamWritable: Writable) {
       start(c) {
         controller = c
       },
-
       async write(chunk) {
         if (streamWritable.writableNeedDrain || !streamWritable.write(chunk)) {
           backpressurePromise = createDeferredPromise()
@@ -124,11 +95,6 @@ export function writableToWeb(streamWritable: Writable) {
           })
         }
       },
-
-      abort(reason) {
-        destroy(streamWritable, reason)
-      },
-
       close(): void | Promise<void> {
         if (closed === undefined && !isWritableEnded(streamWritable)) {
           closed = createDeferredPromise()
@@ -144,61 +110,15 @@ export function writableToWeb(streamWritable: Writable) {
   )
 }
 
-function isReadableFinished(stream: Readable, strict?: boolean) {
-  const rState = (stream as any)._readableState
-  if (rState !== null && rState !== void 0 && rState.errored) {
-    return false
-  }
-  if (
-    typeof (rState === null || rState === void 0
-      ? void 0
-      : rState.endEmitted) !== 'boolean'
-  ) {
-    return null
-  }
-  return !!(
-    rState.endEmitted ||
-    (strict === false && rState.ended === true && rState.length === 0)
-  )
-}
-
-function isReadable(stream: Readable) {
-  if (stream && stream.readable != null) {
-    return stream.readable
-  }
-  if (
-    typeof (stream === null || stream === void 0 ? void 0 : stream.readable) !==
-    'boolean'
-  ) {
-    return null
-  }
-  if (isDestroyed(stream)) {
-    return false
-  }
-  return stream.readable && !isReadableFinished(stream)
-}
-
 export function readableToWeb(streamReadable: Readable) {
-  if (isDestroyed(streamReadable) || !isReadable(streamReadable)) {
-    const readable = new ReadableStream()
-    readable.cancel()
-    return readable
-  }
-
   const objectMode = streamReadable.readableObjectMode
   const highWaterMark = streamReadable.readableHighWaterMark
 
   const evaluateStrategyOrFallback = () => {
     if (objectMode) {
-      // When running in objectMode explicitly but no strategy, we just fall
-      // back to CountQueuingStrategy
       return new CountQueuingStrategy({ highWaterMark })
     }
 
-    // When not running in objectMode explicitly, we just fall
-    // back to a minimal strategy that just specifies the highWaterMark
-    // and no size algorithm. Using a ByteLengthQueuingStrategy here
-    // is unnecessary.
     return { highWaterMark }
   }
 
@@ -207,14 +127,10 @@ export function readableToWeb(streamReadable: Readable) {
   let controller: ReadableStreamDefaultController
 
   function onData(chunk: Uint8Array) {
-    // Copy the Buffer to detach it from the pool.
-    if (Buffer.isBuffer(chunk) && !objectMode) {
-      chunk = new Uint8Array(chunk)
-    }
+    if (Buffer.isBuffer(chunk) && !objectMode) chunk = new Uint8Array(chunk)
+
     controller.enqueue(chunk)
-    if (controller.desiredSize! <= 0) {
-      streamReadable.pause()
-    }
+    if (controller.desiredSize! <= 0) streamReadable.pause()
   }
 
   streamReadable.pause()
@@ -224,14 +140,10 @@ export function readableToWeb(streamReadable: Readable) {
       const err = new AbortError(undefined, { cause: error })
       error = err
     }
-
     cleanup()
-    // This is a protection against non-standard, legacy streams
-    // that happen to emit an error event again after finished is called.
-    streamReadable.on('error', () => {})
-    if (error) {
-      return controller.error(error)
-    }
+
+    if (error) return controller.error(error)
+
     controller.close()
   })
 
@@ -242,13 +154,8 @@ export function readableToWeb(streamReadable: Readable) {
       start(c) {
         controller = c
       },
-
       pull() {
         streamReadable.resume()
-      },
-
-      cancel(reason) {
-        destroy(streamReadable, reason)
       }
     },
     strategy,

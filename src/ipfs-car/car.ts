@@ -34,7 +34,6 @@ export class CAREncoderStream extends TransformStream<Block, Uint8Array> {
         this.finalBlock = block
       }
     })
-    /** @type {import('@ipld/unixfs').Block?} */
     this.finalBlock = null
   }
 }

@@ -37,14 +37,12 @@ export const statusAction = async (
 
   for (const token of tokens) {
     const provider = PROVIDERS[token]
-    if (provider) {
-      if (provider.status) {
-        const { pin, deals } = await provider.status(cid, {
-          accessKey: env.get('GW3_ACCESS_KEY'),
-          token: env.get(token)
-        })
-        pinStatus(provider.name, pin, deals)
-      }
+    if (provider?.status) {
+      const { pin, deals } = await provider.status(cid, {
+        accessKey: env.get('GW3_ACCESS_KEY'),
+        token: env.get(token)
+      })
+      pinStatus(provider.name, pin, deals)
     }
   }
 }
