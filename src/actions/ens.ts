@@ -24,12 +24,12 @@ export const ensAction = async (
   cid: string,
   domain: string,
   {
-    chain: chainName, safe: safeAddress, operationType 
-  }: { chain: ChainName; } & Partial<{ safe: Address | EIP3770Address, operationType: OperationType }>,
+    chain: chainName, safe: safeAddress, operationType, rpcUrl
+  }: { chain: ChainName; } & Partial<{ safe: Address | EIP3770Address, operationType: OperationType; rpcUrl:string }>,
 ) => {
   const chain = chainName === 'mainnet' ? mainnet : goerli
   const publicClient = createPublicClient({
-    transport: http(chain.id === 1 ? 'https://rpc.ankr.com/eth' : 'https://rpc.ankr.com/eth_goerli'),
+    transport: http(rpcUrl ?? chain.id === 1 ? 'https://rpc.ankr.com/eth' : 'https://rpc.ankr.com/eth_goerli'),
     chain
   })
 

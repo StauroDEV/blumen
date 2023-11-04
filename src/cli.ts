@@ -5,9 +5,9 @@ import { cac } from 'cac'
 import { ensAction } from './actions/ens.js'
 import { statusAction } from './actions/status.js'
 import { deployAction } from './actions/deploy.js'
-import { OperationType } from '@stauro/piggybank/types'
 
 import './polyfills/fetch.js'
+import { OperationType } from '@stauro/piggybank/types'
 
 const cli = cac('blumen')
 
@@ -19,11 +19,13 @@ cli
   .option('--name <name>', 'Name of the distribution (without file extension)')
   .option('--dist <dist>', 'Directory to store the distribution file')
   .action(deployAction)
+  .example('blumen deploy --strict ./dist')
 
 cli
   .command('status <cid>', 'Check IPFS pinning status')
   .option('--providers <providers>', 'List providers to check status from')
   .action(statusAction)
+  .example('blumen status bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 --providers web3.storage')
 
 cli
   .command(
@@ -33,9 +35,9 @@ cli
   .option('--chain <chain>', 'Chain to use', { default: 'mainnet' })
   .option('--safe <safe>', 'Deploy using a Safe multisig wallet')
   .option('--operation-type <number>', 'Operation type to use for a Safe multisig wallet (0 - Call, 1 - DelegateCall)', { default: OperationType.Call })
+  .option('--rpc-url <url>', 'Custom Ethereum RPC')
   .action(ensAction)
 
 cli.help()
-cli.version('0.0.0-dev.1')
-cli.example('blumen deploy --strict ./dist')
+cli.version('0.1.0')
 cli.parse()
