@@ -1,9 +1,11 @@
 {
   "name": "blumen",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "🌸 Self-custodial decentralized deployments",
   "type": "module",
-  "bin": { "blumen": "./dist/cli.js" },
+  "bin": {
+    "blumen": "./dist/cli.js"
+  },
   "exports": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "repository": {
@@ -18,13 +20,18 @@
     "prepublishOnly": "pnpm  build"
   },
   "keywords": [
-    "ipfs", "filecoin", "deploy", "cli"
+    "ipfs",
+    "filecoin",
+    "deploy",
+    "cli"
   ],
   "files": [
     "dist"
   ],
   "author": "v1rtl <hi@v1rtl.site>",
-  "engines": { "node": ">=16.8" },
+  "engines": {
+    "node": ">=16.8"
+  },
   "license": "MIT",
   "dependencies": {
     "@ensdomains/content-hash": "^3.0.0",
