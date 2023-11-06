@@ -8,12 +8,11 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node16",
-    "allowJs": true,
+    "allowJs": false,
     "outDir": "dist",
     "declaration": true,
     "declarationDir": "dist",
     "isolatedModules": true,
-    "preserveSymlinks": true,
     "resolveJsonModule": true
   },
   "exclude": ["node_modules", "**/node_modules/*"],

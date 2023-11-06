@@ -105,14 +105,16 @@ $ BLUMEN_PK=0x2... blumen ens bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d
 
 If you are doing testing, you can pass `--chain goerli` to use Goerli network instead of mainnet.
 
-You can also update your ENS name as a [Safe](https://safe.global) owner or delegate by specifying the safe's address and the operation type (0 - (default) for owners, 1 - for delegates).
+##### Safe multisig
+
+You can also update your ENS name as a [Safe](https://safe.global) owner or delegate by specifying the safe's address and the operation type (0 - (default) for owners, 1 - for delegates). ENS name should be owned by a Safe, and a delegate's private key has to be provided to generate a transaction signature for Safe.
 
 > [EIP-3770](https://eips.ethereum.org/EIPS/eip-3770) addresses are also supported.
 
 ```sh
 $  BLUMEN_PK=0x2... blumen ens bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 v1rtl.eth --safe eth:0x0000000000000000000000000000000000000000 --operation-type 1
 
-# ℹ Validating transaction for wallet 0x0000000000000000000000000000000000000000 with balance 0.284910788000486236
+# ℹ Validating transaction for wallet 0x0000000000000000000000000000000000000000
 # ℹ Preparing a transaction for Safe eth:0x0000000000000000000000000000000000000000                             
 # ℹ Signing a Safe transaction                                                                                  
 # ℹ Proposing a Safe transaction                                                                                

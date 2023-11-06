@@ -15,6 +15,7 @@ import { privateKeyToAccount } from 'viem/accounts'
 import { goerli, mainnet } from 'viem/chains'
 import { walletSafeActions, publicSafeActions } from '@stauro/piggybank/actions'
 import { EIP3770Address, OperationType } from '@stauro/piggybank/types'
+import { getEip3770Address } from '@stauro/piggybank/utils'
 import { ApiClient } from '@stauro/piggybank/api'
 import { chainIdToSafeApiUrl } from '../utils/safe.js'
 import { colors } from 'consola/utils'
@@ -67,7 +68,7 @@ export const ensAction = async (
   const { request } = await publicClient.simulateContract({
     abi,
     functionName: 'setContenthash',
-    account,
+    account: safeAddress ? getEip3770Address({ fullAddress: safeAddress, chainId: chain.id }).address : account.address,
     address: PUBLIC_RESOLVER_ADDRESS[chain.id as 1 | 5],
     args: [node, `0x${contentHash}`],
     chain
