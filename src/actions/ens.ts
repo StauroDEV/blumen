@@ -38,7 +38,7 @@ export const ensAction = async (
 
   if (!pk) throw new MissingKeyError('PK')
 
-  const account = privateKeyToAccount(pk as `0x${string}`)
+  const account = privateKeyToAccount(pk.startsWith('0x') ? pk as `0x${string}` : `0x${pk}`)
 
   const walletClient = createWalletClient({
     transport: http(),
@@ -65,31 +65,30 @@ export const ensAction = async (
 
   logger.info(`Validating transaction for wallet ${account.address}`)
 
-  const { request } = await publicClient.simulateContract({
-    abi,
-    functionName: 'setContenthash',
-    account: safeAddress ? getEip3770Address({ fullAddress: safeAddress, chainId: chain.id }).address : account.address,
-    address: PUBLIC_RESOLVER_ADDRESS[chain.id as 1 | 5],
-    args: [node, `0x${contentHash}`],
-    chain
+  const from = safeAddress ? getEip3770Address({ fullAddress: safeAddress, chainId: chain.id }).address : account.address
+
+  const request = await publicClient.prepareTransactionRequest({
+    account: from,
+    to: PUBLIC_RESOLVER_ADDRESS[chain.id as 1 | 5],
+    chain,
+    data: encodeFunctionData({
+      functionName: 'setContenthash',
+      abi,
+      args: [node, `0x${contentHash}`]
+    })
   })
 
   if (safeAddress) {
     logger.info(`Preparing a transaction for Safe ${safeAddress}`)
     const safeWalletClient = walletClient.extend(walletSafeActions(safeAddress))
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+
     const safePublicClient = publicClient.extend(publicSafeActions(safeAddress))
 
     const nonce = await safePublicClient.getSafeNonce()
 
     const txData = {
-      to: request.address,
-      data: encodeFunctionData({
-        functionName: 'setContenthash',
-        abi,
-        args: [node, `0x${contentHash}`]
-      }),
+      ...request,
+      to: request.to as Address,
       operation: operationType ?? OperationType.Call,
       gasPrice: request.gasPrice ?? 0n,
       nonce
@@ -132,7 +131,7 @@ export const ensAction = async (
     let hash: Hash = '0x'
 
     try {
-      hash = await walletClient.writeContract(request)
+      hash = await walletClient.sendTransaction(request)
     } catch (e) {
       if (e instanceof TransactionExecutionError) {
         if (e.details?.includes('insufficient funds')) {
