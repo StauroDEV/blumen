@@ -25,8 +25,8 @@ export const ensAction = async (
   cid: string,
   domain: string,
   {
-    chain: chainName, safe: safeAddress, operationType, rpcUrl
-  }: { chain: ChainName; } & Partial<{ safe: Address | EIP3770Address, operationType: OperationType; rpcUrl:string }>,
+    chain: chainName, safe: safeAddress, rpcUrl
+  }: { chain: ChainName; } & Partial<{ safe: Address | EIP3770Address, rpcUrl:string }>,
 ) => {
   const chain = chainName === 'mainnet' ? mainnet : goerli
   const publicClient = createPublicClient({
@@ -89,7 +89,7 @@ export const ensAction = async (
     const txData = {
       ...request,
       to: request.to as Address,
-      operation: operationType ?? OperationType.Call,
+      operation: OperationType.Call,
       gasPrice: request.gasPrice ?? 0n,
       nonce
     }
