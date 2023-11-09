@@ -7,7 +7,6 @@ import { statusAction } from './actions/status.js'
 import { deployAction } from './actions/deploy.js'
 
 import './polyfills/fetch.js'
-import { OperationType } from '@stauro/piggybank/types'
 
 const cli = cac('blumen')
 
@@ -34,7 +33,6 @@ cli
   )
   .option('--chain <chain>', 'Chain to use', { default: 'mainnet' })
   .option('--safe <safe>', 'Deploy using a Safe multisig wallet')
-  .option('--operation-type <number>', 'Operation type to use for a Safe multisig wallet (0 - Call, 1 - DelegateCall)', { default: OperationType.Call })
   .option('--rpc-url <url>', 'Custom Ethereum RPC')
   .action(ensAction)
 
