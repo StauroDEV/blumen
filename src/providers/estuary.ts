@@ -8,22 +8,22 @@ export const uploadOnEstuary: UploadFunction = async ({
   token,
   car,
   cid,
-  name
+  name,
 }) => {
   const res = await fetch(
     new URL(
       cid ? '/pinning/pins' : `/content/add-car?filename=${name}`,
-      baseURL
+      baseURL,
     ),
     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization: `Bearer ${token}`
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
-      body: cid ? JSON.stringify({ cid, name }) : car as Blob
-    }
+      body: cid ? JSON.stringify({ cid, name }) : car as Blob,
+    },
   )
 
   if ([502, 504].includes(res.status))

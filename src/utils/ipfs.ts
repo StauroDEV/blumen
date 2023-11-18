@@ -13,7 +13,7 @@ import { Blob } from 'node:buffer'
 
 const tmp = tmpdir()
 
-const toWeb = typeof Writable['toWeb'] === 'undefined' ?  writableToWeb : Writable['toWeb']
+const toWeb = typeof Writable['toWeb'] === 'undefined' ? writableToWeb : Writable['toWeb']
 
 export const packCAR = async (files: FileEntry[], name: string, dir = tmp) => {
   const output = `${dir}/${name}.car`
@@ -29,7 +29,7 @@ export const packCAR = async (files: FileEntry[], name: string, dir = tmp) => {
         transform(block, controller) {
           rootCID = block.cid as CID
           controller.enqueue(block)
-        }
+        },
       }),
     )
     .pipeThrough(new CAREncoderStream([placeholderCID]))

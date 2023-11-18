@@ -2,7 +2,7 @@ import type { PinStatus, StatusFunction, UploadFunction } from '../types.js'
 import {
   DeployError,
   MissingKeyError,
-  UploadNotSupportedError
+  UploadNotSupportedError,
 } from '../errors.js'
 
 type GW3PinStatus = 'pinned' | 'unpinning' | 'failure' | 'pinning'
@@ -27,7 +27,7 @@ export const uploadOnGW3: UploadFunction = async ({
   token,
   car,
   cid,
-  accessKey
+  accessKey,
 }) => {
   if (car) throw new UploadNotSupportedError(providerName)
   if (!accessKey) throw new MissingKeyError('GW3_ACCESS_KEY')
@@ -38,19 +38,19 @@ export const uploadOnGW3: UploadFunction = async ({
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'X-Access-Key': accessKey,
-        'X-Access-Secret': token
+        'X-Access-Secret': token,
       },
-      body: car
-    }
+      body: car,
+    },
   )
 
   if (!res.ok) {
     const json = await res.text()
     throw new DeployError(
       providerName,
-      (JSON.parse(json) as { msg: string }).msg
+      (JSON.parse(json) as { msg: string }).msg,
     )
   }
 
@@ -66,11 +66,11 @@ export const statusOnGW3: StatusFunction = async (cid, auth) => {
     {
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'X-Access-Key': auth?.accessKey,
-        'X-Access-Secret': auth?.token
-      }
-    }
+        'X-Access-Secret': auth?.token,
+      },
+    },
   )
   const json = (await res.json()) as {
     code: number
@@ -82,7 +82,7 @@ export const statusOnGW3: StatusFunction = async (cid, auth) => {
 
   if (json.code !== 200) return { pin: 'unknown' }
 
-  const pin = json.data.find((pin) => pin.cid === cid)
+  const pin = json.data.find(pin => pin.cid === cid)
   if (!pin) return { pin: 'unknown' }
 
   return { pin: mapGw3StatusToGenericStatus(pin.status) }

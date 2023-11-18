@@ -6,7 +6,7 @@ import { globby } from 'globby'
 import { readableToWeb } from '../polyfills/toWeb.js'
 import { Readable } from 'node:stream'
 
-const toWeb = typeof Readable['toWeb'] === 'undefined' ?  readableToWeb : Readable['toWeb']
+const toWeb = typeof Readable['toWeb'] === 'undefined' ? readableToWeb : Readable['toWeb']
 
 export const walk = async (dir: string) => {
   let total = 0
@@ -17,7 +17,7 @@ export const walk = async (dir: string) => {
     files.push({
       name: dir === '.' ? path : path.replace(dir, ''),
       size,
-      stream: () => toWeb(createReadStream(path)) 
+      stream: () => toWeb(createReadStream(path)),
     })
   }
 
@@ -28,7 +28,8 @@ export const exists = async (file: string) => {
   try {
     await access(file, constants.F_OK)
     return true
-  } catch {
+  }
+  catch {
     return false
   }
 }
@@ -48,8 +49,8 @@ export function fileSize(bytes: number, digits = 1): string {
     bytes /= thresh
     ++u
   } while (
-    Math.round(Math.abs(bytes) * r) / r >= thresh &&
-    u < units.length - 1
+    Math.round(Math.abs(bytes) * r) / r >= thresh
+    && u < units.length - 1
   )
 
   return bytes.toFixed(digits) + units[u]

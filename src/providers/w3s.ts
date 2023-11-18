@@ -8,7 +8,7 @@ export const uploadOnW3S: UploadFunction = async ({
   token,
   car,
   cid,
-  name
+  name,
 }) => {
   if (cid) throw new PinningNotSupportedError(providerName)
 
@@ -16,18 +16,18 @@ export const uploadOnW3S: UploadFunction = async ({
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
-      ...(name ? { 'X-NAME': encodeURIComponent(name) } : {})
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      ...(name ? { 'X-NAME': encodeURIComponent(name) } : {}),
     },
-    body: car as Blob
+    body: car as Blob,
   })
 
   const json = await res.json()
   if (!res.ok) {
     throw new DeployError(
       providerName,
-      (json as { message: string; code: string }).message,
+      (json as { message: string, code: string }).message,
     )
   }
 
@@ -38,13 +38,13 @@ export const statusOnW3S: StatusFunction = async (cid) => {
   const res = await fetch(new URL(`/status/${cid}`, baseURL))
   const json = (await res.json()) as {
     pins: [{ status: string }]
-    deals: { dealId: string; status: string }[]
+    deals: { dealId: string, status: string }[]
   }
 
   return res.ok
     ? {
-      pin: json.pins[0].status.toLowerCase() as PinStatus,
-      deal: { id: json.deals }
-    }
+        pin: json.pins[0].status.toLowerCase() as PinStatus,
+        deal: { id: json.deals },
+      }
     : { pin: 'unknown' }
 }
