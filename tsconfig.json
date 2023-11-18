@@ -1,19 +1,16 @@
 {
   "compilerOptions": {
-    "lib": ["es2023", "DOM"],
     "module": "Node16",
     "target": "es2022",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node16",
     "allowJs": false,
     "outDir": "dist",
     "declaration": true,
     "declarationDir": "dist",
     "isolatedModules": true,
-    "resolveJsonModule": true
   },
   "exclude": ["node_modules", "**/node_modules/*"],
   "include": ["src"]

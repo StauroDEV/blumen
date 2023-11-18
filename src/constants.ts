@@ -5,7 +5,7 @@ import type { StatusFunction, UploadFunction } from './types.js'
 
 export const PROVIDERS: Record<
 string,
-{ name: string; upload: UploadFunction; status?: StatusFunction }
+{ name: string, upload: UploadFunction, status?: StatusFunction }
 > = {
   // ESTUARY_TOKEN: {
   //   name: 'Estuary',
@@ -14,11 +14,11 @@ string,
   W3S_TOKEN: {
     name: 'web3.storage',
     upload: uploadOnW3S,
-    status: statusOnW3S
+    status: statusOnW3S,
   },
   GW3_TOKEN: {
     name: 'Gateway3',
     upload: uploadOnGW3,
-    status: statusOnGW3
-  }
+    status: statusOnGW3,
+  },
 }

@@ -1,10 +1,9 @@
-
 import { CID } from 'multiformats'
 import { PROVIDERS } from '../constants.js'
 import {
   InvalidCIDError,
   UnknownProviderError,
-  NoProvidersError
+  NoProvidersError,
 } from '../errors.js'
 import { parseTokensFromEnv, findEnvVarProviderName } from '../index.js'
 import { pinStatus } from '../utils/pin.js'
@@ -16,7 +15,8 @@ export const statusAction = async (
   // Validate CID
   try {
     CID.parse(cid)
-  } catch {
+  }
+  catch {
     throw new InvalidCIDError(cid)
   }
 
@@ -26,7 +26,7 @@ export const statusAction = async (
   for (const option of env.keys()) tokens.push(option)
 
   if (providersOptionList) {
-    for (const option of providersOptionList.split(',').map((s) => s.trim())) {
+    for (const option of providersOptionList.split(',').map(s => s.trim())) {
       const tokenName = findEnvVarProviderName(option)
       if (tokenName) tokens.push(tokenName)
       else throw new UnknownProviderError(option)
@@ -40,7 +40,7 @@ export const statusAction = async (
     if (provider?.status) {
       const { pin, deals } = await provider.status(cid, {
         accessKey: env.get('GW3_ACCESS_KEY'),
-        token: env.get(token)
+        token: env.get(token),
       })
       pinStatus(provider.name, pin, deals)
     }
