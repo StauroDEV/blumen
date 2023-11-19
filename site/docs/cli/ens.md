@@ -3,20 +3,18 @@
 Updates ENS domain Content-Hash with an IFPS CID.
 
 ```sh
-blumen ens bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 v1rtl.eth
+blumen ens <cid> <domain.eth>
 ```
 
 Requires a ENS owner's private key (`BLUMEN_PK`) to be defined.
 
-::: warn
+::: warning
 
-It is recommended to use multisig wallets for deployments instead of using a private key of an Ethereum wallet to ensure security.
+It is recommended to use multisig wallets for deployments instead of using a private key of an Ethereum wallet to avoid centralization.
 
 :::
 
-### `ens`
-
-After finishing the deployment, update content hash of an ENS domain to point to the deployment. Equivalent to `blumen ens`.
+## Options
 
 ### `chain`
 
