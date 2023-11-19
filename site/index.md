@@ -12,8 +12,10 @@
 
 Node.js 16.8+ is required.
 
-::: warn
-Warning: Support for Node 16.8 will be removed in the future. Node 18 is recommended.
+::: warning
+
+Support for Node 16.8 will be removed in the future. Node 18 is recommended.
+
 :::
 
 ::: code-group
