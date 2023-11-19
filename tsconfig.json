@@ -6,7 +6,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "moduleResolution": "node16",
-    "allowJs": false,
     "outDir": "dist",
     "declaration": true,
     "declarationDir": "dist",
