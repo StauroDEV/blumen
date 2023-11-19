@@ -28,11 +28,11 @@ export class CAREncoderStream extends TransformStream<Block, Uint8Array> {
   finalBlock: Block | null
   constructor(roots: UnknownLink[] = []) {
     super({
-      start: (controller) => controller.enqueue(encodeHeader(roots)),
+      start: controller => controller.enqueue(encodeHeader(roots)),
       transform: (block, controller) => {
         controller.enqueue(encodeBlock(block))
         this.finalBlock = block
-      }
+      },
     })
     this.finalBlock = null
   }

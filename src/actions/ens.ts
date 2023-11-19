@@ -6,7 +6,7 @@ import {
   http,
   createPublicClient,
   Hex,
-  encodeFunctionData
+  encodeFunctionData,
 } from 'viem'
 import { MissingKeyError } from '../errors.js'
 import { PUBLIC_RESOLVER_ADDRESS, prepareUpdateEnsArgs, abi } from '../utils/ens.js'
@@ -18,15 +18,15 @@ import { EIP3770Address, OperationType } from '@stauro/piggybank/types'
 import { getEip3770Address } from '@stauro/piggybank/utils'
 import { ApiClient } from '@stauro/piggybank/api'
 import { chainIdToSafeApiUrl } from '../utils/safe.js'
-import { colors } from 'consola/utils'
+import * as colors from 'colorette'
 import { logger } from '../utils/logger.js'
 
 export const ensAction = async (
   cid: string,
   domain: string,
   {
-    chain: chainName, safe: safeAddress, rpcUrl
-  }: { chain: ChainName; } & Partial<{ safe: Address | EIP3770Address, rpcUrl:string }>,
+    chain: chainName, safe: safeAddress, rpcUrl,
+  }: { chain: ChainName } & Partial<{ safe: Address | EIP3770Address, rpcUrl: string }>,
 ) => {
   const chain = chainName === 'mainnet' ? mainnet : goerli
 
@@ -34,7 +34,7 @@ export const ensAction = async (
 
   const publicClient = createPublicClient({
     transport: http(rpc),
-    chain
+    chain,
   })
 
   const pk = process.env.BLUMEN_PK
@@ -46,21 +46,23 @@ export const ensAction = async (
   const walletClient = createWalletClient({
     transport: http(rpc),
     chain,
-    account
+    account,
   })
 
-  let contentHash ='',
+  let contentHash = '',
     node: Hex = '0x'
 
   try {
     const result = await prepareUpdateEnsArgs({ cid, domain })
     contentHash = result.contentHash
     node = result.node
-  } catch (e) {
+  }
+  catch (e) {
     if ((e as Error).message.includes('disallowed character')) logger.error(`Invalid ENS domain: ${domain}`, e)
     else if ((e as Error).message.includes('Incorrect length')) {
       logger.error(`Invalid IPFS CID: ${cid}`, e)
-    } else {
+    }
+    else {
       logger.error(e)
     }
     return
@@ -77,8 +79,8 @@ export const ensAction = async (
     data: encodeFunctionData({
       functionName: 'setContenthash',
       abi,
-      args: [node, `0x${contentHash}`]
-    })
+      args: [node, `0x${contentHash}`],
+    }),
   })
 
   if (safeAddress) {
@@ -94,7 +96,7 @@ export const ensAction = async (
       to: request.to as Address,
       operation: OperationType.Call,
       gasPrice: request.gasPrice ?? 0n,
-      nonce
+      nonce,
     }
 
     const safeTxGas = await safePublicClient.estimateSafeTransactionGas(txData)
@@ -108,12 +110,12 @@ export const ensAction = async (
     const senderSignature = await safeWalletClient.generateSafeTransactionSignature({
       ...txData,
       safeTxGas,
-      baseGas
+      baseGas,
     })
 
     logger.info('Proposing a Safe transaction')
 
-    const apiClient = new ApiClient({ url: chainIdToSafeApiUrl(chain.id), safeAddress, chainId:chain.id })
+    const apiClient = new ApiClient({ url: chainIdToSafeApiUrl(chain.id), safeAddress, chainId: chain.id })
 
     try {
       await apiClient.proposeTransaction({
@@ -122,37 +124,41 @@ export const ensAction = async (
         safeTxHash,
         senderSignature,
         chainId: chain.id,
-        origin: 'Piggybank'
+        origin: 'Piggybank',
       })
       logger.success(`Transaction proposed to a Safe wallet.\nOpen in a browser: ${colors.underline(`https://app.safe.global/transactions/queue?safe=${safeAddress}`)}`)
-    } catch (e) {
+    }
+    catch (e) {
       logger.error('Failed to propose a transaction', e)
       return
     }
-
-  } else {
+  }
+  else {
     let hash: Hash = '0x'
 
     try {
       hash = await walletClient.sendTransaction(request)
-    } catch (e) {
+    }
+    catch (e) {
       if (e instanceof TransactionExecutionError) {
         if (e.details?.includes('insufficient funds')) {
           logger.error('Insufficient funds', e)
-        } else {
+        }
+        else {
           logger.error('Transaction failed', e)
         }
-      } else {
+      }
+      else {
         logger.error(e)
       }
       return
     }
 
     logger.info(`Transaction pending: ${chain.blockExplorers.etherscan.url}/tx/${hash}`)
-   
+
     const receipt = await publicClient.waitForTransactionReceipt({
       hash,
-      timeout: 1000 * 60 * 30 // 30 minutes
+      timeout: 1000 * 60 * 30, // 30 minutes
     })
 
     if (receipt.status === 'reverted') return logger.error('Transaction reverted')

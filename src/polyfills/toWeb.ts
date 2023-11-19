@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Readable, Writable, finished } from 'node:stream'
 import {
   type WritableStreamDefaultController,
   type ReadableStreamDefaultController,
   WritableStream,
   ReadableStream,
-  CountQueuingStrategy
+  CountQueuingStrategy,
 } from 'node:stream/web'
 import { Buffer } from 'node:buffer'
 
@@ -104,7 +102,7 @@ export function writableToWeb(streamWritable: Writable) {
 
         controller = undefined
         return Promise.resolve()
-      }
+      },
     },
     strategy,
   )
@@ -156,7 +154,7 @@ export function readableToWeb(streamReadable: Readable) {
       },
       pull() {
         streamReadable.resume()
-      }
+      },
     },
     strategy,
   )

@@ -1,6 +1,6 @@
 import { table } from 'table'
 import type { PinStatus, FilecoinDeal } from '../types.js'
-import { colors } from 'consola/utils'
+import * as colors from 'colorette'
 
 export const pinStatus = (
   provider: string,
@@ -8,7 +8,7 @@ export const pinStatus = (
   deals?: FilecoinDeal[],
 ) => {
   let statusText: string
-  
+
   switch (status) {
     case 'pinned':
       statusText = colors.green(status)
@@ -21,13 +21,13 @@ export const pinStatus = (
       statusText = colors.gray(status || 'unknown')
       break
   }
-  
+
   console.log(`${colors.cyan(provider)}: ${colors.bold(statusText)}`)
-  
+
   if (deals) {
     table(
       deals.map(({
-        dealId, status 
+        dealId, status,
       }) => [dealId, status]),
       { header: { alignment: 'left', content: 'Filecoin deals' } },
     )

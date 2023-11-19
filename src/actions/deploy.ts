@@ -7,21 +7,21 @@ import mod from 'ascii-bar'
 import { ensAction } from './ens.js'
 import { ChainName } from '../types.js'
 import { Address } from 'viem'
-import { colors } from 'consola/utils'
 import { logger } from '../utils/logger.js'
+import * as colors from 'colorette'
 
 const AsciiBar = mod.default
 
 export const deployAction = async (
   dir: string,
-  { strict, ens, chain, safe, name, dist }: { strict: boolean; chain: ChainName; ens: string; safe: Address, name?: string; dist?: string },
+  { strict, ens, chain = 'mainnet', safe, name: customName, dist }: { strict: boolean, chain?: ChainName, ens?: string, safe?: Address, name?: string, dist?: string },
 ) => {
   if (!dir) {
     if (await exists('dist')) dir = 'dist'
     else dir = '.'
   }
   const normalizedPath = path.join(process.cwd(), dir)
-  name = name || path.basename(normalizedPath)
+  const name = customName || path.basename(normalizedPath)
   const [size, files] = await walk(normalizedPath)
 
   if (size === 0) throw new MissingDirectoryError(dir)
@@ -40,7 +40,7 @@ export const deployAction = async (
   if (!providers.length) throw new NoProvidersError()
 
   logger.info(`Deploying with providers: ${providers.join(', ')}`)
-  
+
   let total = 0
 
   const bar = process.stdout.isTTY
@@ -49,7 +49,7 @@ export const deployAction = async (
       formatString: '#spinner #bar #message',
       hideCursor: false,
       enableSpinner: true,
-      width: process.stdout.columns - 30
+      width: process.stdout.columns - 30,
     })
     : undefined
 
@@ -67,13 +67,15 @@ export const deployAction = async (
           name,
           car: blob,
           token,
-          accessKey: apiTokens.get('GW3_ACCESS_KEY')
+          accessKey: apiTokens.get('GW3_ACCESS_KEY'),
         })
-      } catch (e) {
+      }
+      catch (e) {
         if (strict) throw e
         else errors.push(e as Error)
       }
-    } else {
+    }
+    else {
       bar?.update(total++, `Pinning to ${provider}`)
 
       try {
@@ -81,9 +83,10 @@ export const deployAction = async (
           name,
           cid: rootCID.toString(),
           token,
-          accessKey: apiTokens.get('GW3_ACCESS_KEY')
+          accessKey: apiTokens.get('GW3_ACCESS_KEY'),
         })
-      } catch (e) {
+      }
+      catch (e) {
         if (strict) throw e
         else errors.push(e as Error)
       }
@@ -93,16 +96,15 @@ export const deployAction = async (
 
   if (errors.length === providers.length) {
     logger.error('Deploy failed')
-    errors.forEach((e) => logger.error(e))
+    errors.forEach(e => logger.error(e))
     return
   }
   else if (errors.length) {
     logger.warn('There were some problems with deploying')
-    errors.forEach((e) => logger.error(e))
+    errors.forEach(e => logger.error(e))
   }
   else logger.success('Deployed across all providers')
 
-  
   console.log(
     `\nOpen in a browser:\n${colors.bold('IPFS')}:      ${colors.underline(
       `https://${cid}.ipfs.dweb.link`,
