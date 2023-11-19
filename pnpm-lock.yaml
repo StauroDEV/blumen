@@ -26,6 +26,9 @@ dependencies:
   cac:
     specifier: ^6.7.14
     version: 6.7.14
+  colorette:
+    specifier: ^2.0.20
+    version: 2.0.20
   globby:
     specifier: ^14.0.0
     version: 14.0.0
@@ -67,9 +70,6 @@ devDependencies:
   '@typescript-eslint/parser':
     specifier: ^6.11.0
     version: 6.11.0(eslint@8.54.0)(typescript@5.2.2)
-  colorette:
-    specifier: ^2.0.20
-    version: 2.0.20
   eslint:
     specifier: ^8.54.0
     version: 8.54.0
@@ -994,7 +994,7 @@ packages:
 
   /colorette@2.0.20:
     resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
-    dev: true
+    dev: false
 
   /compare-func@2.0.0:
     resolution: {integrity: sha512-zHig5N+tPWARooBnb0Zx1MFcdfpyJrfTJ3Y5L+IFvUm8rM74hHz66z0gw0x4tijh5CorKkKUCnW82R2vmpeCRA==}
