@@ -21,7 +21,7 @@ cli
   .example('blumen deploy --strict ./dist')
 
 cli
-  .command('status <cid>', 'Check IPFS pinning status')
+  .command('status <cid>', 'Check IPFS deployment status')
   .option('--providers <providers>', 'List providers to check status from')
   .action(statusAction)
   .example('blumen status bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 --providers web3.storage')

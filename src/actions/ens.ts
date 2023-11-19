@@ -29,8 +29,11 @@ export const ensAction = async (
   }: { chain: ChainName } & Partial<{ safe: Address | EIP3770Address, rpcUrl: string }>,
 ) => {
   const chain = chainName === 'mainnet' ? mainnet : goerli
+
+  const transport = http(rpcUrl ?? chain.id === 1 ? 'https://rpc.ankr.com/eth' : 'https://rpc.ankr.com/eth_goerli')
+
   const publicClient = createPublicClient({
-    transport: http(rpcUrl ?? chain.id === 1 ? 'https://rpc.ankr.com/eth' : 'https://rpc.ankr.com/eth_goerli'),
+    transport,
     chain,
   })
 
@@ -41,7 +44,7 @@ export const ensAction = async (
   const account = privateKeyToAccount(pk.startsWith('0x') ? pk as `0x${string}` : `0x${pk}`)
 
   const walletClient = createWalletClient({
-    transport: http(),
+    transport,
     chain,
     account,
   })
@@ -84,6 +87,7 @@ export const ensAction = async (
     logger.info(`Preparing a transaction for Safe ${safeAddress}`)
     const safeWalletClient = walletClient.extend(walletSafeActions(safeAddress))
 
+    // @ts-ignore weird "Type instantiation is excessively deep and possibly infinite." that only happens in GHA
     const safePublicClient = publicClient.extend(publicSafeActions(safeAddress))
 
     const nonce = await safePublicClient.getSafeNonce()

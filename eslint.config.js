@@ -5,9 +5,8 @@ import js from '@eslint/js'
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
-  js.configs.recommended,
-  {
-    files: ['**/*.ts', '**/*.tsx'],
+  { files: ['src/**/*.ts', 'eslint.config.js'], ...js.configs.recommended },
+  { files: ['src/**/*.ts', 'eslint.config.js'],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -20,11 +19,9 @@ export default [
         ecmaVersion: 'latest',
       },
     },
-  },
-  stylistic.configs['recommended-flat'],
-  {
     rules: {
       'no-unused-vars': 'off',
     },
   },
+  { files: ['src/**/*.ts', 'eslint.config.js'], ...stylistic.configs['recommended-flat'] },
 ]

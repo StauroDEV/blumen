@@ -5,7 +5,6 @@
 
 [![CI](https://github.com/StauroXYZ/blumen/actions/workflows/ci.yml/badge.svg)](https://github.com/StauroXYZ/blumen/actions/workflows/ci.yml) ![npm](https://img.shields.io/npm/dt/blumen?style=for-the-badge&logo=npm&color=%232B4AD4&label)
 
-
 <sub>Self-custodial decentralized deployments</sub>
 </div>
 
@@ -123,26 +122,3 @@ $  BLUMEN_PK=0x2... blumen ens bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3
 ```
 
 After submitting the transaction, open your Safe app and approve it.
-
-### API
-
-Blumen exposes some of the functionality as well.
-
-```js
-import { walk, packCAR, uploadOnW3S } from 'blumen'
-import { assert } from 'node:assert/strict'
-
-const [files, total] = await walk('./dist')
-
-const { blob, cid: actualCid } = await packCAR(files)
-
-const { cid } = await uploadOnW3S({ token: process.env.W3S_TOKEN, car: blob })
-
-assert.equal(cid, actualCid)
-
-const { pin } = await statusOnW3S(cid)
-
-console.log(`Pin status: ${pin}, CID: ${cid}`)
-```
-
-This example demonstrates how to use the Blumen API to walk through a directory, prepare your files for upload, upload it to web3.storage, and check the IPFS pinning status.
