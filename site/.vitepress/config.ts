@@ -41,9 +41,6 @@ export default defineConfig({
           },
         ],
       },
-      {
-        text: 'API (W.I.P.)',
-      },
     ],
     socialLinks: [
       { icon: 'github', link: 'https://github.com/StauroXYZ/blumen' },

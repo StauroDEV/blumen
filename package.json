@@ -6,8 +6,6 @@
   "bin": {
     "blumen": "./dist/cli.js"
   },
-  "exports": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/StauroXYZ/blumen.git"
@@ -17,7 +15,7 @@
     "dev": "tsx src/index.ts",
     "build": "tsc",
     "postbuild": "chmod +x ./dist/cli.js",
-    "prepublishOnly": "pnpm  build"
+    "prepublishOnly": "pnpm build"
   },
   "keywords": [
     "ipfs",
@@ -30,7 +28,7 @@
   ],
   "author": "v1rtl <hi@v1rtl.site>",
   "engines": {
-    "node": ">=16.8"
+    "node": ">=16.14"
   },
   "license": "MIT",
   "dependencies": {

@@ -30,10 +30,10 @@ export const ensAction = async (
 ) => {
   const chain = chainName === 'mainnet' ? mainnet : goerli
 
-  const rpc = rpcUrl ?? chain.id === 1 ? 'https://rpc.ankr.com/eth' : 'https://rpc.ankr.com/eth_goerli'
+  const transport = http(rpcUrl ?? chain.id === 1 ? 'https://rpc.ankr.com/eth' : 'https://rpc.ankr.com/eth_goerli')
 
   const publicClient = createPublicClient({
-    transport: http(rpc),
+    transport,
     chain,
   })
 
@@ -44,7 +44,7 @@ export const ensAction = async (
   const account = privateKeyToAccount(pk.startsWith('0x') ? pk as `0x${string}` : `0x${pk}`)
 
   const walletClient = createWalletClient({
-    transport: http(rpc),
+    transport,
     chain,
     account,
   })
