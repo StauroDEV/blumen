@@ -11,6 +11,7 @@
     "declaration": true,
     "declarationDir": "dist",
     "isolatedModules": true,
+    "preserveSymlinks": true
   },
   "exclude": ["node_modules", "**/node_modules/*","**/*.test.ts"],
   "include": ["src"]

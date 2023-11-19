@@ -1,3 +1,4 @@
+import { CID } from 'multiformats'
 import { PinningNotSupportedError } from '../errors.js'
 import type { UploadFunction } from '../types.js'
 
@@ -15,8 +16,6 @@ export const uploadOnDolpin: UploadFunction = async ({
 
   fd.append('name', name)
 
-  console.log(fd.entries())
-
   const res = await fetch(new URL(`/api/v1/documents/upload-in-cluster-with-api?api_token=${token}`, baseURL), {
     method: 'POST',
     body: fd,
@@ -24,5 +23,5 @@ export const uploadOnDolpin: UploadFunction = async ({
 
   const json = await res.json()
 
-  return json
+  return { cid: CID.parse(json.data.cid).toV1().toString(), status: 'pinned' }
 }

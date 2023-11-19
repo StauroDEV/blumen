@@ -41,7 +41,7 @@ AuthArgs
 export type UploadReturnType = {
   cid: string
   providers?: string[]
-  status?: string
+  status?: PinStatus
 }
 
 export type UploadFunction = (args: UploadArgs) => Promise<UploadReturnType>
