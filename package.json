@@ -15,7 +15,8 @@
     "dev": "tsx src/index.ts",
     "build": "tsc",
     "postbuild": "chmod +x ./dist/cli.js",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "lint": "eslint . --config eslint.config.js"
   },
   "keywords": [
     "ipfs",
@@ -48,12 +49,14 @@
     "viem": "^1.19.3"
   },
   "devDependencies": {
+    "@eslint/js": "^8.54.0",
     "@stylistic/eslint-plugin": "^1.4.0",
     "@types/node": "^20.9.1",
     "@types/semver": "^7.5.5",
     "@types/varint": "^6.0.3",
     "@typescript-eslint/parser": "^6.11.0",
     "colorette": "^2.0.20",
+    "eslint": "^8.54.0",
     "globals": "^13.23.0",
     "semantic-release": "^22.0.8",
     "typescript": "^5.2.2"
