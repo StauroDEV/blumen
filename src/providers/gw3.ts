@@ -2,9 +2,9 @@ import type { PinStatus, StatusFunction, UploadFunction } from '../types.js'
 import {
   DeployError,
   MissingKeyError,
-  UploadNotSupportedError,
 } from '../errors.js'
 import { CID } from 'multiformats'
+import { logger } from '../utils/logger.js'
 
 type GW3PinStatus = 'pinned' | 'unpinning' | 'failure' | 'pinning'
 
@@ -56,9 +56,8 @@ export const uploadOnGW3: UploadFunction = async ({
     return { cid }
   }
   else {
-    console.log('url', new URL(`ipfs/?size=${car!.size}&ts=${getTs()}`, baseURL).toString())
     const res1 = await fetch(
-      new URL(`ipfs/?size=${car!.size}&ts=${getTs()}`, baseURL),
+      new URL(`https://gw3.io/api/v0/dag/import?size=${car!.size}&ts=${getTs()}&path=/`, baseURL),
       {
         method: 'POST',
         headers: {
@@ -73,37 +72,18 @@ export const uploadOnGW3: UploadFunction = async ({
     if (!res1.ok || json.code !== 200) {
       throw new DeployError(
         providerName,
-        (json).msg,
+        json.msg,
       )
     }
-    const url = json.data.url
 
-    console.log(url)
+    const res2 = await fetch(json.data.url, {
+      method: 'POST',
+      body: car as Blob,
+    })
 
-    const res2 = await fetch(
-      url,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-Access-Key': accessKey,
-          'X-Access-Secret': token,
-        },
-        body: car as Blob,
-      },
-    )
+    if (!res2.ok) throw new DeployError(providerName, await res2.text())
 
-    if (!res2.ok) throw new DeployError(
-      providerName,
-      'Unknown upload error',
-    )
-
-    const text = await res2.text()
-
-    console.log(text)
-
-    return { cid: CID.parse(text.split(': ')[1]).toV1().toString() }
+    return { cid: CID.parse(res2.headers.get('ipfs-hash')!).toV1().toString() }
   }
 }
 

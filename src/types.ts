@@ -24,7 +24,7 @@ type AuthArgs = {
   accessKey?: string
 }
 
-export type UploadArgs = (
+export type UploadArgs<T> = (
   | {
     car: Blob
     cid?: never
@@ -36,7 +36,7 @@ export type UploadArgs = (
     name: string
   }
 ) &
-AuthArgs
+AuthArgs & T
 
 export type UploadReturnType = {
   cid: string
@@ -44,7 +44,7 @@ export type UploadReturnType = {
   status?: PinStatus
 }
 
-export type UploadFunction = (args: UploadArgs) => Promise<UploadReturnType>
+export type UploadFunction<T= {}> = (args: UploadArgs<T>) => Promise<UploadReturnType>
 
 export type Supported = 'upload' | 'pin'
 
