@@ -4,6 +4,7 @@ import {
   MissingKeyError,
   UploadNotSupportedError,
 } from '../errors.js'
+import { CID } from 'multiformats'
 
 type GW3PinStatus = 'pinned' | 'unpinning' | 'failure' | 'pinning'
 
@@ -29,32 +30,81 @@ export const uploadOnGW3: UploadFunction = async ({
   cid,
   accessKey,
 }) => {
-  if (car) throw new UploadNotSupportedError(providerName)
   if (!accessKey) throw new MissingKeyError('GW3_ACCESS_KEY')
-
-  const res = await fetch(
-    new URL(`/api/v0/pin/add?arg=${cid}&ts=${getTs()}`, baseURL),
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'X-Access-Key': accessKey,
-        'X-Access-Secret': token,
+  if (cid) {
+    const res = await fetch(
+      new URL(`/api/v0/pin/add?arg=${cid}&ts=${getTs()}`, baseURL),
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Access-Key': accessKey,
+          'X-Access-Secret': token,
+        },
       },
-      body: car,
-    },
-  )
-
-  if (!res.ok) {
-    const json = await res.text()
-    throw new DeployError(
-      providerName,
-      (JSON.parse(json) as { msg: string }).msg,
     )
-  }
 
-  return { cid }
+    const json = await res.json()
+    if (!res.ok) {
+      throw new DeployError(
+        providerName,
+        (json).msg,
+      )
+    }
+
+    return { cid }
+  }
+  else {
+    console.log('url', new URL(`ipfs/?size=${car!.size}&ts=${getTs()}`, baseURL).toString())
+    const res1 = await fetch(
+      new URL(`ipfs/?size=${car!.size}&ts=${getTs()}`, baseURL),
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Access-Key': accessKey,
+          'X-Access-Secret': token,
+        },
+      },
+    )
+    const json = await res1.json()
+    if (!res1.ok || json.code !== 200) {
+      throw new DeployError(
+        providerName,
+        (json).msg,
+      )
+    }
+    const url = json.data.url
+
+    console.log(url)
+
+    const res2 = await fetch(
+      url,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Access-Key': accessKey,
+          'X-Access-Secret': token,
+        },
+        body: car as Blob,
+      },
+    )
+
+    if (!res2.ok) throw new DeployError(
+      providerName,
+      'Unknown upload error',
+    )
+
+    const text = await res2.text()
+
+    console.log(text)
+
+    return { cid: CID.parse(text.split(': ')[1]).toV1().toString() }
+  }
 }
 
 export const statusOnGW3: StatusFunction = async (cid, auth) => {

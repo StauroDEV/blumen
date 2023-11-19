@@ -1,6 +1,6 @@
 import { table } from 'table'
 import type { PinStatus, FilecoinDeal } from '../types.js'
-import { colors } from 'consola/utils'
+import * as colors from 'colorette'
 
 export const pinStatus = (
   provider: string,

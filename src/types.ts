@@ -28,7 +28,7 @@ export type UploadArgs = (
   | {
     car: Blob
     cid?: never
-    name?: string
+    name: string
   }
   | {
     car?: never
@@ -41,7 +41,7 @@ AuthArgs
 export type UploadReturnType = {
   cid: string
   providers?: string[]
-  status?: string
+  status?: PinStatus
 }
 
 export type UploadFunction = (args: UploadArgs) => Promise<UploadReturnType>

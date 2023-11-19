@@ -18,7 +18,7 @@ import { EIP3770Address, OperationType } from '@stauro/piggybank/types'
 import { getEip3770Address } from '@stauro/piggybank/utils'
 import { ApiClient } from '@stauro/piggybank/api'
 import { chainIdToSafeApiUrl } from '../utils/safe.js'
-import { colors } from 'consola/utils'
+import * as colors from 'colorette'
 import { logger } from '../utils/logger.js'
 
 export const ensAction = async (

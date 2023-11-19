@@ -26,9 +26,6 @@ dependencies:
   cac:
     specifier: ^6.7.14
     version: 6.7.14
-  consola:
-    specifier: ^3.2.3
-    version: 3.2.3
   globby:
     specifier: ^14.0.0
     version: 14.0.0
@@ -57,7 +54,7 @@ devDependencies:
     version: 1.4.0(eslint@8.54.0)(typescript@5.2.2)
   '@types/node':
     specifier: ^20.9.1
-    version: 20.9.1
+    version: 20.9.2
   '@types/semver':
     specifier: ^7.5.5
     version: 7.5.5
@@ -67,6 +64,9 @@ devDependencies:
   '@typescript-eslint/parser':
     specifier: ^6.11.0
     version: 6.11.0(eslint@8.54.0)(typescript@5.2.2)
+  colorette:
+    specifier: ^2.0.20
+    version: 2.0.20
   globals:
     specifier: ^13.23.0
     version: 13.23.0
@@ -462,7 +462,7 @@ packages:
       conventional-commits-filter: 4.0.0
       conventional-commits-parser: 5.0.0
       debug: 4.3.4
-      import-from-esm: 1.3.1
+      import-from-esm: 1.3.3
       lodash-es: 4.17.21
       micromatch: 4.0.5
       semantic-release: 22.0.8(typescript@5.2.2)
@@ -536,7 +536,7 @@ packages:
       conventional-commits-parser: 5.0.0
       debug: 4.3.4
       get-stream: 7.0.1
-      import-from-esm: 1.3.1
+      import-from-esm: 1.3.3
       into-stream: 7.0.0
       lodash-es: 4.17.21
       read-pkg-up: 11.0.0
@@ -545,9 +545,9 @@ packages:
       - supports-color
     dev: true
 
-  /@sindresorhus/is@3.1.2:
-    resolution: {integrity: sha512-JiX9vxoKMmu8Y3Zr2RVathBL1Cdu4Nt4MuNWemt1Nc06A0RAin9c5FArkhGsyMBWfCu4zj+9b+GxtjAnE4qqLQ==}
-    engines: {node: '>=10'}
+  /@sindresorhus/is@6.1.0:
+    resolution: {integrity: sha512-BuvU07zq3tQ/2SIgBsEuxKYDyDjC0n7Zir52bpHy2xnBbW81+po43aLFPLbeV3HRAheFbGud1qgcqSYfhtHMAg==}
+    engines: {node: '>=16'}
     dev: true
 
   /@sindresorhus/merge-streams@1.0.0:
@@ -612,8 +612,8 @@ packages:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
     dev: true
 
-  /@types/node@20.9.1:
-    resolution: {integrity: sha512-HhmzZh5LSJNS5O8jQKpJ/3ZcrrlG6L70hpGqMIAoM9YVD0YBRNWYsfwcXq8VnSjlNpCpgLzMXdiPo+dxcvSmiA==}
+  /@types/node@20.9.2:
+    resolution: {integrity: sha512-WHZXKFCEyIUJzAwh3NyyTHYSR35SevJ6mZ1nWwJafKtiQbqRTIKSRcw3Ma3acqgsent3RRDqeVwpHntMk+9irg==}
     dependencies:
       undici-types: 5.26.5
 
@@ -628,7 +628,7 @@ packages:
   /@types/varint@6.0.3:
     resolution: {integrity: sha512-DHukoGWdJ2aYkveZJTB2rN2lp6m7APzVsoJQ7j/qy1fQxyamJTPD5xQzCMoJ2Qtgn0mE3wWeNOpbTyBFvF+dyA==}
     dependencies:
-      '@types/node': 20.9.1
+      '@types/node': 20.9.2
     dev: true
 
   /@typescript-eslint/parser@6.11.0(eslint@8.54.0)(typescript@5.2.2):
@@ -986,6 +986,10 @@ packages:
   /color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
 
+  /colorette@2.0.20:
+    resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
+    dev: true
+
   /compare-func@2.0.0:
     resolution: {integrity: sha512-zHig5N+tPWARooBnb0Zx1MFcdfpyJrfTJ3Y5L+IFvUm8rM74hHz66z0gw0x4tijh5CorKkKUCnW82R2vmpeCRA==}
     dependencies:
@@ -1003,11 +1007,6 @@ packages:
       ini: 1.3.8
       proto-list: 1.2.4
     dev: true
-
-  /consola@3.2.3:
-    resolution: {integrity: sha512-I5qxpzLv+sJhTVEoLYNcTW+bThDCPsit0vLNKShZx6rLtpilNpmmeTPaeqJb9ZE9dV3DGaeby6Vuhrw38WjeyQ==}
-    engines: {node: ^14.18.0 || >=16.10.0}
-    dev: false
 
   /conventional-changelog-angular@7.0.0:
     resolution: {integrity: sha512-ROjNchA9LgfNMTTFSIWPzebCwOGFdgkEq45EnvvrmSLvCtAw0HSmrCs7/ty+wAeYUZyNay0YMUNYFTRL72PkBQ==}
@@ -1561,7 +1560,7 @@ packages:
     resolution: {integrity: sha512-+K84LB1DYwMHoHSgaOY/Jfhw3ucPmSET5v98Ke/HdNSw4a0UktWzyW1mjhjpuxxTqOOsfWT/7iVshHmVZ4IpOA==}
     engines: {node: ^16.14.0 || >=18.0.0}
     dependencies:
-      lru-cache: 10.0.2
+      lru-cache: 10.0.3
     dev: true
 
   /http-proxy-agent@7.0.0:
@@ -1601,8 +1600,8 @@ packages:
       resolve-from: 4.0.0
     dev: true
 
-  /import-from-esm@1.3.1:
-    resolution: {integrity: sha512-YltaeDglQ6wDZOC8ZAY2I8vK1Ag4XVbs4GhlvNALWz0ee5V+CMkcBhAKbs1iuJZ3fmfgrKFCDRwliM3OxyQMLA==}
+  /import-from-esm@1.3.3:
+    resolution: {integrity: sha512-U3Qt/CyfFpTUv6LOP2jRTLYjphH6zg3okMfHbyqRa/W2w6hr8OsJWVggNlR4jxuojQy81TgTJTxgSkyoteRGMQ==}
     engines: {node: '>=16.20'}
     dependencies:
       debug: 4.3.4
@@ -1885,11 +1884,9 @@ packages:
     resolution: {integrity: sha512-lcHwpNoggQTObv5apGNCTdJrO69eHOZMi4BNC+rTLER8iHAqGrUVeLh/irVIM7zTw2bOXA8T6uNPeujwOLg/2Q==}
     dev: false
 
-  /lru-cache@10.0.2:
-    resolution: {integrity: sha512-Yj9mA8fPiVgOUpByoTZO5pNrcl5Yk37FcSHsUINpAsaBIEZIuqcCclDZJCVxqQShDsmYX8QG63svJiTbOATZwg==}
+  /lru-cache@10.0.3:
+    resolution: {integrity: sha512-B7gr+F6MkqB3uzINHXNctGieGsRTMwIBgxkp0yq/5BwcuDzD4A8wQpHQW6vDAm1uKSLQghmRdD9sKqf2vJ1cEg==}
     engines: {node: 14 || >=16.14}
-    dependencies:
-      semver: 7.5.4
     dev: true
 
   /lru-cache@6.0.0:
@@ -1909,7 +1906,7 @@ packages:
       chalk: 5.3.0
       cli-table3: 0.6.3
       marked: 9.1.6
-      node-emoji: 2.1.0
+      node-emoji: 2.1.1
       supports-hyperlinks: 3.0.0
     dev: true
 
@@ -2000,10 +1997,11 @@ packages:
     engines: {node: '>=10.5.0'}
     dev: false
 
-  /node-emoji@2.1.0:
-    resolution: {integrity: sha512-tcsBm9C6FmPN5Wo7OjFi9lgMyJjvkAeirmjR/ax8Ttfqy4N8PoFic26uqFTIgayHPNI5FH4ltUvfh9kHzwcK9A==}
+  /node-emoji@2.1.1:
+    resolution: {integrity: sha512-+fyi06+Z9LARCwnTmUF1sRPVQFhGlIpuye3zwlzMN8bIKou6l7k1rGV8WVOEu9EQnRLfoVOYj/p107u0CoQoKA==}
+    engines: {node: '>=18'}
     dependencies:
-      '@sindresorhus/is': 3.1.2
+      '@sindresorhus/is': 6.1.0
       char-regex: 1.0.2
       emojilib: 2.4.0
       skin-tone: 2.0.0
@@ -2319,7 +2317,7 @@ packages:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 20.9.1
+      '@types/node': 20.9.2
       long: 5.2.3
     dev: false
 
@@ -2451,7 +2449,7 @@ packages:
       git-log-parser: 1.2.0
       hook-std: 3.0.0
       hosted-git-info: 7.0.1
-      import-from-esm: 1.3.1
+      import-from-esm: 1.3.3
       lodash-es: 4.17.21
       marked: 9.1.6
       marked-terminal: 6.1.0(marked@9.1.6)
