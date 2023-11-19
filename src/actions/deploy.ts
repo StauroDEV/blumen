@@ -7,21 +7,21 @@ import mod from 'ascii-bar'
 import { ensAction } from './ens.js'
 import { ChainName } from '../types.js'
 import { Address } from 'viem'
-import { colors } from 'consola/utils'
 import { logger } from '../utils/logger.js'
+import * as colors from 'colorette'
 
 const AsciiBar = mod.default
 
 export const deployAction = async (
   dir: string,
-  { strict, ens, chain, safe, name, dist }: { strict: boolean, chain: ChainName, ens: string, safe: Address, name?: string, dist?: string },
+  { strict, ens, chain = 'mainnet', safe, name: customName, dist }: { strict: boolean, chain?: ChainName, ens?: string, safe?: Address, name?: string, dist?: string },
 ) => {
   if (!dir) {
     if (await exists('dist')) dir = 'dist'
     else dir = '.'
   }
   const normalizedPath = path.join(process.cwd(), dir)
-  name = name || path.basename(normalizedPath)
+  const name = customName || path.basename(normalizedPath)
   const [size, files] = await walk(normalizedPath)
 
   if (size === 0) throw new MissingDirectoryError(dir)

@@ -28,7 +28,7 @@ export type UploadArgs = (
   | {
     car: Blob
     cid?: never
-    name?: string
+    name: string
   }
   | {
     car?: never
