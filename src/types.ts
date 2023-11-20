@@ -1,5 +1,4 @@
 import type { ReadableStream } from 'node:stream/web'
-import type { Blob } from 'node:buffer'
 
 export interface BlobLike {
   /**
