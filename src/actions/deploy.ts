@@ -7,7 +7,7 @@ import mod from 'ascii-bar'
 import { ensAction } from './ens.js'
 import { ChainName } from '../types.js'
 import { Address } from 'viem'
-import { logger } from '../utils/logger.js'
+import { deployMessage, logger } from '../utils/logger.js'
 import * as colors from 'colorette'
 
 const AsciiBar = mod.default
@@ -59,38 +59,21 @@ export const deployAction = async (
     const envVar = findEnvVarProviderName(provider)!
     const token = apiTokens.get(envVar)!
 
-    if (providers.indexOf(provider) === 0) {
-      bar?.update(total++, `Uploading to ${provider}`)
+    bar?.update(total++, deployMessage(provider, PROVIDERS[envVar].supported))
 
-      try {
-        await PROVIDERS[envVar]!.upload({
-          name,
-          car: blob,
-          token,
-          accessKey: apiTokens.get('GW3_ACCESS_KEY'),
-          cid,
-        })
-      }
-      catch (e) {
-        if (strict) throw e
-        else errors.push(e as Error)
-      }
+    try {
+      await PROVIDERS[envVar].upload({
+        name,
+        car: blob,
+        token,
+        accessKey: apiTokens.get('GW3_ACCESS_KEY'),
+        cid,
+        first: providers.indexOf(provider) === 0,
+      })
     }
-    else {
-      bar?.update(total++, `Pinning to ${provider}`)
-
-      try {
-        await PROVIDERS[envVar]!.upload({
-          name,
-          cid: rootCID.toString(),
-          token,
-          accessKey: apiTokens.get('GW3_ACCESS_KEY'),
-        })
-      }
-      catch (e) {
-        if (strict) throw e
-        else errors.push(e as Error)
-      }
+    catch (e) {
+      if (strict) throw e
+      else errors.push(e as Error)
     }
   }
   bar?.update(total) // finish

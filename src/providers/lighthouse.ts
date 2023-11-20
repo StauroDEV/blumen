@@ -1,18 +1,24 @@
-import { DeployError } from '../errors.js'
+import { DeployError, MissingKeyError } from '../errors.js'
 import { StatusFunction, UploadFunction } from '../types.js'
 
 const providerName = 'Lighthouse'
 
-export const uploadOnLighthouse: UploadFunction = async ({ car, cid, name, token }) => {
-  if (car) {
-    const depotTokenRes = await fetch('https://data-depot.lighthouse.storage/api/auth/lighthouse_auth', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    const depotTokenJson = await depotTokenRes.json()
+const getDepotToken = async (token: string) => {
+  const depotTokenRes = await fetch('https://data-depot.lighthouse.storage/api/auth/lighthouse_auth', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  const depotTokenJson = await depotTokenRes.json()
 
-    if (!depotTokenRes.ok) throw new DeployError(providerName, depotTokenJson)
+  if (!depotTokenRes.ok) throw new DeployError(providerName, depotTokenJson)
+
+  return depotTokenJson.access_token
+}
+
+export const uploadOnLighthouse: UploadFunction = async ({ car, cid, name, token, first }) => {
+  if (first) {
+    const depotToken = await getDepotToken(token)
 
     const fd = new FormData()
     fd.append('file', car as Blob)
@@ -20,7 +26,7 @@ export const uploadOnLighthouse: UploadFunction = async ({ car, cid, name, token
       method: 'POST',
       body: fd,
       headers: {
-        Authorization: `Bearer ${depotTokenJson.access_token}`,
+        Authorization: `Bearer ${depotToken}`,
       },
     })
     const json = await res.json()
@@ -29,28 +35,53 @@ export const uploadOnLighthouse: UploadFunction = async ({ car, cid, name, token
 
     return { cid }
   }
-  else {
-    const res = await fetch(new URL('/api/lighthouse/pin', 'https://api.lighthouse.storage'), {
-      method: 'POST',
-      body: JSON.stringify({
-        cid, fileName: name,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    })
 
-    const json = await res.json()
+  const res = await fetch(new URL('/api/lighthouse/pin', 'https://api.lighthouse.storage'), {
+    method: 'POST',
+    body: JSON.stringify({
+      cid, fileName: name,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+  })
 
-    if (!res.ok) throw new DeployError(providerName, json.errors[0].message)
+  const json = await res.json()
 
-    return { cid }
-  }
+  if (!res.ok) throw new DeployError(providerName, json.errors[0].message)
+
+  return { cid }
 }
 
-// export const statusOnLighthouse: StatusFunction = async (cid) => {
-//   const res = await fetch(`https://api.lighthouse.storage/api/lighthouse/deal_status?cid=${cid}`)
+export const statusOnLighthouse: StatusFunction = async ({ cid, auth }) => {
+  if (!auth.token) throw new MissingKeyError(`LIGHTHOUSE_TOKEN`)
 
-//   consol
-// }
+  const depotToken = await getDepotToken(auth.token)
+
+  const res = await fetch(`https://data-depot.lighthouse.storage/api/data/get_user_uploads?pageNo=1`, {
+    headers: {
+      Authorization: `Bearer ${depotToken}`,
+    },
+  },
+  )
+
+  const json = await res.json() as {
+    pieceCid: string
+    fileName: string
+    payloadCid: string
+    mimeType: `${string}/${string}`
+    userName: string
+    createdAt: number
+    carSize: number
+    lastUpdate: number
+    fileStatus: string
+    fileSize: number
+    id: string
+    pieceSize: number
+  }[]
+
+  if (json.find(pin => pin.payloadCid === cid || pin.pieceCid === cid)) return { pin: 'pinned' }
+
+  return { pin: 'not pinned' }
+}

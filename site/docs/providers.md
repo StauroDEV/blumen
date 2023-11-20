@@ -7,7 +7,7 @@ We support a wide range of different IPFS providers.
 - URL: https://filebase.com
 - API Docs: https://docs.filebase.com/api-documentation/ipfs-pinning-service-api
 - API token env var: `BLUMEN_FILEBASE_TOKEN`
-- Supported methods: Pin
+- Supported methods: Pin, Status
 
 > Upload API is in progress
 
@@ -16,7 +16,7 @@ We support a wide range of different IPFS providers.
 - URL: https://old.web3.storage
 - API Docs: https://old.web3.storage/docs/
 - API token env var: `BLUMEN_W3S_TOKEN`
-- Supported methods: Upload
+- Supported methods: Upload, Status
 
 > New UCAN-based web3.storage API integration is in progress
 
@@ -25,7 +25,7 @@ We support a wide range of different IPFS providers.
 - URL: https://www.gw3.io
 - API Docs: https://doc.gw3.io/api/gateway/pinning.html
 - API token env var: `BLUMEN_GW3_TOKEN`, `BLUMEN_GW3_ACCESS_KEY`
-- Supported methods: Upload, Pin
+- Supported methods: Upload, Pin, Status
 
 ## Lighthouse
 

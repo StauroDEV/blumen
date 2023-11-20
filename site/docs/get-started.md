@@ -19,9 +19,9 @@ Run `blumen deploy`, it will pick up the providers from environment and deploy o
 ```sh
 blumen deploy
 
-# ◐ Packing dist (39.96KB)
-# ℹ Root CID: bafybeieg5ighiog2vdb4p64mta4cpulqv56bmyrhwdfff4qomh7z7afbyy
-# ℹ Deploying with providers: web3.storage
+# 📦 Packing dist (39.96KB)
+# 🛈  Root CID: bafybeieg5ighiog2vdb4p64mta4cpulqv56bmyrhwdfff4qomh7z7afbyy
+# 🛈  Deploying with providers: web3.storage
 # ✓ [>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>] Finished in 3s
 # ✔ Deployed across all providers
 
@@ -29,3 +29,5 @@ blumen deploy
 # IPFS:      https://bafybeieg5ighiog2vdb4p64mta4cpulqv56bmyrhwdfff4qomh7z7afbyy.ipfs.dweb.link
 # IPFS Scan: https://ipfs-scan.io/?cid=bafybeieg5ighiog2vdb4p64mta4cpulqv56bmyrhwdfff4qomh7z7afbyy
 ```
+
+Blumen will upload on the first provider and pin on all others. If pinning is not supported by the provider, it will reupload the file.

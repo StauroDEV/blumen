@@ -9,8 +9,6 @@ export const uploadOnW3S: UploadFunction = async ({
   car,
   name,
 }) => {
-  if (!car) throw new PinningNotSupportedError(providerName)
-
   const res = await fetch(new URL('/car', baseURL), {
     method: 'POST',
     headers: {

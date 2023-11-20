@@ -1,3 +1,5 @@
+import { SupportedMethods } from '../types.js'
+
 export const logger = {
   start(...args: unknown[]) {
     console.log('📦', ...args)
@@ -12,6 +14,17 @@ export const logger = {
     console.warn('⚠️', ...args)
   },
   success(...args: unknown[]) {
-    console.log('✅', ...args)
+    console.log('✔', ...args)
   },
+}
+
+export const deployMessage = (provider: string, supports: SupportedMethods) => {
+  switch (supports) {
+    case 'pin':
+      return `📌 to ${provider}`
+    case 'upload':
+      return `💾 to ${provider}`
+    case 'both':
+      return `💾 and 📌 to ${provider}`
+  }
 }
