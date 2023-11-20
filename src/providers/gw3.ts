@@ -31,7 +31,40 @@ export const uploadOnGW3: UploadFunction = async ({
   accessKey,
 }) => {
   if (!accessKey) throw new MissingKeyError('GW3_ACCESS_KEY')
-  if (cid) {
+  if (car) {
+    const res1 = await fetch(
+      new URL(`https://gw3.io/api/v0/dag/import?size=${car!.size}&ts=${getTs()}`, baseURL),
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Access-Key': accessKey,
+          'X-Access-Secret': token,
+        },
+      },
+    )
+    const json = await res1.json()
+    if (!res1.ok || json.code !== 200) {
+      throw new DeployError(
+        providerName,
+        json.msg,
+      )
+    }
+    const fd = new FormData()
+
+    fd.append('file', car as Blob)
+
+    const res2 = await fetch(json.data.url, {
+      method: 'POST',
+      body: fd,
+    })
+
+    if (!res2.ok) throw new DeployError(providerName, await res2.text())
+
+    return { cid }
+  }
+  else {
     const res = await fetch(
       new URL(`/api/v0/pin/add?arg=${cid}&ts=${getTs()}`, baseURL),
       {
@@ -54,36 +87,6 @@ export const uploadOnGW3: UploadFunction = async ({
     }
 
     return { cid }
-  }
-  else {
-    const res1 = await fetch(
-      new URL(`https://gw3.io/api/v0/dag/import?size=${car!.size}&ts=${getTs()}&path=/`, baseURL),
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-Access-Key': accessKey,
-          'X-Access-Secret': token,
-        },
-      },
-    )
-    const json = await res1.json()
-    if (!res1.ok || json.code !== 200) {
-      throw new DeployError(
-        providerName,
-        json.msg,
-      )
-    }
-
-    const res2 = await fetch(json.data.url, {
-      method: 'POST',
-      body: car as Blob,
-    })
-
-    if (!res2.ok) throw new DeployError(providerName, await res2.text())
-
-    return { cid: CID.parse(res2.headers.get('ipfs-hash')!).toV1().toString() }
   }
 }
 

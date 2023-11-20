@@ -25,16 +25,16 @@ type AuthArgs = {
 }
 
 export type UploadArgs<T> = (
-  | {
-    car: Blob
-    cid?: never
-    name: string
-  }
-  | {
-    car?: never
+  {
     cid: string
     name: string
-  }
+  } &
+   ({
+     car: Blob
+   }
+  | {
+    car?: never
+  })
 ) &
 AuthArgs & T
 
