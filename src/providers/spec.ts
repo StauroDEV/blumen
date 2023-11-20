@@ -1,8 +1,8 @@
 import { DeployError, UploadNotSupportedError } from '../errors.js'
 import { UploadFunction } from '../types.js'
 
-export const specPin: UploadFunction<{ baseURL: string, providerName: string }> = async ({ baseURL, providerName, cid, name, token }) => {
-  if (!cid) throw new UploadNotSupportedError(providerName)
+export const specPin: UploadFunction<{ baseURL: string, providerName: string }> = async ({ baseURL, providerName, cid, name, token, car }) => {
+  if (car) throw new UploadNotSupportedError(providerName)
 
   const res = await fetch(new URL('pins', baseURL), {
     method: 'POST',

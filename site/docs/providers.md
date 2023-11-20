@@ -25,4 +25,11 @@ We support a wide range of different IPFS providers.
 - URL: https://www.gw3.io
 - API Docs: https://doc.gw3.io/api/gateway/pinning.html
 - API token env var: `BLUMEN_GW3_TOKEN`, `BLUMEN_GW3_ACCESS_KEY`
-- Supported methods: Upload, Pin [not working for now]
+- Supported methods: Upload, Pin
+
+## Lighthouse
+
+- URL: https://lighthouse.storage
+- API Docs: https://docs.lighthouse.storage
+- API token env var: `BLUMEN_LIGHTHOUSE_TOKEN`
+- Supported methods: Upload, Pin

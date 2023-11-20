@@ -1,5 +1,6 @@
 import { uploadOnFilebase } from './providers/filebase.js'
 import { statusOnGW3, uploadOnGW3 } from './providers/gw3.js'
+import { uploadOnLighthouse } from './providers/lighthouse.js'
 import { statusOnW3S, uploadOnW3S } from './providers/w3s.js'
 import type { StatusFunction, UploadFunction } from './types.js'
 
@@ -20,5 +21,9 @@ string,
   FILEBASE_TOKEN: {
     name: 'Filebase',
     upload: uploadOnFilebase,
+  },
+  LIGHTHOUSE_TOKEN: {
+    name: 'Lighthouse',
+    upload: uploadOnLighthouse,
   },
 }

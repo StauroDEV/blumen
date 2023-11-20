@@ -9,7 +9,6 @@ import { createDirectoryEncoderStream, CAREncoderStream } from '../ipfs-car/inde
 import { Block } from '@ipld/unixfs'
 import { writableToWeb } from '../polyfills/toWeb.js'
 import { Writable } from 'node:stream'
-import { Blob } from 'node:buffer'
 
 const tmp = tmpdir()
 

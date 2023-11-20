@@ -7,10 +7,9 @@ const providerName = 'web3.storage'
 export const uploadOnW3S: UploadFunction = async ({
   token,
   car,
-  cid,
   name,
 }) => {
-  if (cid) throw new PinningNotSupportedError(providerName)
+  if (!car) throw new PinningNotSupportedError(providerName)
 
   const res = await fetch(new URL('/car', baseURL), {
     method: 'POST',

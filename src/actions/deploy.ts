@@ -68,6 +68,7 @@ export const deployAction = async (
           car: blob,
           token,
           accessKey: apiTokens.get('GW3_ACCESS_KEY'),
+          cid,
         })
       }
       catch (e) {
