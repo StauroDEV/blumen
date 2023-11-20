@@ -1,5 +1,5 @@
 import { DeployError } from '../errors.js'
-import { UploadFunction } from '../types.js'
+import { StatusFunction, UploadFunction } from '../types.js'
 
 const providerName = 'Lighthouse'
 
@@ -23,7 +23,7 @@ export const uploadOnLighthouse: UploadFunction = async ({ car, cid, name, token
         Authorization: `Bearer ${depotTokenJson.access_token}`,
       },
     })
-    const json = await res.text()
+    const json = await res.json()
 
     if (!res.ok) throw new DeployError(providerName, json)
 
@@ -48,3 +48,9 @@ export const uploadOnLighthouse: UploadFunction = async ({ car, cid, name, token
     return { cid }
   }
 }
+
+// export const statusOnLighthouse: StatusFunction = async (cid) => {
+//   const res = await fetch(`https://api.lighthouse.storage/api/lighthouse/deal_status?cid=${cid}`)
+
+//   consol
+// }

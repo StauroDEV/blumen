@@ -1,4 +1,4 @@
-import { uploadOnFilebase } from './providers/filebase.js'
+import { statusOnFilebase, uploadOnFilebase } from './providers/filebase.js'
 import { statusOnGW3, uploadOnGW3 } from './providers/gw3.js'
 import { uploadOnLighthouse } from './providers/lighthouse.js'
 import { statusOnW3S, uploadOnW3S } from './providers/w3s.js'
@@ -21,6 +21,7 @@ string,
   FILEBASE_TOKEN: {
     name: 'Filebase',
     upload: uploadOnFilebase,
+    status: statusOnFilebase,
   },
   LIGHTHOUSE_TOKEN: {
     name: 'Lighthouse',

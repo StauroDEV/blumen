@@ -3,8 +3,6 @@ import {
   DeployError,
   MissingKeyError,
 } from '../errors.js'
-import { CID } from 'multiformats'
-import { logger } from '../utils/logger.js'
 
 type GW3PinStatus = 'pinned' | 'unpinning' | 'failure' | 'pinning'
 
@@ -90,7 +88,7 @@ export const uploadOnGW3: UploadFunction = async ({
   }
 }
 
-export const statusOnGW3: StatusFunction = async (cid, auth) => {
+export const statusOnGW3: StatusFunction = async ({ cid, auth }) => {
   if (!auth?.accessKey) throw new MissingKeyError('GW3_ACCESS_KEY')
   if (!auth?.token) throw new MissingKeyError('GW3_TOKEN')
 
@@ -111,9 +109,12 @@ export const statusOnGW3: StatusFunction = async (cid, auth) => {
       cid: string
       status: GW3PinStatus
     }[]
+    total: number
   }
 
   if (json.code !== 200) return { pin: 'unknown' }
+
+  if (json.total === 0) return { pin: 'not pinned' }
 
   const pin = json.data.find(pin => pin.cid === cid)
   if (!pin) return { pin: 'unknown' }

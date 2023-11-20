@@ -47,13 +47,17 @@ export type UploadFunction<T= {}> = (args: UploadArgs<T>) => Promise<UploadRetur
 
 export type Supported = 'upload' | 'pin'
 
-export type PinStatus = 'queued' | 'pinned' | 'failed' | 'unpinning' | 'unknown'
+export type PinStatus = 'queued' | 'pinned' | 'failed' | 'unpinning' | 'unknown' | 'not pinned'
 
 export type FilecoinDeal = { status: string, dealId: string }
 
-export type StatusFunction = (
-  cid: string,
-  auth?: Partial<AuthArgs>,
+type StatusArgs<T> = {
+  cid: string
+  auth?: Partial<AuthArgs>
+} & T
+
+export type StatusFunction<T = {}> = (
+  args: StatusArgs<T>
 ) => Promise<{
   pin: PinStatus
   deals?: FilecoinDeal[]

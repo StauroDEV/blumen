@@ -33,7 +33,7 @@ export const uploadOnW3S: UploadFunction = async ({
   return json as { cid: string }
 }
 
-export const statusOnW3S: StatusFunction = async (cid) => {
+export const statusOnW3S: StatusFunction = async ({ cid }) => {
   const res = await fetch(new URL(`/status/${cid}`, baseURL))
   const json = (await res.json()) as {
     pins: [{ status: string }]
