@@ -32,4 +32,4 @@ We support a wide range of different IPFS providers.
 - URL: https://lighthouse.storage
 - API Docs: https://docs.lighthouse.storage
 - API token env var: `BLUMEN_LIGHTHOUSE_TOKEN`
-- Supported methods: Upload (WIP), Pin
+- Supported methods: Upload, Pin
