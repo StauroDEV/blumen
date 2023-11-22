@@ -10,7 +10,7 @@ import { pinStatus } from '../utils/pin.js'
 
 export const statusAction = async (
   cid: string,
-  { providers: providersOptionList }: { providers: string },
+  { providers: providersOptionList, verbose }: { providers: string, verbose?: boolean },
 ) => {
   // Validate CID
   try {
@@ -44,6 +44,7 @@ export const statusAction = async (
           accessKey: env.get('GW3_ACCESS_KEY'),
           token: env.get(token),
         },
+        verbose,
       })
       pinStatus(provider.name, pin, deals)
     }

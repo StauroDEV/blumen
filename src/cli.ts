@@ -17,12 +17,14 @@ cli
   .option('--chain <chain>', 'Chain to use for ENS', { default: 'mainnet' })
   .option('--name <name>', 'Name of the distribution (without file extension)')
   .option('--dist <dist>', 'Directory to store the distribution file')
+  .option('--verbose', 'More verbose logs')
   .action(deployAction)
   .example('blumen deploy --strict ./dist')
 
 cli
   .command('status <cid>', 'Check IPFS deployment status')
   .option('--providers <providers>', 'List providers to check status from')
+  .option('--verbose', 'More verbose logs')
   .action(statusAction)
   .example('blumen status bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 --providers web3.storage')
 

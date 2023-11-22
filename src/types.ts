@@ -28,6 +28,7 @@ export type UploadArgs<T> = (
     cid: string
     name: string
     car: Blob
+    verbose?: boolean
     /**
      * Where the provider goes first or it's subsequent
      */
@@ -51,6 +52,7 @@ export type FilecoinDeal = { status: string, dealId: string }
 type StatusArgs<T> = {
   cid: string
   auth: Partial<AuthArgs>
+  verbose?: boolean
 } & T
 
 export type StatusFunction<T = {}> = (

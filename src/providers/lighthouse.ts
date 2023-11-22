@@ -32,8 +32,6 @@ export const uploadOnLighthouse: UploadFunction = async ({ car, cid, name, token
     const json = await res.json()
 
     if (!res.ok) throw new DeployError(providerName, json)
-
-    return { cid }
   }
 
   const res = await fetch(new URL('/api/lighthouse/pin', 'https://api.lighthouse.storage'), {

@@ -14,7 +14,7 @@ const AsciiBar = mod.default
 
 export const deployAction = async (
   dir: string,
-  { strict, ens, chain = 'mainnet', safe, name: customName, dist }: { strict: boolean, chain?: ChainName, ens?: string, safe?: Address, name?: string, dist?: string },
+  { strict, ens, chain = 'mainnet', safe, name: customName, dist, verbose }: { strict: boolean, chain?: ChainName, ens?: string, safe?: Address, name?: string, dist?: string, verbose?: boolean },
 ) => {
   if (!dir) {
     if (await exists('dist')) dir = 'dist'
@@ -69,6 +69,7 @@ export const deployAction = async (
         accessKey: apiTokens.get('GW3_ACCESS_KEY'),
         cid,
         first: providers.indexOf(provider) === 0,
+        verbose,
       })
     }
     catch (e) {

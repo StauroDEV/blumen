@@ -3,6 +3,7 @@ import {
   DeployError,
   MissingKeyError,
 } from '../errors.js'
+import { logger } from '../utils/logger.js'
 
 type GW3PinStatus = 'pinned' | 'unpinning' | 'failure' | 'pinning'
 
@@ -22,7 +23,7 @@ const mapGw3StatusToGenericStatus = (status: GW3PinStatus): PinStatus => {
 const baseURL = 'https://gw3.io'
 const providerName = 'Gateway3'
 
-export const uploadOnGW3: UploadFunction = async ({ token, car, cid, accessKey, first }) => {
+export const uploadOnGW3: UploadFunction = async ({ token, car, cid, accessKey, first, verbose }) => {
   if (!accessKey) throw new MissingKeyError('GW3_ACCESS_KEY')
   if (first) {
     const res1 = await fetch(
@@ -37,6 +38,9 @@ export const uploadOnGW3: UploadFunction = async ({ token, car, cid, accessKey, 
         },
       },
     )
+
+    if (verbose) logger.request('POST', res1.url, res1.status)
+
     const json = await res1.json()
     if (!res1.ok || json.code !== 200) {
       throw new DeployError(
@@ -53,9 +57,9 @@ export const uploadOnGW3: UploadFunction = async ({ token, car, cid, accessKey, 
       body: fd,
     })
 
-    if (!res2.ok) throw new DeployError(providerName, await res2.text())
+    if (verbose) logger.request('POST', res2.url, res2.status)
 
-    return { cid }
+    if (!res2.ok) throw new DeployError(providerName, await res2.text())
   }
 
   const res = await fetch(
@@ -71,6 +75,8 @@ export const uploadOnGW3: UploadFunction = async ({ token, car, cid, accessKey, 
     },
   )
 
+  if (verbose) logger.request('POST', res.url, res.status)
+
   const json = await res.json()
   if (!res.ok) {
     throw new DeployError(
@@ -82,7 +88,7 @@ export const uploadOnGW3: UploadFunction = async ({ token, car, cid, accessKey, 
   return { cid }
 }
 
-export const statusOnGW3: StatusFunction = async ({ cid, auth }) => {
+export const statusOnGW3: StatusFunction = async ({ cid, auth, verbose }) => {
   if (!auth?.accessKey) throw new MissingKeyError('GW3_ACCESS_KEY')
   if (!auth?.token) throw new MissingKeyError('GW3_TOKEN')
 
@@ -97,6 +103,9 @@ export const statusOnGW3: StatusFunction = async ({ cid, auth }) => {
       },
     },
   )
+
+  if (verbose) logger.request('GET', res.url, res.status)
+
   const json = (await res.json()) as {
     code: number
     data: {

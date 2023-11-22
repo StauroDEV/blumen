@@ -1,4 +1,11 @@
+import { bgGreen, bgRed, bgYellow, cyan, green } from 'colorette'
 import { SupportedMethods } from '../types.js'
+
+const responseStatus = (status: number) => {
+  if (status < 300) return bgGreen(status)
+  else if (status < 400) return bgYellow(status)
+  else return bgRed(status)
+}
 
 export const logger = {
   start(...args: unknown[]) {
@@ -15,6 +22,9 @@ export const logger = {
   },
   success(...args: unknown[]) {
     console.log('✔', ...args)
+  },
+  request(method: 'GET' | 'POST', url: string, status: number) {
+    console.log('\n', method === 'GET' ? cyan(method) : green(method), url, responseStatus(status))
   },
 }
 

@@ -1,5 +1,6 @@
 import type { PinStatus, StatusFunction, UploadFunction } from '../types.js'
 import { DeployError, PinningNotSupportedError } from '../errors.js'
+import { logger } from '../utils/logger.js'
 
 const baseURL = 'https://api.web3.storage'
 const providerName = 'web3.storage'
@@ -8,6 +9,7 @@ export const uploadOnW3S: UploadFunction = async ({
   token,
   car,
   name,
+  verbose,
 }) => {
   const res = await fetch(new URL('/car', baseURL), {
     method: 'POST',
@@ -19,6 +21,8 @@ export const uploadOnW3S: UploadFunction = async ({
     },
     body: car as Blob,
   })
+
+  if (verbose) logger.request('POST', res.url, res.status)
 
   const json = await res.json()
   if (!res.ok) {
