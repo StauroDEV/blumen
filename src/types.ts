@@ -23,7 +23,7 @@ type AuthArgs = {
   accessKey?: string
 }
 
-export type UploadArgs<T> = (
+export type UploadArgs<T = {}> = (
   {
     cid: string
     name: string

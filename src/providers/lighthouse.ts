@@ -1,24 +1,28 @@
 import { DeployError, MissingKeyError } from '../errors.js'
-import { StatusFunction, UploadFunction } from '../types.js'
+import { StatusFunction, UploadArgs, UploadFunction } from '../types.js'
+import { logger } from '../utils/logger.js'
 
 const providerName = 'Lighthouse'
 
-const getDepotToken = async (token: string) => {
-  const depotTokenRes = await fetch('https://data-depot.lighthouse.storage/api/auth/lighthouse_auth', {
+const getDepotToken = async (token: string, { verbose }: Pick<UploadArgs, 'verbose'>) => {
+  const res = await fetch('https://data-depot.lighthouse.storage/api/auth/lighthouse_auth', {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   })
-  const depotTokenJson = await depotTokenRes.json()
 
-  if (!depotTokenRes.ok) throw new DeployError(providerName, depotTokenJson)
+  if (verbose) logger.request('GET', res.url, res.status)
+
+  const depotTokenJson = await res.json()
+
+  if (!res.ok) throw new DeployError(providerName, depotTokenJson)
 
   return depotTokenJson.access_token
 }
 
-export const uploadOnLighthouse: UploadFunction = async ({ car, cid, name, token, first }) => {
+export const uploadOnLighthouse: UploadFunction = async ({ car, cid, name, token, first, verbose }) => {
   if (first) {
-    const depotToken = await getDepotToken(token)
+    const depotToken = await getDepotToken(token, { verbose })
 
     const fd = new FormData()
     fd.append('file', car as Blob)
@@ -29,6 +33,9 @@ export const uploadOnLighthouse: UploadFunction = async ({ car, cid, name, token
         Authorization: `Bearer ${depotToken}`,
       },
     })
+
+    if (verbose) logger.request('POST', res.url, res.status)
+
     const json = await res.json()
 
     if (!res.ok) throw new DeployError(providerName, json)
@@ -52,10 +59,10 @@ export const uploadOnLighthouse: UploadFunction = async ({ car, cid, name, token
   return { cid }
 }
 
-export const statusOnLighthouse: StatusFunction = async ({ cid, auth }) => {
+export const statusOnLighthouse: StatusFunction = async ({ cid, auth, verbose }) => {
   if (!auth.token) throw new MissingKeyError(`LIGHTHOUSE_TOKEN`)
 
-  const depotToken = await getDepotToken(auth.token)
+  const depotToken = await getDepotToken(auth.token, { verbose })
 
   const res = await fetch(`https://data-depot.lighthouse.storage/api/data/get_user_uploads?pageNo=1`, {
     headers: {
