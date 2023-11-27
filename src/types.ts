@@ -23,17 +23,21 @@ type AuthArgs = {
   accessKey?: string
 }
 
-export type UploadArgs<T> = (
+export type UploadArgs<T = {}> = (
   {
     cid: string
     name: string
-  } &
-   ({
-     car: Blob
-   }
-  | {
-    car?: never
-  })
+    car: Blob
+    verbose?: boolean
+    /**
+     * Where the provider goes first or it's subsequent
+     */
+    first: boolean
+    /**
+     * Filebase-only
+     */
+    bucketName?: string
+  }
 ) &
 AuthArgs & T
 
@@ -45,18 +49,23 @@ export type UploadReturnType = {
 
 export type UploadFunction<T= {}> = (args: UploadArgs<T>) => Promise<UploadReturnType>
 
-export type Supported = 'upload' | 'pin'
-
-export type PinStatus = 'queued' | 'pinned' | 'failed' | 'unpinning' | 'unknown'
+export type PinStatus = 'queued' | 'pinned' | 'failed' | 'unpinning' | 'unknown' | 'not pinned'
 
 export type FilecoinDeal = { status: string, dealId: string }
 
-export type StatusFunction = (
-  cid: string,
-  auth?: Partial<AuthArgs>,
+type StatusArgs<T> = {
+  cid: string
+  auth: Partial<AuthArgs>
+  verbose?: boolean
+} & T
+
+export type StatusFunction<T = {}> = (
+  args: StatusArgs<T>
 ) => Promise<{
   pin: PinStatus
   deals?: FilecoinDeal[]
 }>
 
 export type ChainName = 'mainnet' | 'goerli'
+
+export type SupportedMethods = 'pin' | 'upload' | 'both'

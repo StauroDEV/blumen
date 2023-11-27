@@ -6,6 +6,7 @@ import js from '@eslint/js'
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
   { files: ['src/**/*.ts', 'eslint.config.js'], ...js.configs.recommended },
+  { files: ['src/**/*.ts', 'eslint.config.js'], ...stylistic.configs['recommended-flat'] },
   { files: ['src/**/*.ts', 'eslint.config.js'],
     languageOptions: {
       globals: {
@@ -21,7 +22,7 @@ export default [
     },
     rules: {
       'no-unused-vars': 'off',
+      '@stylistic/max-len': ['error', { code: 120 }],
     },
   },
-  { files: ['src/**/*.ts', 'eslint.config.js'], ...stylistic.configs['recommended-flat'] },
 ]

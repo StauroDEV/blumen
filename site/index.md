@@ -1,6 +1,11 @@
-# Blumen
+<div align="center">
+  <img src="https://blumen.myfilebase.com/ipfs/QmeQrErKhJxfxxVc5NSuvVyAcvih8icLBY8WzEZ4SbeHEL" height="200" width="200" />
+  <h1>Blumen</h1>
+</div>
 
 **Blumen** is a CLI and API library to deploy apps on the decentralized web using IPFS and Ethereum.
+
+<video src="https://blumen.myfilebase.com/ipfs/QmWVyDjVMaq6GuNZbYt9MS36JMEe2Ad1eg6e14ah6vzMpx" height="1254" width="960" controls />
 
 ## Features
 

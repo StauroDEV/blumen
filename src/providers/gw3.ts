@@ -3,7 +3,6 @@ import {
   DeployError,
   MissingKeyError,
 } from '../errors.js'
-import { CID } from 'multiformats'
 import { logger } from '../utils/logger.js'
 
 type GW3PinStatus = 'pinned' | 'unpinning' | 'failure' | 'pinning'
@@ -24,14 +23,9 @@ const mapGw3StatusToGenericStatus = (status: GW3PinStatus): PinStatus => {
 const baseURL = 'https://gw3.io'
 const providerName = 'Gateway3'
 
-export const uploadOnGW3: UploadFunction = async ({
-  token,
-  car,
-  cid,
-  accessKey,
-}) => {
+export const uploadOnGW3: UploadFunction = async ({ token, car, cid, accessKey, first, verbose }) => {
   if (!accessKey) throw new MissingKeyError('GW3_ACCESS_KEY')
-  if (car) {
+  if (first) {
     const res1 = await fetch(
       new URL(`https://gw3.io/api/v0/dag/import?size=${car!.size}&ts=${getTs()}`, baseURL),
       {
@@ -44,6 +38,9 @@ export const uploadOnGW3: UploadFunction = async ({
         },
       },
     )
+
+    if (verbose) logger.request('POST', res1.url, res1.status)
+
     const json = await res1.json()
     if (!res1.ok || json.code !== 200) {
       throw new DeployError(
@@ -60,37 +57,38 @@ export const uploadOnGW3: UploadFunction = async ({
       body: fd,
     })
 
+    if (verbose) logger.request('POST', res2.url, res2.status)
+
     if (!res2.ok) throw new DeployError(providerName, await res2.text())
-
-    return { cid }
   }
-  else {
-    const res = await fetch(
-      new URL(`/api/v0/pin/add?arg=${cid}&ts=${getTs()}`, baseURL),
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-Access-Key': accessKey,
-          'X-Access-Secret': token,
-        },
+
+  const res = await fetch(
+    new URL(`/api/v0/pin/add?arg=${cid}&ts=${getTs()}`, baseURL),
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-Access-Key': accessKey,
+        'X-Access-Secret': token,
       },
+    },
+  )
+
+  if (verbose) logger.request('POST', res.url, res.status)
+
+  const json = await res.json()
+  if (!res.ok) {
+    throw new DeployError(
+      providerName,
+      (json).msg,
     )
-
-    const json = await res.json()
-    if (!res.ok) {
-      throw new DeployError(
-        providerName,
-        (json).msg,
-      )
-    }
-
-    return { cid }
   }
+
+  return { cid }
 }
 
-export const statusOnGW3: StatusFunction = async (cid, auth) => {
+export const statusOnGW3: StatusFunction = async ({ cid, auth, verbose }) => {
   if (!auth?.accessKey) throw new MissingKeyError('GW3_ACCESS_KEY')
   if (!auth?.token) throw new MissingKeyError('GW3_TOKEN')
 
@@ -105,15 +103,21 @@ export const statusOnGW3: StatusFunction = async (cid, auth) => {
       },
     },
   )
+
+  if (verbose) logger.request('GET', res.url, res.status)
+
   const json = (await res.json()) as {
     code: number
     data: {
       cid: string
       status: GW3PinStatus
     }[]
+    total: number
   }
 
   if (json.code !== 200) return { pin: 'unknown' }
+
+  if (json.total === 0) return { pin: 'not pinned' }
 
   const pin = json.data.find(pin => pin.cid === cid)
   if (!pin) return { pin: 'unknown' }

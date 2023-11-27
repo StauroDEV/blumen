@@ -7,14 +7,25 @@ import mod from 'ascii-bar'
 import { ensAction } from './ens.js'
 import { ChainName } from '../types.js'
 import { Address } from 'viem'
-import { logger } from '../utils/logger.js'
+import { deployMessage, logger } from '../utils/logger.js'
 import * as colors from 'colorette'
 
 const AsciiBar = mod.default
 
+type DeployActionArgs = {
+  strict: boolean
+  chain?: ChainName
+  ens?: string
+  safe?: Address
+  name?: string
+  dist?: string
+  providers?: string
+  verbose?: boolean
+}
+
 export const deployAction = async (
   dir: string,
-  { strict, ens, chain = 'mainnet', safe, name: customName, dist }: { strict: boolean, chain?: ChainName, ens?: string, safe?: Address, name?: string, dist?: string },
+  { strict, ens, chain = 'mainnet', safe, name: customName, dist, verbose, providers: providersList }: DeployActionArgs,
 ) => {
   if (!dir) {
     if (await exists('dist')) dir = 'dist'
@@ -35,7 +46,7 @@ export const deployAction = async (
 
   const apiTokens = parseTokensFromEnv()
 
-  const providers = tokensToProviderNames(apiTokens.keys())
+  const providers = providersList ? providersList.split(',') : tokensToProviderNames(apiTokens.keys())
 
   if (!providers.length) throw new NoProvidersError()
 
@@ -59,41 +70,26 @@ export const deployAction = async (
     const envVar = findEnvVarProviderName(provider)!
     const token = apiTokens.get(envVar)!
 
-    if (providers.indexOf(provider) === 0) {
-      bar?.update(total++, `Uploading to ${provider}`)
+    bar?.update(total++, deployMessage(provider, PROVIDERS[envVar].supported))
 
-      try {
-        await PROVIDERS[envVar]!.upload({
-          name,
-          car: blob,
-          token,
-          accessKey: apiTokens.get('GW3_ACCESS_KEY'),
-          cid,
-        })
-      }
-      catch (e) {
-        if (strict) throw e
-        else errors.push(e as Error)
-      }
+    try {
+      await PROVIDERS[envVar].upload({
+        name,
+        car: blob,
+        token,
+        accessKey: apiTokens.get('GW3_ACCESS_KEY'),
+        bucketName: apiTokens.get('FILEBASE_BUCKET_NAME'),
+        cid,
+        first: providers.indexOf(provider) === 0,
+        verbose,
+      })
     }
-    else {
-      bar?.update(total++, `Pinning to ${provider}`)
-
-      try {
-        await PROVIDERS[envVar]!.upload({
-          name,
-          cid: rootCID.toString(),
-          token,
-          accessKey: apiTokens.get('GW3_ACCESS_KEY'),
-        })
-      }
-      catch (e) {
-        if (strict) throw e
-        else errors.push(e as Error)
-      }
+    catch (e) {
+      if (strict) throw e
+      else errors.push(e as Error)
     }
   }
-  bar?.update(total) // finish
+  bar?.update(total)
 
   if (errors.length === providers.length) {
     logger.error('Deploy failed')

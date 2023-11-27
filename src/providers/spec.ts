@@ -1,10 +1,13 @@
 import { DeployError, UploadNotSupportedError } from '../errors.js'
-import { UploadFunction } from '../types.js'
+import { StatusFunction, UploadFunction } from '../types.js'
+import { logger } from '../utils/logger.js'
 
-export const specPin: UploadFunction<{ baseURL: string, providerName: string }> = async ({ baseURL, providerName, cid, name, token, car }) => {
-  if (car) throw new UploadNotSupportedError(providerName)
+type SpecPinFunction = UploadFunction<{ baseURL: string, providerName: string }>
 
-  const res = await fetch(new URL('pins', baseURL), {
+export const specPin: SpecPinFunction = async ({ baseURL, providerName, cid, name, token, first, verbose }) => {
+  if (first) throw new UploadNotSupportedError(providerName)
+
+  const res = await fetch(new URL(`${baseURL}/pins`), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -14,9 +17,30 @@ export const specPin: UploadFunction<{ baseURL: string, providerName: string }> 
     }),
   })
 
+  if (verbose) logger.request('POST', res.url, res.status)
+
   const json = await res.json()
 
   if (!res.ok) throw new DeployError(providerName, json.error.details)
 
   return { status: json.status, cid: json.pin.cid }
+}
+
+export const specStatus: StatusFunction<{ baseURL: string }> = async ({ cid, baseURL, auth, verbose }) => {
+  const res = await fetch(`${baseURL}/pins?cid=${cid}&limit=1`, {
+    headers: {
+      Authorization: `Bearer ${auth!.token}`,
+    },
+  })
+
+  if (verbose) logger.request('GET', res.url, res.status)
+
+  const json = await res.json()
+
+  if (res.status === 404) return { pin: 'not pinned' }
+  else if (!res.ok) throw new Error(json.error.details)
+
+  return {
+    pin: json.results[0].status,
+  }
 }
