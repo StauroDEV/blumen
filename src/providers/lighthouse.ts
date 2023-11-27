@@ -1,4 +1,4 @@
-import { DeployError, MissingKeyError } from '../errors.js'
+import { DeployError, MissingKeyError, UploadNotSupportedError } from '../errors.js'
 import { StatusFunction, UploadArgs, UploadFunction } from '../types.js'
 import { logger } from '../utils/logger.js'
 
@@ -22,23 +22,7 @@ const getDepotToken = async (token: string, { verbose }: Pick<UploadArgs, 'verbo
 
 export const uploadOnLighthouse: UploadFunction = async ({ car, cid, name, token, first, verbose }) => {
   if (first) {
-    const depotToken = await getDepotToken(token, { verbose })
-
-    const fd = new FormData()
-    fd.append('file', car as Blob)
-    const res = await fetch('https://data-depot.lighthouse.storage/api/upload/upload_files', {
-      method: 'POST',
-      body: fd,
-      headers: {
-        Authorization: `Bearer ${depotToken}`,
-      },
-    })
-
-    if (verbose) logger.request('POST', res.url, res.status)
-
-    const json = await res.json()
-
-    if (!res.ok) throw new DeployError(providerName, json)
+    throw new UploadNotSupportedError(providerName)
   }
 
   const res = await fetch(new URL('/api/lighthouse/pin', 'https://api.lighthouse.storage'), {

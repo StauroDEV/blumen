@@ -37,6 +37,7 @@
     "@ipld/car": "^5.2.4",
     "@ipld/dag-cbor": "^9.0.6",
     "@ipld/unixfs": "^2.1.2",
+    "@stauro/filebase-upload": "^0.0.4",
     "@stauro/piggybank": "^0.0.5",
     "ascii-bar": "^1.0.3",
     "cac": "^6.7.14",

@@ -24,7 +24,7 @@ string,
     name: 'Filebase',
     upload: uploadOnFilebase,
     status: statusOnFilebase,
-    supported: 'pin',
+    supported: 'both',
   },
   LIGHTHOUSE_TOKEN: {
     name: 'Lighthouse',

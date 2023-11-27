@@ -23,7 +23,7 @@ export const logger = {
   success(...args: unknown[]) {
     console.log('✔', ...args)
   },
-  request(method: 'GET' | 'POST', url: string, status: number) {
+  request(method: 'GET' | 'POST' | 'PUT', url: string, status: number) {
     console.log('\n', method === 'GET' ? cyan(method) : green(method), url, responseStatus(status))
   },
 }

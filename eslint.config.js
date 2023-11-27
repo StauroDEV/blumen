@@ -21,6 +21,7 @@ export default [
     },
     rules: {
       'no-unused-vars': 'off',
+      '@stylistic/max-len': ['error', { code: 120 }],
     },
   },
   { files: ['src/**/*.ts', 'eslint.config.js'], ...stylistic.configs['recommended-flat'] },

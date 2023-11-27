@@ -70,7 +70,9 @@ export const ensAction = async (
 
   logger.info(`Validating transaction for wallet ${account.address}`)
 
-  const from = safeAddress ? getEip3770Address({ fullAddress: safeAddress, chainId: chain.id }).address : account.address
+  const from = safeAddress
+    ? getEip3770Address({ fullAddress: safeAddress, chainId: chain.id }).address
+    : account.address
 
   const request = await publicClient.prepareTransactionRequest({
     account: from,
@@ -127,6 +129,7 @@ export const ensAction = async (
         chainId: chain.id,
         origin: 'Piggybank',
       })
+      // eslint-disable-next-line @stylistic/max-len
       logger.success(`Transaction proposed to a Safe wallet.\nOpen in a browser: ${colors.underline(`https://app.safe.global/transactions/queue?safe=${safeAddress}`)}`)
     }
     catch (e) {

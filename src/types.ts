@@ -33,6 +33,10 @@ export type UploadArgs<T = {}> = (
      * Where the provider goes first or it's subsequent
      */
     first: boolean
+    /**
+     * Filebase-only
+     */
+    bucketName?: string
   }
 ) &
 AuthArgs & T

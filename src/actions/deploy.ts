@@ -12,9 +12,20 @@ import * as colors from 'colorette'
 
 const AsciiBar = mod.default
 
+type DeployActionArgs = {
+  strict: boolean
+  chain?: ChainName
+  ens?: string
+  safe?: Address
+  name?: string
+  dist?: string
+  providers?: string
+  verbose?: boolean
+}
+
 export const deployAction = async (
   dir: string,
-  { strict, ens, chain = 'mainnet', safe, name: customName, dist, verbose }: { strict: boolean, chain?: ChainName, ens?: string, safe?: Address, name?: string, dist?: string, verbose?: boolean },
+  { strict, ens, chain = 'mainnet', safe, name: customName, dist, verbose, providers: providersList }: DeployActionArgs,
 ) => {
   if (!dir) {
     if (await exists('dist')) dir = 'dist'
@@ -35,7 +46,7 @@ export const deployAction = async (
 
   const apiTokens = parseTokensFromEnv()
 
-  const providers = tokensToProviderNames(apiTokens.keys())
+  const providers = providersList ? providersList.split(',') : tokensToProviderNames(apiTokens.keys())
 
   if (!providers.length) throw new NoProvidersError()
 
@@ -67,6 +78,7 @@ export const deployAction = async (
         car: blob,
         token,
         accessKey: apiTokens.get('GW3_ACCESS_KEY'),
+        bucketName: apiTokens.get('FILEBASE_BUCKET_NAME'),
         cid,
         first: providers.indexOf(provider) === 0,
         verbose,
@@ -77,7 +89,7 @@ export const deployAction = async (
       else errors.push(e as Error)
     }
   }
-  bar?.update(total) // finish
+  bar?.update(total)
 
   if (errors.length === providers.length) {
     logger.error('Deploy failed')

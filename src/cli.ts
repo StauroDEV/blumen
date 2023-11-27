@@ -17,6 +17,7 @@ cli
   .option('--chain <chain>', 'Chain to use for ENS', { default: 'mainnet' })
   .option('--name <name>', 'Name of the distribution (without file extension)')
   .option('--dist <dist>', 'Directory to store the distribution file')
+  .option('--providers <providers>', 'Explicit provider order')
   .option('--verbose', 'More verbose logs')
   .action(deployAction)
   .example('blumen deploy --strict ./dist')
