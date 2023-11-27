@@ -20,6 +20,7 @@ import { ApiClient } from '@stauro/piggybank/api'
 import { chainIdToSafeApiUrl } from '../utils/safe.js'
 import * as colors from 'colorette'
 import { logger } from '../utils/logger.js'
+import { isTTY } from '../constants.js'
 
 export const ensAction = async (
   cid: string,
@@ -129,8 +130,10 @@ export const ensAction = async (
         chainId: chain.id,
         origin: 'Piggybank',
       })
-      // eslint-disable-next-line @stylistic/max-len
-      logger.success(`Transaction proposed to a Safe wallet.\nOpen in a browser: ${colors.underline(`https://app.safe.global/transactions/queue?safe=${safeAddress}`)}`)
+      const safeLink = `https://app.safe.global/transactions/queue?safe=${safeAddress}`
+      logger.success(`Transaction proposed to a Safe wallet.\nOpen in a browser: ${
+       isTTY ? colors.underline(safeLink) : safeLink
+      }`)
     }
     catch (e) {
       logger.error('Failed to propose a transaction', e)
@@ -168,7 +171,8 @@ export const ensAction = async (
     if (receipt.status === 'reverted') return logger.error('Transaction reverted')
 
     logger.success('Transaction submitted')
-    logger.info(`Open in a browser: ${colors.underline(`https://${domain}.limo`)}`)
+    const browserLink = `https://${domain}.limo`
+    logger.info(`Open in a browser: ${isTTY ? colors.underline(browserLink) : browserLink}`)
   }
   return process.exit()
 }
