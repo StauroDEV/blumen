@@ -36,8 +36,7 @@ export const deployAction = async (
   const [size, files] = await walk(normalizedPath)
 
   if (size === 0) throw new MissingDirectoryError(dir)
-
-  const distName = dir === '.' ? name : dir
+  const distName = ['.', 'dist'].includes(dir) ? name : dir
 
   logger.start(`Packing ${isTTY ? colors.cyan(distName) : distName} (${fileSize(size, 2)})`)
 

@@ -23,7 +23,7 @@ const mapGw3StatusToGenericStatus = (status: GW3PinStatus): PinStatus => {
 const baseURL = 'https://gw3.io'
 const providerName = 'Gateway3'
 
-export const uploadOnGW3: UploadFunction = async ({ token, car, cid, accessKey, first, verbose }) => {
+export const uploadOnGW3: UploadFunction = async ({ token, car, cid, accessKey, first, name, verbose }) => {
   if (!accessKey) throw new MissingKeyError('GW3_ACCESS_KEY')
   if (first) {
     const res1 = await fetch(
@@ -63,7 +63,7 @@ export const uploadOnGW3: UploadFunction = async ({ token, car, cid, accessKey, 
   }
 
   const res = await fetch(
-    new URL(`/api/v0/pin/add?arg=${cid}&ts=${getTs()}`, baseURL),
+    new URL(`/api/v0/pin/add?arg=${cid}&ts=${getTs()}&name=${name}`, baseURL),
     {
       method: 'POST',
       headers: {
