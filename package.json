@@ -16,7 +16,7 @@
     "build": "tsc",
     "postbuild": "chmod +x ./dist/cli.js",
     "prepublishOnly": "pnpm build",
-    "lint": "eslint . --config eslint.config.js"
+    "lint": "eslint --config eslint.config.js src/**/*.ts eslint.config.js"
   },
   "keywords": [
     "ipfs",
