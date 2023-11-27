@@ -33,3 +33,5 @@ string,
     supported: 'both',
   },
 }
+
+export const isTTY = process.stdout.isTTY

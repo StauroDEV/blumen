@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { PROVIDERS } from '../constants.js'
+import { PROVIDERS, isTTY } from '../constants.js'
 import { MissingDirectoryError, NoProvidersError } from '../errors.js'
 import { walk, fileSize, packCAR, parseTokensFromEnv, tokensToProviderNames, findEnvVarProviderName } from '../index.js'
 import { exists } from '../utils/fs.js'
@@ -36,13 +36,14 @@ export const deployAction = async (
   const [size, files] = await walk(normalizedPath)
 
   if (size === 0) throw new MissingDirectoryError(dir)
+  const distName = ['.', 'dist'].includes(dir) ? name : dir
 
-  logger.start(`Packing ${colors.cyan(dir === '.' ? name : dir)} (${fileSize(size, 2)})`)
+  logger.start(`Packing ${isTTY ? colors.cyan(distName) : distName} (${fileSize(size, 2)})`)
 
   const { rootCID, blob } = await packCAR(files, name, dist)
 
   const cid = rootCID.toString()
-  logger.info(`Root CID: ${colors.white(cid)}`)
+  logger.info(`Root CID: ${isTTY ? colors.white(cid) : cid}`)
 
   const apiTokens = parseTokensFromEnv()
 
@@ -54,7 +55,7 @@ export const deployAction = async (
 
   let total = 0
 
-  const bar = process.stdout.isTTY
+  const bar = isTTY
     ? new AsciiBar({
       total: providers.length,
       formatString: '#spinner #bar #message',
@@ -102,11 +103,14 @@ export const deployAction = async (
   }
   else logger.success('Deployed across all providers')
 
+  const dwebLink = `https://${cid}.ipfs.dweb.link`
+  const ipfsScanLink = `https://ipfs-scan.io/?cid=${cid}`
+
   console.log(
-    `\nOpen in a browser:\n${colors.bold('IPFS')}:      ${colors.underline(
-      `https://${cid}.ipfs.dweb.link`,
-    )}\n${colors.bold('IPFS Scan')}: ${colors.underline(
-      `https://ipfs-scan.io/?cid=${cid}`,
+    `\nOpen in a browser:\n${isTTY ? colors.bold('IPFS') : 'IPFS'}:      ${colors.underline(
+      isTTY ? colors.underline(dwebLink) : dwebLink,
+    )}\n${isTTY ? colors.bold('IPFS Scan') : 'IPFS Scan'}: ${colors.underline(
+      isTTY ? colors.underline(ipfsScanLink) : ipfsScanLink,
     )}`,
   )
 

@@ -1,5 +1,6 @@
 import { bgGreen, bgRed, bgYellow, cyan, green } from 'colorette'
 import { SupportedMethods } from '../types.js'
+import { isTTY } from '../constants.js'
 
 const responseStatus = (status: number) => {
   if (status < 300) return bgGreen(status)
@@ -12,7 +13,7 @@ export const logger = {
     console.log('📦', ...args)
   },
   info(...args: unknown[]) {
-    console.info('🛈 ', ...args)
+    console.info('🟢 ', ...args)
   },
   error(...args: unknown[]) {
     console.error('🚨', ...args)
@@ -24,7 +25,8 @@ export const logger = {
     console.log('✔', ...args)
   },
   request(method: 'GET' | 'POST' | 'PUT', url: string, status: number) {
-    console.log('\n', method === 'GET' ? cyan(method) : green(method), url, responseStatus(status))
+    if (isTTY) console.log('\n', method === 'GET' ? cyan(method) : green(method), url, responseStatus(status))
+    else console.log('\n', method, url, status)
   },
 }
 
