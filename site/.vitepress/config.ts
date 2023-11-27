@@ -43,7 +43,7 @@ export default defineConfig({
       },
     ],
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/StauroXYZ/blumen' },
+      { icon: 'github', link: 'https://github.com/StauroDEV/blumen' },
     ],
   },
 })
