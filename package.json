@@ -44,7 +44,6 @@
     "colorette": "^2.0.20",
     "globby": "^14.0.0",
     "multiformats": "^12.1.3",
-    "node-fetch": "^3.3.2",
     "semver": "^7.5.4",
     "table": "^6.8.1",
     "varint": "^6.0.0",

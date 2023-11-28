@@ -6,7 +6,7 @@ import { ensAction } from './actions/ens.js'
 import { statusAction } from './actions/status.js'
 import { deployAction } from './actions/deploy.js'
 
-import './polyfills/fetch.js'
+import './polyfills/globals.js'
 
 const cli = cac('blumen')
 

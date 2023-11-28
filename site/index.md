@@ -15,13 +15,7 @@
 
 ## Installation
 
-Node.js 16.8+ is required.
-
-::: warning
-
-Support for Node 16.8 will be removed in the future. Node 18 is recommended.
-
-:::
+Node.js 18 or newer is required.
 
 ::: code-group
 
