@@ -107,11 +107,11 @@ export const deployAction = async (
   const ipfsScanLink = `https://ipfs-scan.io/?cid=${cid}`
 
   console.log(
-    `\nOpen in a browser:\n${isTTY ? colors.bold('IPFS') : 'IPFS'}:      ${colors.underline(
-      isTTY ? colors.underline(dwebLink) : dwebLink,
-    )}\n${isTTY ? colors.bold('IPFS Scan') : 'IPFS Scan'}: ${colors.underline(
-      isTTY ? colors.underline(ipfsScanLink) : ipfsScanLink,
-    )}`,
+    `\nOpen in a browser:\n${isTTY ? colors.bold('IPFS') : 'IPFS'}:      ${
+      isTTY ? colors.underline(dwebLink) : dwebLink
+    }\n${isTTY ? colors.bold('IPFS Scan') : 'IPFS Scan'}: ${
+      isTTY ? colors.underline(ipfsScanLink) : ipfsScanLink
+    }`,
   )
 
   if (typeof ens === 'string') {
