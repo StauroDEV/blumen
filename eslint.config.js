@@ -23,6 +23,7 @@ export default [
     rules: {
       'no-unused-vars': 'off',
       '@stylistic/max-len': ['error', { code: 120 }],
+      'no-var': 'error',
     },
   },
 ]

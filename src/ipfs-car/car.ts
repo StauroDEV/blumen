@@ -1,4 +1,4 @@
-import varint from 'varint'
+import * as varint from './varint.js'
 import { encode as cborEncode } from '@ipld/dag-cbor'
 import { UnknownLink } from 'multiformats'
 import { Block } from '@ipld/unixfs'

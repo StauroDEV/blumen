@@ -1,4 +1,4 @@
-import { createPresignedUrl } from '@stauro/filebase-upload'
+import { uploadCar } from '@stauro/filebase-upload'
 import { StatusFunction, UploadFunction } from '../types.js'
 import { specPin, specStatus } from './spec.js'
 import { MissingKeyError } from '../errors.js'
@@ -13,9 +13,7 @@ export const uploadOnFilebase: UploadFunction = async ({ first, car, name, token
 
     const file = new File([car], name)
 
-    const url = await createPresignedUrl({ apiUrl: 's3.filebase.com', file, token, bucketName })
-
-    const res = await fetch(decodeURIComponent(url), { method: 'PUT', body: file })
+    const res = await uploadCar({ apiUrl: 's3.filebase.com', file, token, bucketName })
 
     if (verbose) logger.request('PUT', res.url, res.status)
 
