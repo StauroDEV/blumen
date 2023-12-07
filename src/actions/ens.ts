@@ -26,8 +26,8 @@ export const ensAction = async (
   cid: string,
   domain: string,
   {
-    chain: chainName, safe: safeAddress, rpcUrl,
-  }: { chain: ChainName } & Partial<{ safe: Address | EIP3770Address, rpcUrl: string }>,
+    chain: chainName, safe: safeAddress, rpcUrl, resolverAddress,
+  }: { chain: ChainName } & Partial<{ safe: Address | EIP3770Address, rpcUrl: string, resolverAddress: Address }>,
 ) => {
   const chain = chainName === 'mainnet' ? mainnet : goerli
 
@@ -77,7 +77,7 @@ export const ensAction = async (
 
   const request = await publicClient.prepareTransactionRequest({
     account: from,
-    to: PUBLIC_RESOLVER_ADDRESS[chain.id as 1 | 5],
+    to: resolverAddress || PUBLIC_RESOLVER_ADDRESS[chain.id as 1 | 5],
     chain,
     data: encodeFunctionData({
       functionName: 'setContenthash',

@@ -34,3 +34,7 @@ blumen ens bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 v1rtl.eth
 ### `rpc-url`
 
 Use a custom Ethereum RPC for transactions. By default, [Ankr RPCs](https://ankr.com/rpc) are used.
+
+### `resolver-address`
+
+Use a custom ENS Resolver address. Resolvers for mainnet and goerli are set by default.

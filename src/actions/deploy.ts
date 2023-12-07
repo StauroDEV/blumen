@@ -16,6 +16,7 @@ type DeployActionArgs = {
   strict: boolean
   chain?: ChainName
   ens?: string
+  resolverAddress?: Address
   safe?: Address
   name?: string
   dist?: string
@@ -25,7 +26,9 @@ type DeployActionArgs = {
 
 export const deployAction = async (
   dir: string,
-  { strict, ens, chain = 'mainnet', safe, name: customName, dist, verbose, providers: providersList }: DeployActionArgs,
+  {
+    strict, ens, chain = 'mainnet', safe, name: customName, dist, verbose, providers: providersList, resolverAddress,
+  }: DeployActionArgs,
 ) => {
   if (!dir) {
     if (await exists('dist')) dir = 'dist'
@@ -116,6 +119,6 @@ export const deployAction = async (
 
   if (typeof ens === 'string') {
     console.log('\n')
-    await ensAction(cid, ens, { chain, safe })
+    await ensAction(cid, ens, { chain, safe, resolverAddress })
   }
 }

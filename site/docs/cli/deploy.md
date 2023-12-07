@@ -28,6 +28,10 @@ After finishing the deployment, update content hash of an ENS domain to point to
 blumen deploy --ens v1rtl.eth
 ```
 
+### `resolver-address`
+
+Use a custom ENS Resolver address. Resolvers for mainnet and goerli are set by default.
+
 ### `chain`
 
 Default: `mainnet`
