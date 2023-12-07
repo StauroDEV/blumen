@@ -14,6 +14,7 @@ cli
   .command('deploy [dir]', 'Deploy a web app on IPFS')
   .option('--strict', 'Throw if one of the providers fails', { default: true })
   .option('--ens <domain>', 'Update Content-Hash of an ENS domain')
+  .option('--resolver-address <address>', 'Custom ENS Resolver address')
   .option('--chain <chain>', 'Chain to use for ENS', { default: 'mainnet' })
   .option('--name <name>', 'Name of the distribution (without file extension)')
   .option('--dist <dist>', 'Directory to store the distribution file')
@@ -37,6 +38,7 @@ cli
   .option('--chain <chain>', 'Chain to use', { default: 'mainnet' })
   .option('--safe <safe>', 'Deploy using a Safe multisig wallet')
   .option('--rpc-url <url>', 'Custom Ethereum RPC')
+  .option('--resolver-address <address>', 'Custom ENS Resolver address')
   .action(ensAction)
 
 cli.help()
