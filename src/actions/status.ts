@@ -23,7 +23,7 @@ export const statusAction = async (
   const env = parseTokensFromEnv()
   const tokens: string[] = []
 
-  for (const option of env.keys()) tokens.push(option)
+  if (!providersOptionList) for (const option of env.keys()) tokens.push(option)
 
   if (providersOptionList) {
     for (const option of providersOptionList.split(',').map(s => s.trim())) {

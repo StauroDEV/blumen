@@ -37,7 +37,7 @@ export const specStatus: StatusFunction<{ baseURL: string }> = async ({ cid, bas
 
   const json = await res.json()
 
-  if (res.status === 404) return { pin: 'not pinned' }
+  if (res.status === 404 || json.count === 0) return { pin: 'not pinned' }
   else if (!res.ok) throw new Error(json.error.details)
 
   return {
