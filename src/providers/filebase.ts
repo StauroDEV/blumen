@@ -15,7 +15,7 @@ export const uploadOnFilebase: UploadFunction = async ({ first, car, name, token
 
     const res = await uploadCar({ apiUrl: 's3.filebase.com', file, token, bucketName })
 
-    if (verbose) logger.request('PUT', res.url, res.status)
+    if (verbose) logger.request('PUT', res.url, res.status, await res.text())
 
     return { cid: res.headers.get('x-amz-meta-cid')!, status: 'queued' }
   }
