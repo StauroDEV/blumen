@@ -24,9 +24,9 @@ export const logger = {
   success(...args: unknown[]) {
     console.log('✔', ...args)
   },
-  request(method: 'GET' | 'POST' | 'PUT', url: string, status: number) {
-    if (isTTY) console.log('\n', method === 'GET' ? cyan(method) : green(method), url, responseStatus(status))
-    else console.log('\n', method, url, status)
+  request(method: 'GET' | 'POST' | 'PUT', url: string, status: number, body?: unknown) {
+    if (isTTY) console.log('\n', method === 'GET' ? cyan(method) : green(method), url, responseStatus(status), body)
+    else console.log('\n', method, url, status, body)
   },
 }
 
