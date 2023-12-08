@@ -1,8 +1,8 @@
 import * as varint from './varint.js'
-import { encode as cborEncode } from '@ipld/dag-cbor'
 import { UnknownLink } from 'multiformats'
 import { Block } from '@ipld/unixfs'
 import { TransformStream } from 'node:stream/web'
+import { cborEncode } from './dag-cbor.js'
 
 function encodeHeader(roots: UnknownLink[]) {
   const headerBytes = cborEncode({ version: 1, roots })
