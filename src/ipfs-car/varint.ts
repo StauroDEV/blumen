@@ -27,3 +27,32 @@ export function encode(num: number, out: number[] = [], offset: number = 0): num
 
   return out
 }
+
+interface ReadResult {
+  bytes: number
+}
+
+export function decode(buf: Uint8Array, offset = 0): [number, number] {
+  let res = 0
+  let shift = 0
+  let counter = offset
+  let b: number
+  const l = buf.length
+  let bytes = 0
+
+  do {
+    if (counter >= l || shift > 49) {
+      bytes = 0
+      throw new RangeError('Could not decode varint')
+    }
+    b = buf[counter++]
+    res += shift < 28
+      ? (b & REST) << shift
+      : (b & REST) * Math.pow(2, shift)
+    shift += 7
+  } while (b >= MSB)
+
+  bytes = counter - offset
+
+  return [res, bytes]
+}

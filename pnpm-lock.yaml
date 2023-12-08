@@ -8,12 +8,6 @@ dependencies:
   '@ensdomains/content-hash':
     specifier: ^3.0.0
     version: 3.0.0
-  '@ipld/car':
-    specifier: ^5.2.4
-    version: 5.2.4
-  '@ipld/dag-cbor':
-    specifier: ^9.0.6
-    version: 9.0.6
   '@ipld/unixfs':
     specifier: ^2.1.2
     version: 2.1.2
@@ -29,6 +23,9 @@ dependencies:
   cac:
     specifier: ^6.7.14
     version: 6.7.14
+  cborg:
+    specifier: ^4.0.5
+    version: 4.0.5
   colorette:
     specifier: ^2.0.20
     version: 2.0.20
@@ -38,9 +35,6 @@ dependencies:
   multiformats:
     specifier: ^12.1.3
     version: 12.1.3
-  semver:
-    specifier: ^7.5.4
-    version: 7.5.4
   table:
     specifier: ^6.8.1
     version: 6.8.1
@@ -58,9 +52,6 @@ devDependencies:
   '@types/node':
     specifier: ^20.10.0
     version: 20.10.0
-  '@types/semver':
-    specifier: ^7.5.6
-    version: 7.5.6
   '@typescript-eslint/parser':
     specifier: ^6.13.1
     version: 6.13.1(eslint@8.54.0)(typescript@5.3.2)
@@ -245,24 +236,6 @@ packages:
   /@humanwhocodes/object-schema@2.0.1:
     resolution: {integrity: sha512-dvuCeX5fC9dXgJn9t+X5atfmgQAzUOWqS1254Gh0m6i8wKd10ebXkfNKiRK+1GWi/yTvvLDHpoxLr0xxxeslWw==}
     dev: true
-
-  /@ipld/car@5.2.4:
-    resolution: {integrity: sha512-YoVXE/o5HLXKi/Oqh9Nhcn423sdn9brRFKnbUid68/1D332/XINcoyCTvBluFcCw/9IeiTx+sEAV+onXZ/A4eA==}
-    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
-    dependencies:
-      '@ipld/dag-cbor': 9.0.6
-      cborg: 4.0.5
-      multiformats: 12.1.3
-      varint: 6.0.0
-    dev: false
-
-  /@ipld/dag-cbor@9.0.6:
-    resolution: {integrity: sha512-3kNab5xMppgWw6DVYx2BzmFq8t7I56AGWfp5kaU1fIPkwHVpBRglJJTYsGtbVluCi/s/q97HZM3bC+aDW4sxbQ==}
-    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
-    dependencies:
-      cborg: 4.0.5
-      multiformats: 12.1.3
-    dev: false
 
   /@ipld/dag-pb@4.0.6:
     resolution: {integrity: sha512-wOij3jfDKZsb9yjhQeHp+TQy0pu1vmUkGv324xciFFZ7xGbDfAGTQW03lSA5aJ/7HBBNYgjEE0nvHmNW1Qjfag==}
@@ -3072,10 +3045,6 @@ packages:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
     dev: true
-
-  /varint@6.0.0:
-    resolution: {integrity: sha512-cXEIW6cfr15lFv563k4GuVuW/fiwjknytD37jIOLSdSWuOI6WnO/oKwmP2FQTU2l01LP8/M5TSAJpzUaGe3uWg==}
-    dev: false
 
   /viem@1.19.9(typescript@5.3.2):
     resolution: {integrity: sha512-Sf9U2x4jU0S/FALqYypcspWOGene0NZyD470oUripNhE0Ta6uOE/OgE4toTDVfRxov8qw0JFinr/wPGxYE3+HQ==}
