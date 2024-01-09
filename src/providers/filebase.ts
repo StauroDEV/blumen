@@ -1,7 +1,7 @@
 import { uploadCar } from '@stauro/filebase-upload'
 import { StatusFunction, UploadFunction } from '../types.js'
 import { specPin, specStatus } from './spec.js'
-import { MissingKeyError } from '../errors.js'
+import { DeployError, MissingKeyError } from '../errors.js'
 import { logger } from '../utils/logger.js'
 
 const providerName = 'Filebase'
@@ -16,7 +16,11 @@ export const uploadOnFilebase: UploadFunction<{ bucketName: string }>
 
       const res = await uploadCar({ apiUrl: 's3.filebase.com', file, token, bucketName })
 
-      if (verbose) logger.request('PUT', res.url, res.status, await res.text())
+      const text = await res.text()
+
+      if (!res.ok) throw new DeployError(providerName, text)
+
+      if (verbose) logger.request('PUT', res.url, res.status, text)
 
       return { cid: res.headers.get('x-amz-meta-cid')!, status: 'queued' }
     }
