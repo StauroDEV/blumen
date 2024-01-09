@@ -9,7 +9,7 @@
 
 ## Features
 
-- **Multi-Provider Deployment**: Deploy your web app simultaneously on multiple IPFS providers, including [web3.storage](https://web3.storage) and [Gateway3](https://gateway3.io), ensuring redundancy and availability.
+- **Multi-Provider Deployment**: Deploy your web app simultaneously on multiple IPFS providers, including [web3.storage](https://web3.storage) and [Gateway3](https://gw3.io), ensuring redundancy and availability.
 - **ENS Integration**: Seamlessly integrate with [ENS](https://ens.domains) to update your Content-Hash, making it easier for users to access your web app via ENS gateways.
 - **Safe Integration**: Update your ENS Content-Hash using a multisig [Safe](https://safe.global) contract, adding an extra layer of security and decentralization.
 
