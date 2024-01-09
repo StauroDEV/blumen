@@ -3,7 +3,8 @@
 <img src="logo.png" height="200" width="200" />
 <h1>Blumen</h1>
 
-[![CI](https://github.com/StauroDEV/blumen/actions/workflows/ci.yml/badge.svg)](https://github.com/StauroDEV/blumen/actions/workflows/ci.yml) ![npm](https://img.shields.io/npm/dt/blumen?style=for-the-badge&logo=npm&color=%232B4AD4&label)
+[![GitHub Workflow
+Status][gh-actions-img]][github-actions] ![npm](https://img.shields.io/npm/dt/blumen?style=for-the-badge&logo=npm&color=%232B4AD4&label)
 
 <sub>Self-custodial decentralized deployments</sub>
 </div>
@@ -22,3 +23,7 @@
 ## Docs
 
 Read the [docs](https://blumen.stauro.xyz).
+
+
+[github-actions]: https://github.com/StauroDEV/blumen/actions
+[gh-actions-img]: https://img.shields.io/github/actions/workflow/status/StauroDEV/blumen/ci.yml?branch=main&style=for-the-badge&logo=github&label=&color=%232B4AD4
