@@ -90,7 +90,6 @@ export const ensAction = async (
     logger.info(`Preparing a transaction for Safe ${safeAddress}`)
     const safeWalletClient = walletClient.extend(walletSafeActions(safeAddress))
 
-    // @ts-ignore weird "Type instantiation is excessively deep and possibly infinite." that only happens in GHA
     const safePublicClient = publicClient.extend(publicSafeActions(safeAddress))
 
     const nonce = await safePublicClient.getSafeNonce()
