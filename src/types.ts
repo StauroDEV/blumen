@@ -23,7 +23,7 @@ type AuthArgs = {
   accessKey?: string
 }
 
-export type UploadArgs<T = {}> = (
+export type UploadArgs<T = object> = (
   {
     cid: string
     name: string
@@ -33,10 +33,6 @@ export type UploadArgs<T = {}> = (
      * Where the provider goes first or it's subsequent
      */
     first: boolean
-    /**
-     * Filebase-only
-     */
-    bucketName?: string
   }
 ) &
 AuthArgs & T
@@ -47,7 +43,7 @@ export type UploadReturnType = {
   status?: PinStatus
 }
 
-export type UploadFunction<T= {}> = (args: UploadArgs<T>) => Promise<UploadReturnType>
+export type UploadFunction<T= object> = (args: UploadArgs<T>) => Promise<UploadReturnType>
 
 export type PinStatus = 'queued' | 'pinned' | 'failed' | 'unpinning' | 'unknown' | 'not pinned'
 
@@ -59,7 +55,7 @@ type StatusArgs<T> = {
   verbose?: boolean
 } & T
 
-export type StatusFunction<T = {}> = (
+export type StatusFunction<T = object> = (
   args: StatusArgs<T>
 ) => Promise<{
   pin: PinStatus

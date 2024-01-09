@@ -1,17 +1,17 @@
 import { statusOnFilebase, uploadOnFilebase } from './providers/filebase.js'
 import { statusOnGW3, uploadOnGW3 } from './providers/gw3.js'
 import { statusOnLighthouse, uploadOnLighthouse } from './providers/lighthouse.js'
-import { statusOnW3S, uploadOnW3S } from './providers/w3s.js'
+import { uploadOnW3S } from './providers/w3s.js'
 import type { StatusFunction, SupportedMethods, UploadFunction } from './types.js'
 
 export const PROVIDERS: Record<
 string,
-{ name: string, upload: UploadFunction, status?: StatusFunction, supported: SupportedMethods }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+{ name: string, upload: UploadFunction<any>, status?: StatusFunction, supported: SupportedMethods }
 > = {
   W3S_TOKEN: {
     name: 'web3.storage',
     upload: uploadOnW3S,
-    status: statusOnW3S,
     supported: 'upload',
   },
   GW3_TOKEN: {
