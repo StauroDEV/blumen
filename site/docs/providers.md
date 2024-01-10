@@ -21,12 +21,72 @@ echo "accessKey:accessSecret" | base64
 
 ## web3.storage
 
-- URL: https://old.web3.storage
-- API Docs: https://old.web3.storage/docs/
-- API token env variables: `BLUMEN_W3S_TOKEN`
-- Supported methods: Upload, Status
+- URL: https://web3.storage
+- API Docs: https://web3.storage/docs/
+- API token env variables: `BLUMEN_W3S_TOKEN`, `BLUMEN_W3S_PROOF`
+- Supported methods: Upload
 
-> New UCAN-based web3.storage API integration is in progress
+New web3.storage platform is more self-sovereign, so it requires a bit more work to set up.
+
+First you have to install w3up cli:
+
+::: code-group
+
+```bash [npm]
+npm i -g @web3-storage/w3cli
+```
+
+```bash [pnpm]
+pnpm i -g @web3-storage/w3cli
+```
+
+```bash [bun]
+bun i -g @web3-storage/w3cli
+```
+
+:::
+
+Then you need to login to your web3.storage account:
+
+```
+w3 login <your@mail.com>
+```
+
+Once log in is successful, you need to select your space. Grab the DID (the `did:key:...` string) from web3.storage web console and run the following command:
+
+```sh
+w3 space use did:key:...
+```
+
+When both the account and the space are set up, you need to generate a unique private key. Later we'll need it to generate a proof (that gives us permit to upload files on web3.storage).
+
+::: code-group
+
+```bash [npm]
+npx ucan-key ed
+```
+
+```bash [pnpm]
+pnpx ucan-key ed
+```
+
+```bash [bun]
+bunx ucan-key ed
+```
+
+:::
+
+Save this private key (which starts with `Mg..`) to an environment variable (`BLUMEN_W3S_TOKEN`).
+
+You also need to create a delegation for the generated DID:
+
+```sh
+w3 delegation create <did_from_ucan-key_command_above> | base64
+```
+
+It's recommended to additionally supply `--can 'store/add' --can 'upload/add'` flags to the first command to limit access to only uploading files.
+
+Save the command output in a `BLUMEN_W3S_PROOF` environment variable.
 
 ## Gateway3
 
@@ -34,10 +94,3 @@ echo "accessKey:accessSecret" | base64
 - API Docs: https://doc.gw3.io/api/gateway/pinning.html
 - API token env variables: `BLUMEN_GW3_TOKEN`, `BLUMEN_GW3_ACCESS_KEY`
 - Supported methods: Upload, Pin, Status
-
-## Lighthouse
-
-- URL: https://lighthouse.storage
-- API Docs: https://docs.lighthouse.storage
-- API token env variables: `BLUMEN_LIGHTHOUSE_TOKEN`
-- Supported methods: Pin

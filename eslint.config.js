@@ -1,5 +1,6 @@
 import stylistic from '@stylistic/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
+import ts from '@typescript-eslint/eslint-plugin'
 import globals from 'globals'
 import js from '@eslint/js'
 
@@ -20,8 +21,13 @@ export default [
         ecmaVersion: 'latest',
       },
     },
+    plugins: {
+      '@typescript-eslint': ts,
+      ts,
+    },
     rules: {
-      'no-unused-vars': 'off',
+      ...ts.configs['eslint-recommended'].rules,
+      ...ts.configs['recommended'].rules,
       '@stylistic/max-len': ['error', { code: 120 }],
       'no-var': 'error',
     },

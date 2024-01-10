@@ -1,51 +1,24 @@
-import type { PinStatus, StatusFunction, UploadFunction } from '../types.js'
-import { DeployError, PinningNotSupportedError } from '../errors.js'
-import { logger } from '../utils/logger.js'
+import type { UploadFunction } from '../types.js'
+import { DeployError, MissingKeyError } from '../errors.js'
+import { setupW3Up } from '../utils/w3up.js'
 
-const baseURL = 'https://api.web3.storage'
 const providerName = 'web3.storage'
 
-export const uploadOnW3S: UploadFunction = async ({
+export const uploadOnW3S: UploadFunction<{ proof: string }> = async ({
   token,
   car,
-  name,
-  verbose,
+  proof,
 }) => {
-  const res = await fetch(new URL('/car', baseURL), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': `Bearer ${token}`,
-      ...(name ? { 'X-NAME': encodeURIComponent(name) } : {}),
-    },
-    body: car as Blob,
-  })
+  if (!proof) throw new MissingKeyError(proof)
 
-  if (verbose) logger.request('POST', res.url, res.status)
+  const client = await setupW3Up({ pk: token, proof })
 
-  const json = await res.json()
-  if (!res.ok) {
-    throw new DeployError(
-      providerName,
-      (json as { message: string, code: string }).message,
-    )
+  try {
+    const cid = await client.uploadCAR(car)
+
+    return { cid: cid.toV1().toString() }
   }
-
-  return json as { cid: string }
-}
-
-export const statusOnW3S: StatusFunction = async ({ cid }) => {
-  const res = await fetch(new URL(`/status/${cid}`, baseURL))
-  const json = (await res.json()) as {
-    pins: [{ status: string }]
-    deals: { dealId: string, status: string }[]
+  catch (e) {
+    throw new DeployError(providerName, (e as Error).message)
   }
-
-  return res.ok
-    ? {
-        pin: json.pins[0].status.toLowerCase() as PinStatus,
-        deal: { id: json.deals },
-      }
-    : { pin: 'unknown' }
 }

@@ -2,12 +2,11 @@ import { tmpdir } from 'node:os'
 import { readFile, open } from 'node:fs/promises'
 import { createWriteStream } from 'node:fs'
 import { CID } from 'multiformats/cid'
-import type { FileEntry } from '../types.js'
 import { TransformStream } from 'node:stream/web'
-import { createDirectoryEncoderStream, CAREncoderStream } from '../ipfs-car/index.js'
 import { Block } from '@ipld/unixfs'
 import { Writable } from 'node:stream'
-import { updateRootsInFile } from './car-writer.js'
+import type { FileEntry } from '../types.js'
+import { updateRootsInFile, CAREncoderStream, createDirectoryEncoderStream } from '@stauro/minicar'
 
 const tmp = tmpdir()
 
