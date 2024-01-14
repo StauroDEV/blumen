@@ -26,6 +26,9 @@ dependencies:
   '@ucanto/principal':
     specifier: ^9.0.0
     version: 9.0.0
+  '@web3-storage/access':
+    specifier: ^18.1.0
+    version: 18.1.0
   '@web3-storage/w3up-client':
     specifier: ^12.0.0
     version: 12.0.0

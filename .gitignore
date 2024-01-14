@@ -45,3 +45,4 @@ jspm_packages/
 
 site/.vitepress/cache
 dist
+proof*.txt

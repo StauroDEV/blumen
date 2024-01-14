@@ -86,7 +86,11 @@ w3 delegation create <did_from_ucan-key_command_above> | base64
 
 It's recommended to additionally supply `--can 'store/add' --can 'upload/add'` flags to the first command to limit access to only uploading files.
 
-Save the command output in a `BLUMEN_W3S_PROOF` environment variable.
+Save the command output in a `BLUMEN_W3S_PROOF` environment variable or save it to a file (that should not be uploaded!) and then read from it like this:
+
+```sh
+BLUMEN_W3S_PROOF=`cat proof.txt`
+```
 
 ## Gateway3
 
