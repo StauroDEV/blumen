@@ -1,5 +1,3 @@
-import type { ReadableStream } from 'node:stream/web'
-
 export interface BlobLike {
   /**
    * Returns a ReadableStream which yields the Blob data.

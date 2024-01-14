@@ -34,9 +34,9 @@
   "license": "MIT",
   "dependencies": {
     "@ensdomains/content-hash": "^3.0.0",
+    "@ipld/car": "^5.2.6",
     "@ipld/unixfs": "^2.1.2",
     "@stauro/filebase-upload": "^0.0.7",
-    "@stauro/minicar": "^0.0.0",
     "@stauro/piggybank": "^0.0.5",
     "@ucanto/core": "^9.0.1",
     "@ucanto/principal": "^9.0.0",
@@ -46,6 +46,7 @@
     "cborg": "^4.0.5",
     "colorette": "^2.0.20",
     "globby": "^14.0.0",
+    "ipfs-car": "^1.1.0",
     "multiformats": "^13.0.0",
     "table": "^6.8.1",
     "viem": "^1.19.9"

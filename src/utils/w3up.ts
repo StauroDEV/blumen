@@ -1,7 +1,7 @@
 import * as Signer from '@ucanto/principal/ed25519'
 import * as Client from '@web3-storage/w3up-client'
 import { importDAG } from '@ucanto/core/delegation'
-import { CarReader } from '@stauro/minicar'
+import { CarReader } from '@ipld/car'
 import { Block } from '@ipld/unixfs'
 
 export async function setupW3Up({ pk, proof: _proof }: { pk: string, proof: string }) {
