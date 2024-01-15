@@ -107,7 +107,7 @@ export const deployAction = async (
   }
   else logger.success('Deployed across all providers')
 
-  const dwebLink = `https://${cid}.ipfs.dweb.link`
+  const dwebLink = `https://${cid}.ipfs.cf-ipfs.com`
   const ipfsScanLink = `https://ipfs-scan.io/?cid=${cid}`
 
   console.log(

@@ -2,11 +2,11 @@ import { tmpdir } from 'node:os'
 import { readFile, open } from 'node:fs/promises'
 import { createWriteStream } from 'node:fs'
 import { CID } from 'multiformats/cid'
-import { TransformStream } from 'node:stream/web'
 import { Block } from '@ipld/unixfs'
 import { Writable } from 'node:stream'
 import type { FileEntry } from '../types.js'
-import { updateRootsInFile, CAREncoderStream, createDirectoryEncoderStream } from '@stauro/minicar'
+import { CAREncoderStream, createDirectoryEncoderStream } from 'ipfs-car'
+import { CarWriter } from '@ipld/car/writer'
 
 const tmp = tmpdir()
 
@@ -31,7 +31,7 @@ export const packCAR = async (files: FileEntry[], name: string, dir = tmp) => {
     .pipeTo(Writable.toWeb(createWriteStream(output)))
 
   const fd = await open(output, 'r+')
-  await updateRootsInFile(fd, [rootCID!])
+  await CarWriter.updateRootsInFile(fd, [rootCID!])
   await fd.close()
 
   const file = await readFile(output)

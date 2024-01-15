@@ -9,7 +9,7 @@ export const uploadOnW3S: UploadFunction<{ proof: string }> = async ({
   car,
   proof,
 }) => {
-  if (!proof) throw new MissingKeyError(proof)
+  if (!proof) throw new MissingKeyError(`W3S_PROOF`)
 
   const client = await setupW3Up({ pk: token, proof })
 
