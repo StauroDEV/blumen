@@ -13,10 +13,11 @@ export default defineConfig({
     sidebar: [
       {
         text: 'Introduction',
+        link:'/',
         items: [
           {
             text: 'Getting Started',
-            link: '/',
+            link: '/docs/get-started',
           },
           {
             text: 'Providers',
