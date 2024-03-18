@@ -16,7 +16,8 @@
     "build": "tsc",
     "postbuild": "chmod +x ./dist/cli.js",
     "prepublishOnly": "pnpm build",
-    "lint": "eslint --config eslint.config.js src/**/*.ts eslint.config.js"
+    "lint": "eslint --config eslint.config.js src/**/*.ts eslint.config.js",
+    "types": "tsc --noEmit"
   },
   "keywords": [
     "ipfs",
@@ -51,7 +52,7 @@
     "ipfs-car": "^1.1.0",
     "multiformats": "^13.0.0",
     "table": "^6.8.1",
-    "viem": "^1.19.9"
+    "viem": "^2.8.12"
   },
   "devDependencies": {
     "@eslint/js": "^8.54.0",

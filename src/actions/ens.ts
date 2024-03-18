@@ -143,7 +143,7 @@ export const ensAction = async (
     let hash: Hash = '0x'
 
     try {
-      hash = await walletClient.sendTransaction<typeof request, typeof chain>(request)
+      hash = await walletClient.sendTransaction(request)
     }
     catch (e) {
       if (e instanceof TransactionExecutionError) {
