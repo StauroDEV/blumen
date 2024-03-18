@@ -59,3 +59,39 @@ Custom directory to store the distribution file at before deployment. By default
 blumen deploy --dist ./
 file ./dist.car
 ```
+
+### `providers`
+
+A list of providers to deploy on.
+
+```sh
+blumen deploy --providers web3.storage bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 
+```
+
+### `verbose`
+
+More verbose logs.
+
+```sh
+blumen deploy --verbose --providers=Gateway3
+
+# 📦 Packing dist (30.99KB)
+# 🟢 Root CID: bafybeihw4r72ynkl2zv4od2ru4537qx2zxjkwlzddadqmochzhe524t7qu
+# 🟢 Deploying with providers: Gateway3
+# POST https://gw3.io/api/v0/dag/import?size=33547&ts=... 200
+# POST https://some-node.gtw3.io/api/v0/dag/import?sargs=...-...-...-...&ssig=.......-...-...%3D%3D 200
+# POST https://gw3.io/api/v0/pin/add?arg=...&ts=...&name=dist 200
+# ✓ [>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>] Finished in 3s
+# ✔ Deployed across all providers
+# Open in a browser:
+# IPFS:      https://bafybeihw4r72ynkl2zv4od2ru4537qx2zxjkwlzddadqmochzhe524t7qu.ipfs.cf-ipfs.com
+# Providers: https://delegated-ipfs.dev/routing/v1/providers/bafybeihw4r72ynkl2zv4od2ru4537qx2zxjkwlzddadqmochzhe524t7qu
+```
+
+### `safe` (Recommended)
+
+Deploy using a [Safe](https://safe.global) multisig wallet. Requires private key of a Safe owner/delegate to sign a transaction. [EIP-3770](https://eips.ethereum.org/EIPS/eip-3770) addresses are supported.
+
+```sh
+blumen ens bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 v1rtl.eth --safe gor:0x1234567890000000000000000000000000000000 --chain goerli
+```

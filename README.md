@@ -22,7 +22,7 @@ Status][gh-actions-img]][github-actions] ![npm](https://img.shields.io/npm/dt/bl
 
 ## Docs
 
-Read the [docs](https://blumen.stauro.xyz).
+Read the [docs](https://blumen.stauro.dev).
 
 
 [github-actions]: https://github.com/StauroDEV/blumen/actions

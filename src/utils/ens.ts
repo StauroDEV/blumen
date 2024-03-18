@@ -1,5 +1,5 @@
 import { encode } from '@ensdomains/content-hash'
-import { parseAbi } from 'viem/abi'
+import { parseAbi } from 'viem'
 import { namehash, normalize } from 'viem/ens'
 
 export const prepareUpdateEnsArgs = async ({ cid, domain }: { cid: string, domain: string }) => {

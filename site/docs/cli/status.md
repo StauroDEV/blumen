@@ -17,3 +17,7 @@ A list of providers to check the deployment status for.
 ```sh
 blumen status --providers web3.storage bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 
 ```
+
+### `verbose`
+
+More verbose logs.

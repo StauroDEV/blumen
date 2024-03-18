@@ -7,6 +7,8 @@ import { statusAction } from './actions/status.js'
 import { deployAction } from './actions/deploy.js'
 
 import './polyfills/globals.js'
+import { pingAction } from './actions/ping.js'
+import { getVersion } from './utils/version.js'
 
 const cli = cac('blumen')
 
@@ -20,6 +22,7 @@ cli
   .option('--dist <dist>', 'Directory to store the distribution file')
   .option('--providers <providers>', 'Explicit provider order')
   .option('--verbose', 'More verbose logs')
+  .option('--safe <safe>', 'Deploy using a Safe multi-sig')
   .action(deployAction)
   .example('blumen deploy --strict ./dist')
 
@@ -36,11 +39,17 @@ cli
     'Update ENS domain Content-Hash with an IFPS CID',
   )
   .option('--chain <chain>', 'Chain to use', { default: 'mainnet' })
-  .option('--safe <safe>', 'Deploy using a Safe multisig wallet')
+  .option('--safe <safe>', 'Deploy using a Safe multi-sig')
   .option('--rpc-url <url>', 'Custom Ethereum RPC')
   .option('--resolver-address <address>', 'Custom ENS Resolver address')
   .action(ensAction)
 
+cli.command('ping <cid> <endpoint>', 'Ping an endpoint until it resolves content')
+  .option('--max-retries', 'Max retries', { default: Infinity })
+  .option('--retry-interval', 'Interval between retries (in ms)', { default: 5000 })
+  .option('--timeout', 'Request timeout until next attempt (in ms)', { default: 10000 })
+  .action(pingAction)
+
 cli.help()
-cli.version('0.1.0')
+cli.version(await getVersion())
 cli.parse()

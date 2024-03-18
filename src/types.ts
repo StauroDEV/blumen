@@ -41,7 +41,7 @@ export type UploadReturnType = {
   status?: PinStatus
 }
 
-export type UploadFunction<T= object> = (args: UploadArgs<T>) => Promise<UploadReturnType>
+export type UploadFunction<T = object> = (args: UploadArgs<T>) => Promise<UploadReturnType>
 
 export type PinStatus = 'queued' | 'pinned' | 'failed' | 'unpinning' | 'unknown' | 'not pinned'
 

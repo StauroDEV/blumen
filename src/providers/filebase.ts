@@ -20,7 +20,7 @@ export const uploadOnFilebase: UploadFunction<{ bucketName: string }>
 
       if (!res.ok) throw new DeployError(providerName, text)
 
-      if (verbose) logger.request('PUT', res.url, res.status, text)
+      if (verbose) logger.request('PUT', res.url, res.status)
 
       return { cid: res.headers.get('x-amz-meta-cid')!, status: 'queued' }
     }
