@@ -143,7 +143,7 @@ export const ensAction = async (
     let hash: Hash = '0x'
 
     try {
-      hash = await walletClient.sendTransaction(request)
+      hash = await walletClient.sendTransaction<typeof request, typeof chain>(request)
     }
     catch (e) {
       if (e instanceof TransactionExecutionError) {
@@ -160,7 +160,7 @@ export const ensAction = async (
       return
     }
 
-    logger.info(`Transaction pending: ${chain.blockExplorers.etherscan.url}/tx/${hash}`)
+    logger.info(`Transaction pending: ${chain.blockExplorers.default.url}/tx/${hash}`)
 
     const receipt = await publicClient.waitForTransactionReceipt({
       hash,
