@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="logo.png" height="200" width="200" />
+<img src="logo.png" height="200" />
 <h1>Blumen</h1>
 
 [![GitHub Workflow
