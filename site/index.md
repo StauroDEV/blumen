@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://ipfs.io/ipfs/QmeQrErKhJxfxxVc5NSuvVyAcvih8icLBY8WzEZ4SbeHEL" height="200" width="200" />
+  <img src="./logo.png" width="200" />
   <h1>Blumen</h1>
 </div>
 
