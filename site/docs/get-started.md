@@ -12,7 +12,7 @@ BLUMEN_GW3_TOKEN=ZA70...
 BLUMEN_GW3_ACCESS_KEY=9e01ce24...
 ```
 
-### Deployment
+## Deployment
 
 Run `blumen deploy`, it will pick up the providers from environment and deploy on them.
 
@@ -26,8 +26,8 @@ blumen deploy
 # ✔ Deployed across all providers
 
 # Open in a browser:
-#IPFS:      https://bafybeieao2nmw5njfino26llsokqdbc56pdfq7kudhoc5rrsvp4jk7tlk4.ipfs.cf-ipfs.com
-#Providers: https://delegated-ipfs.dev/routing/v1/providers/bafybeieao2nmw5njfino26llsokqdbc56pdfq7kudhoc5rrsvp4jk7tlk4
+# IPFS:      https://bafybeieao2nmw5njfino26llsokqdbc56pdfq7kudhoc5rrsvp4jk7tlk4.ipfs.cf-ipfs.com
+# Providers: https://delegated-ipfs.dev/routing/v1/providers/bafybeieao2nmw5njfino26llsokqdbc56pdfq7kudhoc5rrsvp4jk7tlk4
 ```
 
 Blumen will upload on the first provider and pin on all others. If pinning is not supported by the provider, it will reupload the file.

@@ -22,6 +22,7 @@ cli
   .option('--dist <dist>', 'Directory to store the distribution file')
   .option('--providers <providers>', 'Explicit provider order')
   .option('--verbose', 'More verbose logs')
+  .option('--safe <safe>', 'Deploy using a Safe multi-sig')
   .action(deployAction)
   .example('blumen deploy --strict ./dist')
 
@@ -38,7 +39,7 @@ cli
     'Update ENS domain Content-Hash with an IFPS CID',
   )
   .option('--chain <chain>', 'Chain to use', { default: 'mainnet' })
-  .option('--safe <safe>', 'Deploy using a Safe multisig wallet')
+  .option('--safe <safe>', 'Deploy using a Safe multi-sig')
   .option('--rpc-url <url>', 'Custom Ethereum RPC')
   .option('--resolver-address <address>', 'Custom ENS Resolver address')
   .action(ensAction)

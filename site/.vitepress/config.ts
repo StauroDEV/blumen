@@ -23,6 +23,10 @@ export default defineConfig({
             text: 'Providers',
             link: '/docs/providers',
           },
+          {
+            text: 'Deploying with Safe',
+            link: '/docs/safe'
+          }
         ],
       },
       {
