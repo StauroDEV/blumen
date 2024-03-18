@@ -26,8 +26,8 @@ blumen deploy
 # ✔ Deployed across all providers
 
 # Open in a browser:
-# IPFS:      https://bafybeieg5ighiog2vdb4p64mta4cpulqv56bmyrhwdfff4qomh7z7afbyy.ipfs.dweb.link
-# IPFS Scan: https://ipfs-scan.io/?cid=bafybeieg5ighiog2vdb4p64mta4cpulqv56bmyrhwdfff4qomh7z7afbyy
+#IPFS:      https://bafybeieao2nmw5njfino26llsokqdbc56pdfq7kudhoc5rrsvp4jk7tlk4.ipfs.cf-ipfs.com
+#Providers: https://delegated-ipfs.dev/routing/v1/providers/bafybeieao2nmw5njfino26llsokqdbc56pdfq7kudhoc5rrsvp4jk7tlk4
 ```
 
 Blumen will upload on the first provider and pin on all others. If pinning is not supported by the provider, it will reupload the file.
