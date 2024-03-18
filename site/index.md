@@ -5,7 +5,7 @@
 
 **Blumen** is a CLI and API library to deploy apps on the decentralized web using IPFS and Ethereum.
 
-<video src="https://ipfs.io/ipfs/QmWVyDjVMaq6GuNZbYt9MS36JMEe2Ad1eg6e14ah6vzMpx" height="1254" width="960" controls />
+<video src="./blumen.mp4" height="1254" width="960" controls />
 
 ## Features
 
