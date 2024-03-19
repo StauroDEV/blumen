@@ -9,6 +9,7 @@ import { deployAction } from './actions/deploy.js'
 import './polyfills/globals.js'
 import { pingAction } from './actions/ping.js'
 import { getVersion } from './utils/version.js'
+import { dnsLinkAction } from './actions/dnslink.js'
 
 const cli = cac('blumen')
 
@@ -49,6 +50,10 @@ cli.command('ping <cid> <endpoint>', 'Ping an endpoint until it resolves content
   .option('--retry-interval', 'Interval between retries (in ms)', { default: 5000 })
   .option('--timeout', 'Request timeout until next attempt (in ms)', { default: 10000 })
   .action(pingAction)
+
+cli.command('dnslink <cid>', 'Update DNSLink with a given CID using Cloudflare')
+  // .option('--init', 'Create a DNSLink gateway', { default: false })
+  .action(dnsLinkAction)
 
 cli.help()
 cli.version(await getVersion())

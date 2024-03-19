@@ -64,8 +64,22 @@ export class InvalidCIDError extends Error {
 }
 
 export class MissingDirectoryError extends Error {
-  name = 'MissingDirectory'
+  name = 'MissingDirectoryError'
   constructor(dir: string) {
     super(`Directory ${dir} is missing.`)
+  }
+}
+
+export class DnsLinkError extends Error {
+  name = 'DnsLinkError'
+  constructor(error: unknown) {
+    super(`Error updating DNSLink: ${error}`)
+  }
+}
+
+export class MissingDnsLinkError extends Error {
+  name = 'MissingDnsLinkError'
+  constructor() {
+    super(`No DNSLink gateway was found. Create one first.\nhttps://blumen.stauro.dev/docs/dnslink.html`)
   }
 }

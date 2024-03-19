@@ -28,3 +28,5 @@ string,
 }
 
 export const isTTY = process.stdout.isTTY
+
+export const CLOUDFLARE_API_URL = 'https://api.cloudflare.com/client/v4'
