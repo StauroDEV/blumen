@@ -7,11 +7,16 @@ import { CarReader } from '@ipld/car'
 export async function setupW3Up({ pk, proof: _proof }: { pk: string, proof: string }) {
   const principal = Signer.parse(pk)
   const client = await Client.create({ principal, store: new StoreMemory() })
-  const proof = await parseProof(_proof)
-  const space = await client.addSpace(proof)
-  await client.setCurrentSpace(space.did())
+  try {
+    const proof = await parseProof(_proof)
+    const space = await client.addSpace(proof)
+    await client.setCurrentSpace(space.did())
 
-  return client
+    return client
+  }
+  catch {
+    throw new Error('Failed to parse UCAN proof')
+  }
 }
 
 async function parseProof(data: string) {

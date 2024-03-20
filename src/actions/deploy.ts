@@ -128,7 +128,6 @@ export const deployAction = async (
   }
 
   if (dnslink === true) {
-    console.log(`\n`)
     await dnsLinkAction(cid)
   }
 }
