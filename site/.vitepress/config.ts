@@ -3,17 +3,30 @@ import { defineConfig } from 'vitepress'
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: 'Blumen',
-  description: 'a CLI and API library to deploy apps on the decentralized web using IPFS and Ethereum.',
+  description:
+    'a CLI to deploy apps on the decentralized web using IPFS and Ethereum.',
+  head: [
+    ['link', { rel: 'icon', href: '/logo.png' }],
+    ['meta', {
+      property: 'og:description',
+      content:
+        'a CLI to deploy apps on the decentralized web using IPFS and Ethereum.',
+    }],
+    ['meta', {
+      property: 'og:image',
+      content: 'http://blumen.stauro.dev/blumen.jpg',
+    }],
+  ],
   themeConfig: {
     nav: [{ text: 'Docs', link: '/' }],
     search: {
       provider: 'local',
     },
-
+    logo: '/logo.png',
     sidebar: [
       {
         text: 'Introduction',
-        link:'/',
+        link: '/',
         items: [
           {
             text: 'Getting Started',
@@ -25,12 +38,12 @@ export default defineConfig({
           },
           {
             text: 'Deploying with Safe',
-            link: '/docs/safe'
+            link: '/docs/safe',
           },
           {
             text: 'DNSLink',
-            link: '/docs/dnslink'
-          }
+            link: '/docs/dnslink',
+          },
         ],
       },
       {
@@ -50,12 +63,12 @@ export default defineConfig({
           },
           {
             text: 'Ping',
-            link: '/docs/cli/ping'
+            link: '/docs/cli/ping',
           },
           {
             text: 'DNSLink',
-            link: '/docs/cli/dnslink'
-          }
+            link: '/docs/cli/dnslink',
+          },
         ],
       },
     ],

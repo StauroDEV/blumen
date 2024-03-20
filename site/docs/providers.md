@@ -11,7 +11,7 @@ We support a wide range of different IPFS providers. If you would like to integr
 
 `BLUMEN_FILEBASE_TOKEN` for upload + pin is obtained by encoding access key and access secret to base64. Access key and access secret could be found in the Filebase console.
 
-![Filebase console](filebase.png)
+![Filebase console](/filebase.png)
 
 The easiest way to generate an S3 API token is using the `base64` command:
 

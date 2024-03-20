@@ -47,6 +47,6 @@ Your web app got deployed on IPFS. The last step is approving a transaction prop
 
 Go back to the Safe app > Transactions and confirm your deployment:
 
-![Safe app](safe.jpg)
+![Safe app](/safe.jpg)
 
 Once it finishes getting processed, your ENS record should start pointing to your new deployment. Now your web app should be discoverable through any ENS gateway (such as .eth.limo).
