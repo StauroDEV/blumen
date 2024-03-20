@@ -22,7 +22,7 @@ blumen deploy --strict
 
 Default: empty
 
-After finishing the deployment, update content hash of an ENS domain to point to the IPFS CID. Equivalent to running `blumen ens` afterwarsd.
+After finishing the deployment, update content hash of an ENS domain to point to the IPFS CID. Equivalent to running `blumen ens` afterwards.
 
 ```sh
 blumen deploy --ens v1rtl.eth
@@ -94,4 +94,12 @@ Deploy using a [Safe](https://safe.global) multisig wallet. Requires private key
 
 ```sh
 blumen ens bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 v1rtl.eth --safe gor:0x1234567890000000000000000000000000000000 --chain goerli
+```
+
+### `dnslink`
+
+Update DNSLink. After finishing the deployment, DNSLink is updated afterwards (or after ENS if it was included in the deployment). Equivalent to `blumen dnslink <cid>`
+
+```sh
+blumen deploy --dnslink
 ```

@@ -9,9 +9,9 @@
 
 ## Features
 
-- **Multi-Provider Deployment**: Deploy your web app simultaneously on multiple IPFS providers, including [web3.storage](https://web3.storage) and [Gateway3](https://gw3.io), ensuring redundancy and availability.
-- **ENS Integration**: Seamlessly integrate with [ENS](https://ens.domains) to update your Content-Hash, making it easier for users to access your web app via ENS gateways.
-- **Safe Integration**: Update your ENS Content-Hash using a multisig [Safe](https://safe.global) contract, adding an extra layer of security and decentralization.
+- **Multi-Provider Deployment**: Deploy your web app simultaneously on multiple IPFS providers, including [web3.storage](https://web3.storage), [Gateway3](https://gw3.app) and [Filebase](https://filebase.com).
+- **ENS and DNSLink Integration**: Seamlessly integrate with [ENS](https://ens.domains) and [DNSLink](https://dnslink.dev) to update your Content-Hash, making it easier for users to access your web app via ENS gateways.
+- **Safe Integration**: Add an extra layer of security and decentralization with [Safe](https://safe.global) multi-sig.
 
 ## Installation
 

@@ -26,6 +26,10 @@ export default defineConfig({
           {
             text: 'Deploying with Safe',
             link: '/docs/safe'
+          },
+          {
+            text: 'DNSLink',
+            link: '/docs/dnslink'
           }
         ],
       },
@@ -44,6 +48,14 @@ export default defineConfig({
             text: 'ENS',
             link: '/docs/cli/ens',
           },
+          {
+            text: 'Ping',
+            link: '/docs/cli/ping'
+          },
+          {
+            text: 'DNSLink',
+            link: '/docs/cli/dnslink'
+          }
         ],
       },
     ],
