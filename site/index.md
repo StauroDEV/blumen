@@ -3,7 +3,7 @@
   <h1>Blumen</h1>
 </div>
 
-**Blumen** is a CLI and API library to deploy apps on the decentralized web using IPFS and Ethereum.
+**Blumen** is a CLI app to deploy apps on the decentralized web using IPFS and Ethereum.
 
 <video src="./blumen.mp4" height="1254" width="960" controls />
 
