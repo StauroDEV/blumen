@@ -23,7 +23,7 @@ type DeployActionArgs = {
   dist?: string
   providers?: string
   verbose?: boolean
-  dnslink?: boolean
+  dnslink?: string
 }
 
 export const deployAction = async (
@@ -127,7 +127,7 @@ export const deployAction = async (
     await ensAction(cid, ens, { chain, safe, resolverAddress })
   }
 
-  if (dnslink === true) {
-    await dnsLinkAction(cid)
+  if (dnslink) {
+    await dnsLinkAction(cid, dnslink)
   }
 }

@@ -24,7 +24,7 @@ cli
   .option('--providers <providers>', 'Explicit provider order')
   .option('--verbose', 'More verbose logs')
   .option('--safe <safe>', 'Deploy using a Safe multi-sig')
-  .option('--dnslink', 'Update DNSLink', { default: false })
+  .option('--dnslink <name>', 'Update DNSLink')
   .action(deployAction)
   .example('blumen deploy --strict ./dist')
 
@@ -52,7 +52,7 @@ cli.command('ping <cid> <endpoint>', 'Ping an endpoint until it resolves content
   .option('--timeout', 'Request timeout until next attempt (in ms)', { default: 10000 })
   .action(pingAction)
 
-cli.command('dnslink <cid>', 'Update DNSLink with a given CID using Cloudflare')
+cli.command('dnslink <cid> <name>', 'Update DNSLink with a given CID using Cloudflare')
   // .option('--init', 'Create a DNSLink gateway', { default: false })
   .action(dnsLinkAction)
 
