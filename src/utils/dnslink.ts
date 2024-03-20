@@ -25,21 +25,21 @@ import { DnsLinkError, MissingDnsLinkError } from '../errors.js'
 // }
 
 export const updateDnsLink = async (
-  { cid, zoneId, apiKey }:
-  { cid: string, zoneId: string, apiKey: string },
+  { cid, zoneId, apiKey, name }:
+  { cid: string, zoneId: string, apiKey: string, name: string },
 ) => {
   const res = await fetch(`${CLOUDFLARE_API_URL}/zones/${zoneId}/web3/hostnames`, {
     headers: {
       Authorization: `Bearer ${apiKey}`,
     },
   })
-  const json = await res.json()
+  const json = await res.json() as { result: { name: string }[], errors: { message: string, code: number }[] }
 
   if (!res.ok) throw new DnsLinkError(json.errors[0].message)
 
   if (!json.result.length) throw new MissingDnsLinkError()
 
-  const recordId = json.result[0].id
+  const recordId = json.result.find(item => name === item.name)
 
   return await fetch(`${CLOUDFLARE_API_URL}/zones/${zoneId}/web3/hostnames/${recordId}`, {
     method: 'PATCH',
