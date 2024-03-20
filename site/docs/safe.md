@@ -11,7 +11,7 @@ First, we need to create a Safe multi-sig account. It's required to control our 
 
 After a successful safe creation, you will get your safe's address. Next we need to add a delegate account. A delegate is not allowed to approve transactions but can propose them to the wallet. Unfortunately, it's not possible to create a delegate from the dashboard; we need to use [another web app](https://gnosis-delegator.badger.com) for that. Connect with your browser wallet, choose your safe and then add the delegate address of some other account:
 
-![Delegate app](delegate.png)
+![Delegate app](/delegate.png)
 
 Lastly, add the private key of your delegate to environment variables:
 
