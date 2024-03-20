@@ -1,11 +1,11 @@
 <div align="center">
-  <img src="./logo.png" width="200" />
+  <img src="/logo.png" width="200" />
   <h1>Blumen</h1>
 </div>
 
 **Blumen** is a CLI app to deploy apps on the decentralized web using IPFS and Ethereum.
 
-<video src="./blumen.mp4" height="1254" width="960" controls />
+<video src="/blumen.mp4" height="1254" width="960" controls />
 
 ## Features
 
