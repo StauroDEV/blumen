@@ -2,7 +2,6 @@ import { tmpdir } from 'node:os'
 import { readFile, open } from 'node:fs/promises'
 import { createWriteStream } from 'node:fs'
 import { CID } from 'multiformats/cid'
-import { Block } from '@ipld/unixfs'
 import { Writable } from 'node:stream'
 import type { FileEntry } from '../types.js'
 import { CAREncoderStream, createDirectoryEncoderStream } from 'ipfs-car'
@@ -20,7 +19,7 @@ export const packCAR = async (files: FileEntry[], name: string, dir = tmp) => {
 
   await createDirectoryEncoderStream(files)
     .pipeThrough(
-      new TransformStream<Block>({
+      new TransformStream({
         transform(block, controller) {
           rootCID = block.cid as CID
           controller.enqueue(block)

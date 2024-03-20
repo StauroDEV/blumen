@@ -9,6 +9,7 @@ import { ChainName } from '../types.js'
 import { Address } from 'viem'
 import { deployMessage, logger } from '../utils/logger.js'
 import * as colors from 'colorette'
+import { dnsLinkAction } from './dnslink.js'
 
 const AsciiBar = mod.default
 
@@ -22,12 +23,15 @@ type DeployActionArgs = {
   dist?: string
   providers?: string
   verbose?: boolean
+  dnslink?: boolean
 }
 
 export const deployAction = async (
   dir: string,
   {
-    strict, ens, chain = 'mainnet', safe, name: customName, dist, verbose, providers: providersList, resolverAddress,
+    strict, ens, chain = 'mainnet', safe, name: customName,
+    dist, verbose, providers: providersList, resolverAddress,
+    dnslink,
   }: DeployActionArgs,
 ) => {
   if (!dir) {
@@ -121,5 +125,10 @@ export const deployAction = async (
   if (typeof ens === 'string') {
     console.log('\n')
     await ensAction(cid, ens, { chain, safe, resolverAddress })
+  }
+
+  if (dnslink === true) {
+    console.log(`\n`)
+    await dnsLinkAction(cid)
   }
 }

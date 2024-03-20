@@ -11,9 +11,6 @@ dependencies:
   '@ipld/car':
     specifier: ^5.3.0
     version: 5.3.0
-  '@ipld/unixfs':
-    specifier: ^3.0.0
-    version: 3.0.0
   '@stauro/filebase-upload':
     specifier: ^0.0.7
     version: 0.0.7

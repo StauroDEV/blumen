@@ -37,7 +37,6 @@
   "dependencies": {
     "@ensdomains/content-hash": "^3.0.0",
     "@ipld/car": "^5.3.0",
-    "@ipld/unixfs": "^3.0.0",
     "@stauro/filebase-upload": "^0.0.7",
     "@stauro/piggybank": "^0.0.5",
     "@ucanto/core": "^9.0.1",

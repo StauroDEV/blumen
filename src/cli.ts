@@ -24,6 +24,7 @@ cli
   .option('--providers <providers>', 'Explicit provider order')
   .option('--verbose', 'More verbose logs')
   .option('--safe <safe>', 'Deploy using a Safe multi-sig')
+  .option('--dnslink', 'Update DNSLink', { default: false })
   .action(deployAction)
   .example('blumen deploy --strict ./dist')
 
