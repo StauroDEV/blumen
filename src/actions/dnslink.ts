@@ -20,12 +20,14 @@ export const dnsLinkAction = async (
   // else {
   logger.info(`Updating DNSLink`)
   try {
-    const { result } = await updateDnsLink({ cid, zoneId, apiKey, name })
+    const response = await updateDnsLink({ cid, zoneId, apiKey, name })
 
-    logger.success(`${result.name} now points to ${result.dnslink}`)
+    if (response.errors) return logger.error(response.errors[0].message)
+
+    logger.success(`${response.result.name} now points to ${response.result.dnslink}`)
   }
   catch (e) {
-    logger.error(e)
+    return logger.error(e)
   }
   // }
 }

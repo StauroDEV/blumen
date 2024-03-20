@@ -33,15 +33,20 @@ export const updateDnsLink = async (
       Authorization: `Bearer ${apiKey}`,
     },
   })
-  const json = await res.json() as { result: { name: string }[], errors: { message: string, code: number }[] }
+  const json = await res.json() as {
+    result: { name: string, id: string }[]
+    errors: { message: string, code: number }[]
+  }
 
   if (!res.ok) throw new DnsLinkError(json.errors[0].message)
 
   if (!json.result.length) throw new MissingDnsLinkError()
 
-  const recordId = json.result.find(item => name === item.name)
+  const record = json.result.find(item => name === item.name)
 
-  return await fetch(`${CLOUDFLARE_API_URL}/zones/${zoneId}/web3/hostnames/${recordId}`, {
+  if (!record) throw new MissingDnsLinkError()
+
+  return await fetch(`${CLOUDFLARE_API_URL}/zones/${zoneId}/web3/hostnames/${record.id}`, {
     method: 'PATCH',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
