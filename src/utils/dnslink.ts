@@ -1,5 +1,6 @@
 import { CLOUDFLARE_API_URL } from '../constants.js'
 import { DnsLinkError, MissingDnsLinkError } from '../errors.js'
+import { logger } from './logger.js';
 
 // export const createDnsLink = async (
 //   { cid, zoneId, apiKey }:
@@ -25,14 +26,15 @@ import { DnsLinkError, MissingDnsLinkError } from '../errors.js'
 // }
 
 export const updateDnsLink = async (
-  { cid, zoneId, apiKey, name }:
-  { cid: string, zoneId: string, apiKey: string, name: string },
+  { cid, zoneId, apiKey, name,verbose }:
+  { cid: string, zoneId: string, apiKey: string, name: string; verbose: boolean },
 ) => {
   const res = await fetch(`${CLOUDFLARE_API_URL}/zones/${zoneId}/web3/hostnames`, {
     headers: {
       Authorization: `Bearer ${apiKey}`,
     },
   })
+  if (verbose) logger.request('GET', res.url, res.status)
   const json = await res.json() as {
     result: { name: string, id: string }[]
     errors: { message: string, code: number }[]
@@ -46,7 +48,7 @@ export const updateDnsLink = async (
 
   if (!record) throw new MissingDnsLinkError()
 
-  return await fetch(`${CLOUDFLARE_API_URL}/zones/${zoneId}/web3/hostnames/${record.id}`, {
+  const res2 = await fetch(`${CLOUDFLARE_API_URL}/zones/${zoneId}/web3/hostnames/${record.id}`, {
     method: 'PATCH',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
@@ -57,5 +59,6 @@ export const updateDnsLink = async (
       description: `Powered by Blumen`,
     }),
   })
-    .then(res => res.json())
+  if (verbose) logger.request('POST', res.url, res.status)
+  return res2.json()
 }

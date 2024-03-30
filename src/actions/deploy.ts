@@ -30,7 +30,7 @@ export const deployAction = async (
   dir: string,
   {
     strict, ens, chain = 'mainnet', safe, name: customName,
-    dist, verbose, providers: providersList, resolverAddress,
+    dist, verbose = false, providers: providersList, resolverAddress,
     dnslink,
   }: DeployActionArgs,
 ) => {
@@ -128,6 +128,6 @@ export const deployAction = async (
   }
 
   if (dnslink) {
-    await dnsLinkAction(cid, dnslink)
+    await dnsLinkAction(cid, dnslink, {verbose})
   }
 }

@@ -54,6 +54,7 @@ cli.command('ping <cid> <endpoint>', 'Ping an endpoint until it resolves content
 
 cli.command('dnslink <cid> <name>', 'Update DNSLink with a given CID using Cloudflare')
   // .option('--init', 'Create a DNSLink gateway', { default: false })
+  .option('--verbose', 'More verbose logs', {default:false})
   .action(dnsLinkAction)
 
 cli.help()
