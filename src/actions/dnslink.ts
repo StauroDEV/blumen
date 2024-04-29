@@ -3,8 +3,9 @@ import { updateDnsLink } from '../utils/dnslink.js'
 import { logger } from '../utils/logger.js'
 
 export const dnsLinkAction = async (
-  cid: string, name: string, { verbose }: { verbose: boolean }, /* { init = false }: { init?: boolean } */
+  { cid, name, options = {} }: { cid: string, name: string, options?: { verbose?: boolean } },
 ) => {
+  const { verbose = false } = options
   const apiKey = process.env.BLUMEN_CF_KEY
   const zoneId = process.env.BLUMEN_CF_ZONE_ID
 

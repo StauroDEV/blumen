@@ -5,9 +5,14 @@ let retryCount = 0
 const gwOfflineMessage = `😞 Max retries exceeded. Gateway is ${colors.bold(colors.red('Offline'))}.`
 
 export const pingAction = async (
-  cid: string, endpoint: string, { maxRetries: retries = Infinity, retryInterval = 5000, timeout = 10000 }:
-  Partial<{ maxRetries: number, retryInterval: number, timeout: number }>,
+  { cid, endpoint, options }: {
+    cid: string
+    endpoint: string
+    options: Partial<{ maxRetries: number, retryInterval: number, timeout: number }>
+  },
 ): Promise<void> => {
+  const { maxRetries: retries = Infinity, retryInterval = 5000, timeout = 10000 } = options
+
   retryCount++
   const url = `https://${cid}.ipfs.${endpoint}`
   console.log(`${colors.bold(`[${retryCount}]`)}: Requesting content at ${url}`)
@@ -17,7 +22,7 @@ export const pingAction = async (
       if (retries > 1) {
         console.log(`🔄 Retrying in ${retryInterval / 1000} seconds...`)
         await new Promise(resolve => setTimeout(resolve, retryInterval))
-        return pingAction(cid, endpoint, { maxRetries: retries - 1, retryInterval })
+        return pingAction({ cid, endpoint, options: { maxRetries: retries - 1, retryInterval } })
       }
       else {
         return console.error(gwOfflineMessage)
@@ -35,7 +40,7 @@ export const pingAction = async (
     if (error instanceof DOMException) {
       if (retries > 1) {
         console.log(`⌛ Timed out. Retrying...`)
-        return pingAction(cid, endpoint, { maxRetries: retries - 1, retryInterval })
+        return pingAction({ cid, endpoint, options: { maxRetries: retries - 1, retryInterval } })
       }
       else {
         return console.error(gwOfflineMessage)

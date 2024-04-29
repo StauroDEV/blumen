@@ -9,9 +9,12 @@ import { parseTokensFromEnv, findEnvVarProviderName } from '../index.js'
 import { pinStatus } from '../utils/pin.js'
 
 export const statusAction = async (
-  cid: string,
-  { providers: providersOptionList, verbose }: { providers: string, verbose?: boolean },
+  { cid, options = {} }: {
+    cid: string
+    options?: Partial<{ providers: string, verbose: boolean }>
+  },
 ) => {
+  const { providers: providersOptionList, verbose } = options
   // Validate CID
   try {
     CID.parse(cid)
