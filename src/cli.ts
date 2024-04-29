@@ -53,11 +53,13 @@ cli.command('deploy', ([dir], options) => deployAction({
     },
     {
       name: 'name',
+      short: 'n',
       description: 'Name of the distribution (without file extension)',
       type: 'string',
     },
     {
       name: 'dist',
+      short: 'd',
       description: 'Directory to store the distribution file',
       type: 'string',
     },
@@ -135,6 +137,7 @@ cli.command('ping', ([cid, endpoint], options) => pingAction({
       name: 'timeout',
       description: 'Request timeout until next attempt (in ms)',
       type: 'string',
+      short: 't',
     },
   ] as const,
 })
