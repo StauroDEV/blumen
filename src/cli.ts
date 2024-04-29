@@ -8,7 +8,7 @@ import { deployAction } from './actions/deploy.js'
 
 import './polyfills/globals.js'
 import { pingAction } from './actions/ping.js'
-import { getVersion } from './utils/version.js'
+import { BLUMEN_VERSION } from './utils/version.js'
 import { dnsLinkAction } from './actions/dnslink.js'
 
 const cli = cac('blumen')
@@ -58,5 +58,5 @@ cli.command('dnslink <cid> <name>', 'Update DNSLink with a given CID using Cloud
   .action(dnsLinkAction)
 
 cli.help()
-cli.version(await getVersion())
+cli.version(BLUMEN_VERSION)
 cli.parse()

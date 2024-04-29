@@ -1,14 +1,16 @@
 {
-  "compilerOptions": {
-    "module": "Node16",
-    "target": "es2022",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "moduleResolution": "node16",
-    "outDir": "dist",
-    "isolatedModules": true,
-  },
-  "exclude": ["node_modules", "**/node_modules/*","**/*.test.ts"],
-  "include": ["src"]
-}
+    "compilerOptions": {
+      "module": "Preserve",
+      "target": "es2022",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "moduleResolution": "Bundler",
+      "outDir": "dist",
+      "isolatedModules": true,
+      "resolveJsonModule": true
+    },
+    "exclude": ["node_modules", "**/*.test.ts"],
+    "include": ["src", "scripts"]
+  }
+  

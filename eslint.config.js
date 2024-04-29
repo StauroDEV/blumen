@@ -1,8 +1,8 @@
 import stylistic from '@stylistic/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 import ts from '@typescript-eslint/eslint-plugin'
-import globals from 'globals'
 import js from '@eslint/js'
+import globals from 'globals'
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
@@ -12,13 +12,13 @@ export default [
     languageOptions: {
       globals: {
         ...globals.node,
-        ...globals[''],
       },
       parser: tsParser,
       parserOptions: {
         config: './tsconfig.json',
         ecmaFeatures: { modules: true },
         ecmaVersion: 'latest',
+        sourceType: 'module',
       },
     },
     plugins: {

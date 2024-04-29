@@ -11,6 +11,7 @@ import { deployMessage, logger } from '../utils/logger.js'
 import * as colors from 'colorette'
 import { dnsLinkAction } from './dnslink.js'
 
+// @ts-expect-error authors of AsciiBar didnt publish the package properly
 const AsciiBar = mod.default
 
 type DeployActionArgs = {
@@ -128,6 +129,6 @@ export const deployAction = async (
   }
 
   if (dnslink) {
-    await dnsLinkAction(cid, dnslink, {verbose})
+    await dnsLinkAction(cid, dnslink, { verbose })
   }
 }
