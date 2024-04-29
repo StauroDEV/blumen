@@ -1,1 +1,1 @@
-export const BLUMEN_VERSION = '0.1.2'
+export const BLUMEN_VERSION = '0.10.4'
