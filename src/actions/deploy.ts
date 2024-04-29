@@ -4,9 +4,7 @@ import { MissingDirectoryError, NoProvidersError } from '../errors.js'
 import { walk, fileSize, packCAR, parseTokensFromEnv, tokensToProviderNames, findEnvVarProviderName } from '../index.js'
 import { exists } from '../utils/fs.js'
 import mod from 'ascii-bar'
-import { ensAction } from './ens.js'
-import { ChainName } from '../types.js'
-import { Address } from 'viem'
+import { EnsActionArgs, ensAction } from './ens.js'
 import { deployMessage, logger } from '../utils/logger.js'
 import * as colors from 'colorette'
 import { dnsLinkAction } from './dnslink.js'
@@ -14,27 +12,24 @@ import { dnsLinkAction } from './dnslink.js'
 // @ts-expect-error authors of AsciiBar didnt publish the package properly
 const AsciiBar = mod.default
 
-type DeployActionArgs = {
+export type DeployActionArgs = Partial<{
   strict: boolean
-  chain?: ChainName
-  ens?: string
-  resolverAddress?: Address
-  safe?: Address
-  name?: string
-  dist?: string
-  providers?: string
-  verbose?: boolean
-  dnslink?: string
-}
+  ens: string
+  name: string
+  dist: string
+  providers: string
+  verbose: boolean
+  dnslink: string
+}> & EnsActionArgs
 
 export const deployAction = async (
-  dir: string,
-  {
+  { dir, options = {} }: { dir?: string, options?: DeployActionArgs },
+) => {
+  const {
     strict, ens, chain = 'mainnet', safe, name: customName,
     dist, verbose = false, providers: providersList, resolverAddress,
-    dnslink,
-  }: DeployActionArgs,
-) => {
+    dnslink, rpcUrl,
+  } = options
   if (!dir) {
     if (await exists('dist')) dir = 'dist'
     else dir = '.'
@@ -125,10 +120,10 @@ export const deployAction = async (
 
   if (typeof ens === 'string') {
     console.log('\n')
-    await ensAction(cid, ens, { chain, safe, resolverAddress })
+    await ensAction({ cid, domain: ens, options: { chain, safe, resolverAddress, rpcUrl } })
   }
 
   if (dnslink) {
-    await dnsLinkAction(cid, dnslink, { verbose })
+    await dnsLinkAction({ cid, name, options: { verbose } })
   }
 }

@@ -8,9 +8,9 @@ import {
   Hex,
   encodeFunctionData,
 } from 'viem'
-import { MissingKeyError } from '../errors.js'
+import { InvalidCIDError, MissingCLIArgsError, MissingKeyError } from '../errors.js'
 import { PUBLIC_RESOLVER_ADDRESS, prepareUpdateEnsArgs, abi } from '../utils/ens.js'
-import { ChainName } from '../types.js'
+import type { ChainName } from '../types.js'
 import { privateKeyToAccount } from 'viem/accounts'
 import { goerli, mainnet } from 'viem/chains'
 import { walletSafeActions, publicSafeActions } from '@stauro/piggybank/actions'
@@ -21,14 +21,33 @@ import { chainIdToSafeApiUrl } from '../utils/safe.js'
 import * as colors from 'colorette'
 import { logger } from '../utils/logger.js'
 import { isTTY } from '../constants.js'
+import { CID } from 'multiformats'
+
+export type EnsActionArgs = Partial<{
+  chain: ChainName
+  safe: Address | EIP3770Address
+  rpcUrl: string
+  resolverAddress: Address
+}>
 
 export const ensAction = async (
-  cid: string,
-  domain: string,
-  {
-    chain: chainName, safe: safeAddress, rpcUrl, resolverAddress,
-  }: { chain: ChainName } & Partial<{ safe: Address | EIP3770Address, rpcUrl: string, resolverAddress: Address }>,
+  { cid, domain, options = {} }: {
+    cid: string
+    domain: string
+    options: EnsActionArgs
+  },
 ) => {
+  const {
+    chain: chainName = 'mainnet', safe: safeAddress, rpcUrl, resolverAddress,
+  } = options
+
+  try {
+    CID.parse(cid)
+  }
+  catch {
+    throw new InvalidCIDError(cid)
+  }
+  if (!domain) throw new MissingCLIArgsError([domain])
   const chain = chainName === 'mainnet' ? mainnet : goerli
 
   const transport = http(rpcUrl ?? chain.id === 1 ? 'https://rpc.ankr.com/eth' : 'https://rpc.ankr.com/eth_goerli')

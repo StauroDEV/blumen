@@ -59,7 +59,7 @@ export class MissingKeyError extends Error {
 export class InvalidCIDError extends Error {
   name = 'InvalidCIDError'
   constructor(cid: string) {
-    super(`${cid} is invalid IPFS CID.`)
+    super(`${cid} is not a valid IPFS CID.`)
   }
 }
 
@@ -81,5 +81,12 @@ export class MissingDnsLinkError extends Error {
   name = 'MissingDnsLinkError'
   constructor() {
     super(`No DNSLink gateway was found. Create one first.\nhttps://blumen.stauro.dev/docs/dnslink.html`)
+  }
+}
+
+export class MissingCLIArgsError extends Error {
+  name = 'MissingCLIArgsError'
+  constructor(args: string[]) {
+    super(`Missing CLI arguments: ${args.join(', ')}`)
   }
 }

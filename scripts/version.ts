@@ -1,7 +1,11 @@
+import { exec } from 'node:child_process'
+import { promisify } from 'node:util'
 import { readFile, writeFile } from 'node:fs/promises'
 
-const pkg = await readFile('./package.json', 'utf8')
+const {stdout} = await promisify(exec)(`git describe --tags --abbrev=0`)
 
-const {version} = JSON.parse(pkg)
+const patchVersion = stdout.slice(stdout.lastIndexOf('.'))
 
-await writeFile('./src/utils/version.ts', `export const BLUMEN_VERSION = '${version}'`)
+const newVersion = stdout.replace('v','').replace(patchVersion, `.${parseInt(patchVersion[1]) + 1}`)
+
+await writeFile('./src/utils/version.ts', `export const BLUMEN_VERSION = '${newVersion}'\n`)
