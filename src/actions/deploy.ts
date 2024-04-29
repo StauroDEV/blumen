@@ -11,7 +11,9 @@ import { deployMessage, logger } from '../utils/logger.js'
 import * as colors from 'colorette'
 import { dnsLinkAction } from './dnslink.js'
 
+// @ts-ignore
 const AsciiBar = mod.default
+
 
 type DeployActionArgs = {
   strict: boolean

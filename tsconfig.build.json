@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "Preserve",
+    "target": "es2022",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "moduleResolution": "Bundler",
+    "outDir": "dist",
+    "isolatedModules": true,
+    "resolveJsonModule": true
+  },
+  "exclude": ["node_modules", "**/*.test.ts"],
+  "include": ["src"]
+}

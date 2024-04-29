@@ -13,7 +13,7 @@
   "homepage": "https://github.com/StauroDEV/blumen",
   "scripts": {
     "dev": "tsx src/cli.ts",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "postbuild": "chmod +x ./dist/cli.js",
     "prepublishOnly": "pnpm build",
     "lint": "eslint --config eslint.config.js src/**/*.ts eslint.config.js",
@@ -71,5 +71,6 @@
   },
   "publishConfig": {
     "provenance": true
-  }
+  },
+  "packageManager": "pnpm@9.0.6"
 }
