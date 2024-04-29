@@ -1,6 +1,6 @@
 import { CLOUDFLARE_API_URL } from '../constants.js'
 import { DnsLinkError, MissingDnsLinkError } from '../errors.js'
-import { logger } from './logger.js';
+import { logger } from './logger.js'
 
 // export const createDnsLink = async (
 //   { cid, zoneId, apiKey }:
@@ -26,8 +26,8 @@ import { logger } from './logger.js';
 // }
 
 export const updateDnsLink = async (
-  { cid, zoneId, apiKey, name,verbose }:
-  { cid: string, zoneId: string, apiKey: string, name: string; verbose: boolean },
+  { cid, zoneId, apiKey, name, verbose }:
+  { cid: string, zoneId: string, apiKey: string, name: string, verbose: boolean },
 ) => {
   const res = await fetch(`${CLOUDFLARE_API_URL}/zones/${zoneId}/web3/hostnames`, {
     headers: {
