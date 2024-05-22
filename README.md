@@ -17,8 +17,8 @@ Status][gh-actions-img]][github-actions] ![npm](https://img.shields.io/npm/dt/bl
 ## Features
 
 - **Multi-Provider Deployment**: Deploy your web app simultaneously on multiple IPFS providers, including [web3.storage](https://web3.storage), [Gateway3](https://gw3.app) and [Filebase](https://filebase.com).
-- **ENS and DNSLink Integration**: Seamlessly integrate with [ENS](https://ens.domains) and [DNSLink](https://dnslink.dev) to update your Content-Hash, making it easier for users to access your web app via ENS gateways.
-- **Safe Integration**: Add an extra layer of security and decentralization with [Safe](https://safe.global) multi-sig.
+- **ENS and DNSLink Integration**: Seamlessly integrate with [ENS](https://ens.domains) and [DNSLink](https://dnslink.dev) to update your decentralized website.
+- **Safe Integration**: Add an extra layer of security and decentralization with a [Safe](https://safe.global) multi-sig.
 
 ## Docs
 
