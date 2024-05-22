@@ -13,7 +13,7 @@ import { BLUMEN_VERSION } from './utils/version.js'
 import { dnsLinkAction } from './actions/dnslink.js'
 import { isTTY } from './constants.js'
 
-const cli = new CLI({ name: 'blumen', plugins: isTTY ? [] : [colorPlugin] })
+const cli = new CLI({ name: 'blumen', plugins: isTTY ? [colorPlugin] : [] })
 
 const ensOptions = [{
   name: 'chain',
