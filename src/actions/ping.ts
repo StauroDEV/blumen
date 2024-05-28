@@ -1,5 +1,6 @@
 import * as colors from 'colorette'
 import { isTTY } from '../constants'
+import { logger } from '../utils/logger'
 
 let retryCount = 0
 
@@ -16,7 +17,10 @@ export const pingAction = async (
 
   retryCount++
   const url = `https://${cid}.ipfs.${endpoint}`
-  console.log(`${isTTY ? colors.bold(`[${retryCount}]`) : `[${retryCount}]`}: Requesting content at ${url}`)
+  console.log(`${isTTY
+    ? `${colors.bold(`[${retryCount}]`)}: Requesting content at ${url}`
+    : `[${retryCount}]`}: Requesting content at ${url}`,
+  )
   try {
     const response = await fetch(url, { signal: AbortSignal.timeout(timeout), redirect: 'follow' })
     if (response.status === 504) {
@@ -32,7 +36,7 @@ export const pingAction = async (
     else {
       return console.log(`Gateway status: ${
         response.status >= 200 && response.status < 400
-        ? (isTTY ? colors.bold(colors.green(`Online ${response.status}`)) : `Online ${response.status}`)
+        ? logger.info((isTTY ? colors.bold(colors.green(`Online ${response.status}`)) : `Online ${response.status}`))
         : response.status
       }`)
     }
@@ -47,7 +51,7 @@ export const pingAction = async (
         return console.error(gwOfflineMessage)
       }
     }
-    console.error('Error fetching endpoint:', (error as Error).message)
+    logger.error('Error fetching endpoint:', (error as Error).message)
     throw error
   }
 }
