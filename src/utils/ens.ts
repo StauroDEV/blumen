@@ -1,7 +1,7 @@
 import { encode } from '@ensdomains/content-hash'
 import { Address, parseAbi } from 'viem'
 import { namehash, normalize } from 'viem/ens'
-import type { ChainName } from '../types'
+import type { ChainName } from '../types.js'
 
 export const prepareUpdateEnsArgs = async ({ cid, domain }: { cid: string, domain: string }) => {
   const contentHash = encode('ipfs', cid)

@@ -1,6 +1,6 @@
 import * as colors from 'colorette'
-import { isTTY } from '../constants'
-import { logger } from '../utils/logger'
+import { isTTY } from '../constants.js'
+import { logger } from '../utils/logger.js'
 
 let retryCount = 0
 
