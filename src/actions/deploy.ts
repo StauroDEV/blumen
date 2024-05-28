@@ -9,7 +9,6 @@ import { deployMessage, logger } from '../utils/logger.js'
 import * as colors from 'colorette'
 import { dnsLinkAction } from './dnslink.js'
 
-// @ts-expect-error authors of AsciiBar didnt publish the package properly
 const AsciiBar = mod.default
 
 export type DeployActionArgs = Partial<{

@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
-      "module": "Preserve",
+      "module": "NodeNext",
       "target": "es2022",
       "strict": true,
       "esModuleInterop": true,
       "skipLibCheck": true,
-      "moduleResolution": "Bundler",
+      "moduleResolution": "NodeNext",
       "outDir": "dist",
       "isolatedModules": true,
       "resolveJsonModule": true
