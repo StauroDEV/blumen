@@ -18,8 +18,8 @@ importers:
         specifier: ^0.0.7
         version: 0.0.7
       '@stauro/piggybank':
-        specifier: ^0.0.5
-        version: 0.0.5(viem@2.13.1(typescript@5.4.5))
+        specifier: ^0.1.0
+        version: 0.1.0(viem@2.13.1(typescript@5.4.5))
       '@ucanto/core':
         specifier: ^10.0.1
         version: 10.0.1
@@ -477,8 +477,8 @@ packages:
   '@stauro/filebase-upload@0.0.7':
     resolution: {integrity: sha512-8Oot0Gajg3FRrltscsPTm/8kcEBS+Ff3iIUbaxvlJWYVCu10dY5x05TAPJrVRekp+CXWpXlfEQ0ow3zWxmwf+g==}
 
-  '@stauro/piggybank@0.0.5':
-    resolution: {integrity: sha512-bt8Va4uO9IEuMdFqAfezCDI/g1BpSyTLhIV+O0zE1crVTgdvrHUfHT0P4Q90GvsZ79yH0Ax57Y4qUQ4JtUYEfQ==}
+  '@stauro/piggybank@0.1.0':
+    resolution: {integrity: sha512-mVqKvfgvOtEahIQb/rQKzpaN1/ECnnWRvlKX329+U00LfB4MYc0BDO2SGTwMmybj0nFMef9ClH22LuI6247G5A==}
     peerDependencies:
       viem: '>=1.16'
 
@@ -3077,7 +3077,7 @@ snapshots:
       '@smithy/types': 2.6.0
       aws4: 1.12.0
 
-  '@stauro/piggybank@0.0.5(viem@2.13.1(typescript@5.4.5))':
+  '@stauro/piggybank@0.1.0(viem@2.13.1(typescript@5.4.5))':
     dependencies:
       semver: 7.6.2
       viem: 2.13.1(typescript@5.4.5)

@@ -9,7 +9,7 @@ import {
   encodeFunctionData,
 } from 'viem'
 import { InvalidCIDError, MissingCLIArgsError, MissingKeyError } from '../errors.js'
-import { PUBLIC_RESOLVER_ADDRESS, prepareUpdateEnsArgs, abi } from '../utils/ens.js'
+import { PUBLIC_RESOLVER_ADDRESS, prepareUpdateEnsArgs, abi, chainToRpcUrl } from '../utils/ens.js'
 import type { ChainName } from '../types.js'
 import { privateKeyToAccount } from 'viem/accounts'
 import * as chains from 'viem/chains'
@@ -50,7 +50,7 @@ export const ensAction = async (
   if (!domain) throw new MissingCLIArgsError([domain])
   const chain = chains[chainName]
 
-  const transport = http(rpcUrl ?? chain.id === 1 ? 'https://rpc.ankr.com/eth' : 'https://rpc.ankr.com/eth_goerli')
+  const transport = http(rpcUrl ?? chainToRpcUrl(chainName))
 
   const publicClient = createPublicClient({
     transport,
