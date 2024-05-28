@@ -1,8 +1,9 @@
 import * as colors from 'colorette'
+import { isTTY } from '../constants'
 
 let retryCount = 0
 
-const gwOfflineMessage = `😞 Max retries exceeded. Gateway is ${colors.bold(colors.red('Offline'))}.`
+const gwOfflineMessage = `😞 Max retries exceeded. Gateway is ${isTTY ? colors.bold(colors.red('Offline')) : 'Offline'}.`
 
 export const pingAction = async (
   { cid, endpoint, options }: {
@@ -15,7 +16,7 @@ export const pingAction = async (
 
   retryCount++
   const url = `https://${cid}.ipfs.${endpoint}`
-  console.log(`${colors.bold(`[${retryCount}]`)}: Requesting content at ${url}`)
+  console.log(`${isTTY ? colors.bold(`[${retryCount}]`) : `[${retryCount}]`}: Requesting content at ${url}`)
   try {
     const response = await fetch(url, { signal: AbortSignal.timeout(timeout), redirect: 'follow' })
     if (response.status === 504) {
@@ -31,7 +32,7 @@ export const pingAction = async (
     else {
       return console.log(`Gateway status: ${
         response.status >= 200 && response.status < 400
-        ? colors.bold(colors.green(`Online ${response.status}`))
+        ? (isTTY ? colors.bold(colors.green(`Online ${response.status}`)) : `Online ${response.status}`)
         : response.status
       }`)
     }
