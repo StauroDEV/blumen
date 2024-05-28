@@ -24,7 +24,7 @@ BLUMEN_PK=0x...
 Once environment is set up, we can deploy our application by running blumen deploy with our Safe and ENS name:
 
 ```sh
-blumen deploy --safe=gor:0x... --ens=mydomain.eth
+blumen deploy --safe=sep:0x... --ens=mydomain.eth
 # 📦 Packing app (965.48KB)
 # 🟢  Root CID: bafybeieao2nmw5njfino26llsokqdbc56pdfq7kudhoc5rrsvp4jk7tlk4
 # 🟢  Deploying with providers: Gateway3, Filebase

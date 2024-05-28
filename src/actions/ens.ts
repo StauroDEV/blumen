@@ -12,12 +12,12 @@ import { InvalidCIDError, MissingCLIArgsError, MissingKeyError } from '../errors
 import { PUBLIC_RESOLVER_ADDRESS, prepareUpdateEnsArgs, abi } from '../utils/ens.js'
 import type { ChainName } from '../types.js'
 import { privateKeyToAccount } from 'viem/accounts'
-import { goerli, mainnet } from 'viem/chains'
+import * as chains from 'viem/chains'
 import { walletSafeActions, publicSafeActions } from '@stauro/piggybank/actions'
 import { EIP3770Address, OperationType } from '@stauro/piggybank/types'
 import { getEip3770Address } from '@stauro/piggybank/utils'
 import { ApiClient } from '@stauro/piggybank/api'
-import { chainIdToSafeApiUrl } from '../utils/safe.js'
+import { chainToSafeApiUrl } from '../utils/safe.js'
 import * as colors from 'colorette'
 import { logger } from '../utils/logger.js'
 import { isTTY } from '../constants.js'
@@ -48,7 +48,7 @@ export const ensAction = async (
     throw new InvalidCIDError(cid)
   }
   if (!domain) throw new MissingCLIArgsError([domain])
-  const chain = chainName === 'mainnet' ? mainnet : goerli
+  const chain = chains[chainName]
 
   const transport = http(rpcUrl ?? chain.id === 1 ? 'https://rpc.ankr.com/eth' : 'https://rpc.ankr.com/eth_goerli')
 
@@ -96,7 +96,7 @@ export const ensAction = async (
 
   const request = await publicClient.prepareTransactionRequest({
     account: from,
-    to: resolverAddress || PUBLIC_RESOLVER_ADDRESS[chain.id as 1 | 5],
+    to: resolverAddress || PUBLIC_RESOLVER_ADDRESS[chainName],
     chain,
     data: encodeFunctionData({
       functionName: 'setContenthash',
@@ -137,7 +137,7 @@ export const ensAction = async (
 
     logger.info('Proposing a Safe transaction')
 
-    const apiClient = new ApiClient({ url: chainIdToSafeApiUrl(chain.id), safeAddress, chainId: chain.id })
+    const apiClient = new ApiClient({ url: chainToSafeApiUrl(chainName), safeAddress, chainId: chain.id })
 
     try {
       await apiClient.proposeTransaction({
