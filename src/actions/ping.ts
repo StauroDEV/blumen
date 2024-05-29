@@ -17,7 +17,7 @@ export const pingAction = async (
 
   retryCount++
   const url = `https://${cid}.ipfs.${endpoint}`
-  logger.info(`${isTTY
+  logger.text(`${isTTY
     ? `${colors.bold(`[${retryCount}]`)}: Requesting content at ${url}`
     : `[${retryCount}]`}: Requesting content at ${url}`,
   )
@@ -25,7 +25,7 @@ export const pingAction = async (
     const response = await fetch(url, { signal: AbortSignal.timeout(timeout), redirect: 'follow' })
     if (response.status === 504) {
       if (retries > 1) {
-        logger.info(`🔄 Retrying in ${retryInterval / 1000} seconds...`)
+        logger.text(`🔄 Retrying in ${retryInterval / 1000} seconds...`)
         await new Promise(resolve => setTimeout(resolve, retryInterval))
         return pingAction({ cid, endpoint, options: { maxRetries: retries - 1, retryInterval } })
       }
@@ -34,9 +34,9 @@ export const pingAction = async (
       }
     }
     else {
-      return logger.info(`Gateway status: ${
+      return logger.text(`Gateway status: ${
         response.status >= 200 && response.status < 400
-        ? (isTTY ? colors.bold(colors.green(`Online ${response.status}`)) : `Online ${response.status}`)
+        ? (isTTY ? colors.bold(colors.green(`🟢 Online ${response.status}`)) : `🟢 Online ${response.status}`)
         : response.status
       }`)
     }

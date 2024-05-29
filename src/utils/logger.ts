@@ -28,6 +28,9 @@ export const logger = {
     if (isTTY) console.log('\n', method === 'GET' ? cyan(method) : green(method), url, responseStatus(status))
     else console.log('\n', method, url, status)
   },
+  text(...args: unknown[]) {
+    console.log(...args)
+  },
 }
 
 export const deployMessage = (provider: string, supports: SupportedMethods) => {
