@@ -38,7 +38,7 @@
     "@ensdomains/content-hash": "^3.0.0",
     "@ipld/car": "^5.4.0",
     "@stauro/filebase-upload": "^0.0.7",
-    "@stauro/piggybank": "^0.1.1",
+    "@stauro/piggybank": "^0.1.2",
     "@ucanto/core": "^10.2.1",
     "@ucanto/principal": "^9.0.2",
     "@web3-storage/access": "^20.1.1",

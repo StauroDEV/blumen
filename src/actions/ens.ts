@@ -48,7 +48,7 @@ export const ensAction = async (
     throw new InvalidCIDError(cid)
   }
   if (!domain) throw new MissingCLIArgsError([domain])
-  const chain = chains[chainName]
+  const chain = chains[chainName] as chains.Chain
 
   const transport = http(rpcUrl ?? chainToRpcUrl(chainName))
 
@@ -150,7 +150,7 @@ export const ensAction = async (
       })
       const safeLink = `https://app.safe.global/transactions/queue?safe=${safeAddress}`
       logger.success(`Transaction proposed to a Safe wallet.\nOpen in a browser: ${
-       isTTY ? colors.underline(safeLink) : safeLink
+        isTTY ? colors.underline(safeLink) : safeLink
       }`)
     }
     catch (e) {
@@ -162,7 +162,6 @@ export const ensAction = async (
     let hash: Hash = '0x'
 
     try {
-      // @ts-expect-error no clue how to fix it
       hash = await walletClient.sendTransaction(request)
     }
     catch (e) {
@@ -180,7 +179,7 @@ export const ensAction = async (
       return
     }
 
-    logger.info(`Transaction pending: ${chain.blockExplorers.default.url}/tx/${hash}`)
+    logger.info(`Transaction pending: ${chain.blockExplorers!.default.url}/tx/${hash}`)
 
     const receipt = await publicClient.waitForTransactionReceipt({
       hash,
