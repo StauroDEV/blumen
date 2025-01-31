@@ -2,9 +2,9 @@ import type { UploadFunction } from '../types.js'
 import { DeployError, MissingKeyError } from '../errors.js'
 import { setupW3Up } from '../utils/w3up.js'
 
-const providerName = 'web3.storage'
+const providerName = 'Storacha'
 
-export const uploadOnW3S: UploadFunction<{ proof: string }> = async ({
+export const uploadOnWStoracha: UploadFunction<{ proof: string }> = async ({
   token,
   car,
   proof,

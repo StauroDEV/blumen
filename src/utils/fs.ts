@@ -2,13 +2,13 @@ import { access, stat } from 'node:fs/promises'
 import { constants } from 'node:fs'
 import { FileEntry } from '../types.js'
 import { createReadStream } from 'node:fs'
-import { globby } from 'globby'
+import { glob } from 'tinyglobby'
 import { Readable } from 'node:stream'
 
 export const walk = async (dir: string) => {
   let total = 0
   const files: FileEntry[] = []
-  for (const path of await globby(dir, { ignore: ['**/node_modules'] })) {
+  for (const path of await glob(dir, { ignore: ['**/node_modules'] })) {
     const size = (await stat(path)).size
     total += size
     files.push({

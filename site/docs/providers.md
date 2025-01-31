@@ -91,10 +91,3 @@ Save the command output in a `BLUMEN_W3S_PROOF` environment variable or save it 
 ```sh
 BLUMEN_W3S_PROOF=`cat proof.txt`
 ```
-
-## Gateway3
-
-- URL: https://www.gw3.io
-- API Docs: https://doc.gw3.io/api/gateway/pinning.html
-- API token env variables: `BLUMEN_GW3_TOKEN`, `BLUMEN_GW3_ACCESS_KEY`
-- Supported methods: Upload, Pin, Status

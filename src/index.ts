@@ -1,5 +1,4 @@
-export * from './providers/gw3.js'
-export * from './providers/w3s.js'
+export * from './providers/storacha.js'
 export * from './utils/ipfs.js'
 export { walk, fileSize } from './utils/fs.js'
 export * from './utils/env.js'
