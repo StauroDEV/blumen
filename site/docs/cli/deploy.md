@@ -84,7 +84,7 @@ blumen deploy --verbose --providers=Gateway3
 # ✓ [>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>] Finished in 3s
 # ✔ Deployed across all providers
 # Open in a browser:
-# IPFS:      https://bafybeihw4r72ynkl2zv4od2ru4537qx2zxjkwlzddadqmochzhe524t7qu.ipfs.cf-ipfs.com
+# IPFS:      https://bafybeihw4r72ynkl2zv4od2ru4537qx2zxjkwlzddadqmochzhe524t7qu.ipfs.dweb.link
 # Providers: https://delegated-ipfs.dev/routing/v1/providers/bafybeihw4r72ynkl2zv4od2ru4537qx2zxjkwlzddadqmochzhe524t7qu
 ```
 
