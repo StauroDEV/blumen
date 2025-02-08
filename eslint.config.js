@@ -4,11 +4,11 @@ import ts from '@typescript-eslint/eslint-plugin'
 import js from '@eslint/js'
 import globals from 'globals'
 
-/** @type {import('eslint').Linter.FlatConfig[]} */
+/** @type {import('eslint').Linter.Config[]} */
 export default [
-  { files: ['src/**/*.ts', 'eslint.config.js'], ...js.configs.recommended },
-  { files: ['src/**/*.ts', 'eslint.config.js'], ...stylistic.configs['recommended-flat'] },
-  { files: ['src/**/*.ts', 'eslint.config.js'],
+  { files: ['**/*.ts', 'eslint.config.js'], ...js.configs.recommended },
+  { files: ['**/*.ts', 'eslint.config.js'], ...stylistic.configs['recommended-flat'] },
+  { files: ['**/*.ts', 'eslint.config.js'],
     languageOptions: {
       globals: {
         ...globals.node,

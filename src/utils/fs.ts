@@ -4,15 +4,19 @@ import { FileEntry } from '../types.js'
 import { createReadStream } from 'node:fs'
 import { glob } from 'tinyglobby'
 import { Readable } from 'node:stream'
+import { logger } from './logger.js'
+import { relative } from 'node:path'
 
-export const walk = async (dir: string) => {
+export const walk = async (dir: string, verbose = false) => {
   let total = 0
   const files: FileEntry[] = []
-  for (const path of await glob(dir, { ignore: ['**/node_modules'] })) {
+  for (const path of await glob(dir, { ignore: ['**/node_modules'], onlyFiles: true, absolute: false })) {
     const size = (await stat(path)).size
+    const name = relative(dir, path)
+    if (verbose) logger.text(`${name} (${fileSize(size, 2)})`)
     total += size
     files.push({
-      name: dir === '.' ? path : path.replace(dir, ''),
+      name,
       size,
       stream: () => Readable.toWeb(createReadStream(path)) as ReadableStream,
     })
@@ -34,9 +38,7 @@ export const exists = async (file: string) => {
 export function fileSize(bytes: number, digits = 1): string {
   const thresh = 1000
 
-  if (Math.abs(bytes) < thresh) {
-    return bytes + 'B'
-  }
+  if (Math.abs(bytes) < thresh) return bytes + 'B'
 
   const units = ['KB', 'MB', 'GB', 'TB', 'PB']
   let u = -1

@@ -12,6 +12,7 @@ import { pingAction } from './actions/ping.js'
 import { BLUMEN_VERSION } from './utils/version.js'
 import { dnsLinkAction } from './actions/dnslink.js'
 import { isTTY } from './constants.js'
+import { packAction } from './actions/pack.js'
 
 const cli = new CLI({ name: 'blumen', plugins: isTTY ? [colorPlugin] : [] })
 
@@ -85,7 +86,7 @@ cli.command('deploy', ([dir], options) => deployAction({
 })
 
 cli
-  .command('status', ([cid], options) => statusAction({ cid: cid as string, options }), {
+  .command<[string]>('status', ([cid], options) => statusAction({ cid, options }), {
     description: 'Check IPFS deployment status',
     options: [
       {
@@ -103,11 +104,11 @@ cli
   })
 
 cli
-  .command(
+  .command<[string, string]>(
     'ens',
     ([cid, domain], options) => ensAction({
-      cid: cid as string,
-      domain: domain as string,
+      cid,
+      domain,
       options: options as EnsActionArgs,
     }),
     {
@@ -116,11 +117,10 @@ cli
     },
   )
 
-cli.command('ping', ([cid, endpoint], options) => pingAction({
-  cid: cid as string,
-  endpoint: endpoint as string,
-  options: Object.fromEntries(Object.entries(options).map(([k, v]) => [k, parseInt(v)])),
-
+cli.command<[string, string]>('ping', ([cid, endpoint], options) => pingAction({
+  cid,
+  endpoint,
+  options: Object.fromEntries(Object.entries(options).map(([k, v]) => [k, Number.parseInt(v as string)])),
 }), {
   description: 'Ping an endpoint until it resolves content',
   options: [
@@ -143,7 +143,7 @@ cli.command('ping', ([cid, endpoint], options) => pingAction({
   ] as const,
 })
 
-cli.command('dnslink', ([cid, name], options) => dnsLinkAction({ cid: cid as string, name: name as string, options }), {
+cli.command<[string, string]>('dnslink', ([cid, name], options) => dnsLinkAction({ cid, name, options }), {
   options: [
     {
       name: 'verbose',
@@ -152,6 +152,27 @@ cli.command('dnslink', ([cid, name], options) => dnsLinkAction({ cid: cid as str
       short: 'v',
     },
   ] as const,
+})
+
+cli.command<[string]>('pack', ([dir], options) => packAction({ dir, options }), {
+  options: [{
+    name: 'name',
+    short: 'n',
+    description: 'Name of the distribution (without file extension)',
+    type: 'string',
+  },
+  {
+    name: 'dist',
+    short: 'd',
+    description: 'Directory to store the distribution file',
+    type: 'string',
+  },
+  {
+    name: 'verbose',
+    description: 'More verbose logs',
+    type: 'boolean',
+    short: 'v',
+  }] as const,
 })
 
 cli.help()
