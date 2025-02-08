@@ -32,7 +32,7 @@
   "author": "v1rtl <hi@v1rtl.site>",
   "engineStrict": true,
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "license": "MIT",
   "dependencies": {
@@ -40,12 +40,8 @@
     "@ipld/car": "^5.4.0",
     "@stauro/filebase-upload": "^0.0.7",
     "@stauro/piggybank": "^0.1.2",
-    "@ucanto/core": "^10.2.1",
-    "@ucanto/principal": "^9.0.2",
-    "@web3-storage/access": "^20.1.1",
     "@web3-storage/w3up-client": "^17.1.2",
     "ascii-bar": "^1.0.3",
-    "cborg": "^4.2.8",
     "colorette": "^2.0.20",
     "ipfs-car": "^2.0.0",
     "multiformats": "^13.3.1",
