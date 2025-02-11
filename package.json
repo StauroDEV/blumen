@@ -16,8 +16,9 @@
     "build": "tsc -p tsconfig.build.json",
     "postbuild": "chmod +x ./dist/cli.js",
     "prepublishOnly": "pnpm build",
-    "lint": "eslint --config eslint.config.js src/**/*.ts eslint.config.js",
-    "types": "tsc --noEmit"
+    "lint": "eslint --config eslint.config.js **/*.ts eslint.config.js",
+    "types": "tsc --noEmit",
+    "test": "pnpm tsx --test test/**/*.test.ts"
   },
   "keywords": [
     "ipfs",
@@ -31,7 +32,7 @@
   "author": "v1rtl <hi@v1rtl.site>",
   "engineStrict": true,
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "license": "MIT",
   "dependencies": {
@@ -39,30 +40,27 @@
     "@ipld/car": "^5.4.0",
     "@stauro/filebase-upload": "^0.0.7",
     "@stauro/piggybank": "^0.1.2",
-    "@ucanto/core": "^10.2.1",
-    "@ucanto/principal": "^9.0.2",
-    "@web3-storage/access": "^20.1.1",
     "@web3-storage/w3up-client": "^17.1.2",
     "ascii-bar": "^1.0.3",
-    "cborg": "^4.2.8",
     "colorette": "^2.0.20",
-    "ipfs-car": "^1.2.0",
-    "multiformats": "^13.3.1",
+    "ipfs-car": "^2.0.0",
+    "multiformats": "^13.3.2",
     "spektr": "^0.1.1",
     "table": "^6.9.0",
     "tinyglobby": "^0.2.10",
-    "viem": "^2.22.17"
+    "viem": "^2.23.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.19.0",
-    "@stylistic/eslint-plugin": "^3.0.1",
-    "@types/node": "^20.12.12",
-    "@typescript-eslint/eslint-plugin": "^7.11.0",
-    "@typescript-eslint/parser": "^8.22.0",
-    "eslint": "^9.19.0",
+    "@eslint/js": "^9.20.0",
+    "@stylistic/eslint-plugin": "^3.1.0",
+    "@types/node": "^22.13.1",
+    "@typescript-eslint/eslint-plugin": "^8.24.0",
+    "@typescript-eslint/parser": "^8.24.0",
+    "eslint": "^9.20.0",
     "globals": "^15.14.0",
-    "semantic-release": "^24.2.1",
-    "typescript": "^5.4.5"
+    "semantic-release": "^24.2.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
   },
   "release": {
     "branches": [
@@ -72,5 +70,10 @@
   "publishConfig": {
     "provenance": true
   },
-  "packageManager": "pnpm@9.0.6"
+  "packageManager": "pnpm@10.1.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
 }

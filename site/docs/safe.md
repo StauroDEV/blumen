@@ -32,7 +32,7 @@ blumen deploy --safe=sep:0x... --ens=mydomain.eth
 # ✔ Deployed across all providers
 
 # Open in a browser:
-# IPFS:      https://bafybeieao2nmw5njfino26llsokqdbc56pdfq7kudhoc5rrsvp4jk7tlk4.ipfs.cf-ipfs.com
+# IPFS:      https://bafybeieao2nmw5njfino26llsokqdbc56pdfq7kudhoc5rrsvp4jk7tlk4.ipfs.dweb.link
 # Providers: https://delegated-ipfs.dev/routing/v1/providers/bafybeieao2nmw5njfino26llsokqdbc56pdfq7kudhoc5rrsvp4jk7tlk4
 
 # Validating transaction for wallet <0x...>

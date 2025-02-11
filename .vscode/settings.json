@@ -4,5 +4,5 @@
     "source.fixAll.eslint": "explicit"
   },
   "typescript.tsdk": "node_modules/typescript/lib",
-  "eslint.experimental.useFlatConfig": true
+  "prettier.enable": false
 }

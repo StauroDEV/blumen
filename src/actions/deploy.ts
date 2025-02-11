@@ -1,13 +1,12 @@
-import path from 'node:path'
 import { PROVIDERS, isTTY } from '../constants.js'
-import { MissingDirectoryError, NoProvidersError } from '../errors.js'
-import { walk, fileSize, packCAR, parseTokensFromEnv, tokensToProviderNames, findEnvVarProviderName } from '../index.js'
-import { exists } from '../utils/fs.js'
+import { NoProvidersError } from '../errors.js'
+import { parseTokensFromEnv, tokensToProviderNames, findEnvVarProviderName } from '../index.js'
 import mod from 'ascii-bar'
 import { EnsActionArgs, ensAction } from './ens.js'
 import { deployMessage, logger } from '../utils/logger.js'
 import * as colors from 'colorette'
 import { dnsLinkAction } from './dnslink.js'
+import { packAction } from './pack.js'
 
 const AsciiBar = mod.default
 
@@ -29,23 +28,8 @@ export const deployAction = async (
     dist, verbose = false, providers: providersList, resolverAddress,
     dnslink, rpcUrl,
   } = options
-  if (!dir) {
-    if (await exists('dist')) dir = 'dist'
-    else dir = '.'
-  }
-  const normalizedPath = path.join(process.cwd(), dir)
-  const name = customName || path.basename(normalizedPath)
-  const [size, files] = await walk(normalizedPath)
 
-  if (size === 0) throw new MissingDirectoryError(dir)
-  const distName = ['.', 'dist'].includes(dir) ? name : dir
-
-  logger.start(`Packing ${isTTY ? colors.cyan(distName) : distName} (${fileSize(size, 2)})`)
-
-  const { rootCID, blob } = await packCAR(files, name, dist)
-
-  const cid = rootCID.toString()
-  logger.info(`Root CID: ${isTTY ? colors.white(cid) : cid}`)
+  const { name, cid, blob } = await packAction({ dir, options: { name: customName, dist, verbose } })
 
   const apiTokens = parseTokensFromEnv()
 
@@ -106,7 +90,7 @@ export const deployAction = async (
   }
   else logger.success('Deployed across all providers')
 
-  const dwebLink = `https://${cid}.ipfs.cf-ipfs.com`
+  const dwebLink = `https://${cid}.ipfs.dweb.link`
   const providersLink = `https://delegated-ipfs.dev/routing/v1/providers/${cid}`
 
   console.log(
