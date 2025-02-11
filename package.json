@@ -44,21 +44,21 @@
     "ascii-bar": "^1.0.3",
     "colorette": "^2.0.20",
     "ipfs-car": "^2.0.0",
-    "multiformats": "^13.3.1",
+    "multiformats": "^13.3.2",
     "spektr": "^0.1.1",
     "table": "^6.9.0",
     "tinyglobby": "^0.2.10",
-    "viem": "^2.22.23"
+    "viem": "^2.23.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
     "@stylistic/eslint-plugin": "^3.1.0",
     "@types/node": "^22.13.1",
-    "@typescript-eslint/eslint-plugin": "^8.23.0",
-    "@typescript-eslint/parser": "^8.23.0",
+    "@typescript-eslint/eslint-plugin": "^8.24.0",
+    "@typescript-eslint/parser": "^8.24.0",
     "eslint": "^9.20.0",
     "globals": "^15.14.0",
-    "semantic-release": "^24.2.1",
+    "semantic-release": "^24.2.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   },
