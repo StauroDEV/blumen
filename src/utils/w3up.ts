@@ -1,5 +1,5 @@
 import { CarReader } from '@ipld/car'
-import { Block } from 'ipfs-car'
+import type { Block } from 'ipfs-car'
 import { StoreMemory } from '@web3-storage/access/stores/store-memory'
 import { Signer } from '@ucanto/principal/ed25519'
 import { Agent, AgentData } from '@web3-storage/access/agent'
