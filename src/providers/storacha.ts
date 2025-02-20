@@ -36,13 +36,8 @@ export const uploadOnWStoracha: UploadFunction<{ proof: string }> = async ({
 
   const agent = await setupW3Up({ pk: token, proof })
 
-  const resource = agent.currentSpace()
+  const resource = agent.currentSpace()!
 
-  if (!resource) {
-    throw new Error(
-      'missing current space: use createSpace() or setCurrentSpace()',
-    )
-  }
   const abilities = [
     BlobCapabilities.add.can,
     IndexCapabilities.add.can,
