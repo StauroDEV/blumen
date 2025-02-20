@@ -65,7 +65,7 @@ file ./dist.car
 A list of providers to deploy on.
 
 ```sh
-blumen deploy --providers web3.storage bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 
+blumen deploy --providers Storacha
 ```
 
 ### `verbose`

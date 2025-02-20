@@ -8,8 +8,6 @@ Grab API keys from the services you use and define them in your environment (e.g
 
 ```txt
 BLUMEN_W3S_TOKEN=eyJhb....
-BLUMEN_GW3_TOKEN=ZA70...
-BLUMEN_GW3_ACCESS_KEY=9e01ce24...
 ```
 
 ## Deployment
@@ -21,7 +19,7 @@ blumen deploy
 
 # 📦 Packing dist (39.96KB)
 # 🛈  Root CID: bafybeieg5ighiog2vdb4p64mta4cpulqv56bmyrhwdfff4qomh7z7afbyy
-# 🛈  Deploying with providers: web3.storage
+# 🛈  Deploying with providers: Storacha
 # ✓ [>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>] Finished in 3s
 # ✔ Deployed across all providers
 
