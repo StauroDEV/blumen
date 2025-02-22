@@ -23,7 +23,7 @@ echo "accessKey:accessSecret" | base64
 
 - URL: https://storacha.network
 - API Docs: https://docs.storacha.network/how-to/upload
-- API token env variables: `W3S_TOKEN`, `W3S_PROOF`
+- API token env variables: `STORACHA_TOKEN`, `STORACHA_PROOF`
 - Supported methods: Upload
 
 First you have to install w3up cli:
@@ -74,7 +74,7 @@ bunx ucan-key ed
 
 :::
 
-Save this private key (which starts with `Mg..`) to an environment variable (`BLUMEN_W3S_TOKEN`).
+Save this private key (which starts with `Mg..`) to an environment variable (`BLUMEN_STORACHA_TOKEN`).
 
 You also need to create a delegation for the generated DID:
 
@@ -82,8 +82,8 @@ You also need to create a delegation for the generated DID:
 w3 delegation create <did_from_ucan-key_command_above> --can 'store/add' --can 'upload/add' --can 'space/blob/add' --can 'space/index/add' | base64
 ```
 
-Save the command output in a `BLUMEN_W3S_PROOF` environment variable or save it to a file (that should not be uploaded!) and then read from it like this:
+Save the command output in a `BLUMEN_STORACHA_PROOF` environment variable or save it to a file (that should not be uploaded!) and then read from it like this:
 
 ```sh
-BLUMEN_W3S_PROOF=`cat proof.txt`
+BLUMEN_STORACHA_PROOF=`cat proof.txt`
 ```

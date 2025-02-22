@@ -32,7 +32,7 @@ export const uploadOnWStoracha: UploadFunction<{ proof: string }> = async ({
   car,
   proof,
 }) => {
-  if (!proof) throw new MissingKeyError(`W3S_PROOF`)
+  if (!proof) throw new MissingKeyError(`STORACHA_PROOF`)
 
   const agent = await setupW3Up({ pk: token, proof })
 
