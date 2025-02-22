@@ -66,7 +66,7 @@ export const deployAction = async (
         token,
         accessKey: apiTokens.get('GW3_ACCESS_KEY'),
         bucketName: apiTokens.get('FILEBASE_BUCKET_NAME'),
-        proof: apiTokens.get('W3S_PROOF'),
+        proof: apiTokens.get('STORACHA_PROOF'),
         cid,
         first: providers.indexOf(provider) === 0,
         verbose,

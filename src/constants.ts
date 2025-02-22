@@ -7,7 +7,7 @@ export const PROVIDERS: Record<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   { name: string, upload: UploadFunction<any>, status?: StatusFunction, supported: SupportedMethods }
 > = {
-  W3S_TOKEN: {
+  STORACHA_TOKEN: {
     name: 'Storacha',
     upload: uploadOnWStoracha,
     supported: 'upload',

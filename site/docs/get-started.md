@@ -7,7 +7,7 @@ Grab API keys from the services you use and define them in your environment (e.g
 > All env variables used by Blumen must be prefixed with `BLUMEN_`
 
 ```txt
-BLUMEN_W3S_TOKEN=eyJhb....
+BLUMEN_STORACHA_TOKEN=...
 ```
 
 ## Deployment
