@@ -5,7 +5,7 @@
 
 **Blumen** is a CLI to deploy apps on the decentralized web using IPFS and Ethereum. Built with [Spektr](https://github.com/StauroDEV/spektr).
 
-<video src="/blumen.mp4" height="1254" width="960" controls />
+<video src="/blumen.webm" height="1254" width="960" controls />
 
 ## Features
 
