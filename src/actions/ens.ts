@@ -13,14 +13,11 @@ import { PUBLIC_RESOLVER_ADDRESS, prepareUpdateEnsArgs, abi, chainToRpcUrl } fro
 import type { ChainName } from '../types.js'
 import { privateKeyToAccount } from 'viem/accounts'
 import * as chains from 'viem/chains'
-import {
-  walletSafeActions, estimateSafeTransactionGas, estimateSafeTransactionBaseGas, getSafeTransactionHash,
-  getSafeNonce,
-} from '@stauro/piggybank/actions'
+import { walletSafeActions, getSafeNonce } from '@stauro/piggybank/actions'
 import { EIP3770Address, OperationType } from '@stauro/piggybank/types'
 import { getEip3770Address } from '@stauro/piggybank/utils'
 import { ApiClient } from '@stauro/piggybank/api'
-import { chainToSafeApiUrl } from '../utils/safe.js'
+import { chainToSafeApiUrl, prepareSafeTransactionData } from '../utils/safe.js'
 import * as colors from 'colorette'
 import { logger } from '../utils/logger.js'
 import { isTTY } from '../constants.js'
@@ -109,7 +106,7 @@ export const ensAction = async (
   })
 
   if (safeAddress) {
-    logger.info(`Preparing a transaction for Safe ${safeAddress}`)
+    logger.info(`Preparing a transaction for Safe ${safeAddress} on ${chainName}`)
     const safeWalletClient = walletClient.extend(walletSafeActions(safeAddress))
 
     const nonce = await getSafeNonce(publicClient, safeAddress)
@@ -120,14 +117,15 @@ export const ensAction = async (
       operation: OperationType.Call,
       gasPrice: request.gasPrice ?? 0n,
       nonce,
+      value: request.value ?? 0n,
+      data: request.data ?? '0x',
     }
 
-    const safeTxGas = await estimateSafeTransactionGas(publicClient, safeAddress, txData)
-
-    const baseGas = await estimateSafeTransactionBaseGas(publicClient, safeAddress, { ...txData, safeTxGas })
-
-    const safeTxHash = await getSafeTransactionHash(publicClient, safeAddress, { ...txData, safeTxGas, baseGas })
-
+    const { safeTxGas, baseGas, safeTxHash } = await prepareSafeTransactionData({
+      txData,
+      safeAddress,
+      publicClient,
+    })
     logger.info('Signing a Safe transaction')
 
     const senderSignature = await safeWalletClient.generateSafeTransactionSignature({
