@@ -13,7 +13,10 @@ import { PUBLIC_RESOLVER_ADDRESS, prepareUpdateEnsArgs, abi, chainToRpcUrl } fro
 import type { ChainName } from '../types.js'
 import { privateKeyToAccount } from 'viem/accounts'
 import * as chains from 'viem/chains'
-import { walletSafeActions, publicSafeActions } from '@stauro/piggybank/actions'
+import {
+  walletSafeActions, estimateSafeTransactionGas, estimateSafeTransactionBaseGas, getSafeTransactionHash,
+  getSafeNonce,
+} from '@stauro/piggybank/actions'
 import { EIP3770Address, OperationType } from '@stauro/piggybank/types'
 import { getEip3770Address } from '@stauro/piggybank/utils'
 import { ApiClient } from '@stauro/piggybank/api'
@@ -73,7 +76,7 @@ export const ensAction = async (
     node: Hex = '0x'
 
   try {
-    const result = await prepareUpdateEnsArgs({ cid, domain })
+    const result = prepareUpdateEnsArgs({ cid, domain })
     contentHash = result.contentHash
     node = result.node
   }
@@ -109,9 +112,7 @@ export const ensAction = async (
     logger.info(`Preparing a transaction for Safe ${safeAddress}`)
     const safeWalletClient = walletClient.extend(walletSafeActions(safeAddress))
 
-    const safePublicClient = publicClient.extend(publicSafeActions(safeAddress))
-
-    const nonce = await safePublicClient.getSafeNonce()
+    const nonce = await getSafeNonce(publicClient, safeAddress)
 
     const txData = {
       ...request,
@@ -121,11 +122,11 @@ export const ensAction = async (
       nonce,
     }
 
-    const safeTxGas = await safePublicClient.estimateSafeTransactionGas(txData)
+    const safeTxGas = await estimateSafeTransactionGas(publicClient, safeAddress, txData)
 
-    const baseGas = await safePublicClient.estimateSafeTransactionBaseGas({ ...txData, safeTxGas })
+    const baseGas = await estimateSafeTransactionBaseGas(publicClient, safeAddress, { ...txData, safeTxGas })
 
-    const safeTxHash = await safePublicClient.getSafeTransactionHash({ ...txData, safeTxGas, baseGas })
+    const safeTxHash = await getSafeTransactionHash(publicClient, safeAddress, { ...txData, safeTxGas, baseGas })
 
     logger.info('Signing a Safe transaction')
 
