@@ -59,13 +59,17 @@ export const deployAction = async (
 
     bar?.update(total++, deployMessage(provider, PROVIDERS[envVar].supported))
 
+    let bucketName: string | undefined
+
+    if (envVar.includes('FILEBASE')) bucketName = apiTokens.get('FILEBASE_BUCKET_NAME')
+    else if (envVar.includes('4EVERLAND')) bucketName = apiTokens.get('4EVERLAND_BUCKET_NAME')
+
     try {
       await PROVIDERS[envVar].upload({
         name,
         car: blob,
         token,
-        accessKey: apiTokens.get('GW3_ACCESS_KEY'),
-        bucketName: apiTokens.get('FILEBASE_BUCKET_NAME'),
+        bucketName,
         proof: apiTokens.get('STORACHA_PROOF'),
         cid,
         first: providers.indexOf(provider) === 0,

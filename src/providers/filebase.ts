@@ -1,8 +1,7 @@
-import { uploadCar } from '@stauro/filebase-upload'
 import { StatusFunction, UploadFunction } from '../types.js'
 import { specPin, specStatus } from './spec.js'
-import { DeployError, MissingKeyError } from '../errors.js'
-import { logger } from '../utils/logger.js'
+import { MissingKeyError } from '../errors.js'
+import { uploadOnS3 } from './s3.js'
 
 const providerName = 'Filebase'
 const baseURL = 'https://api.filebase.io/v1/ipfs'
@@ -12,15 +11,9 @@ export const uploadOnFilebase: UploadFunction<{ bucketName: string }>
     if (first) {
       if (!bucketName) throw new MissingKeyError(`FILEBASE_BUCKET_NAME`)
 
-      const file = new File([car], name)
-
-      const res = await uploadCar({ apiUrl: 's3.filebase.com', file, token, bucketName })
-
-      const text = await res.text()
-
-      if (!res.ok) throw new DeployError(providerName, text)
-
-      if (verbose) logger.request('PUT', res.url, res.status)
+      const res = await uploadOnS3({
+        bucketName, apiUrl: 's3.filebase.com', providerName, verbose, name, car, token, ...args,
+      })
 
       return { cid: res.headers.get('x-amz-meta-cid')!, status: 'queued' }
     }
