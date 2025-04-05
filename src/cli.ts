@@ -13,6 +13,7 @@ import { BLUMEN_VERSION } from './utils/version.js'
 import { dnsLinkAction } from './actions/dnslink.js'
 import { isTTY } from './constants.js'
 import { packAction } from './actions/pack.js'
+import { pinAction } from './actions/pin.js'
 
 const cli = new CLI({ name: 'blumen', plugins: isTTY ? [colorPlugin] : [] })
 
@@ -161,6 +162,7 @@ cli.command<[string, string]>('dnslink', ([cid, name], options) => dnsLinkAction
       short: 'v',
     },
   ] as const,
+  description: 'Update DNSLink with a given CID using Cloudflare.',
 })
 
 cli.command<[string]>('pack', ([dir], options) => packAction({ dir, options }), {
@@ -182,6 +184,29 @@ cli.command<[string]>('pack', ([dir], options) => packAction({ dir, options }), 
     type: 'boolean',
     short: 'v',
   }] as const,
+  description: 'Pack websites files into a CAR without uploading it anywhere',
+})
+
+cli.command<[string]>('pin', ([cid], options) => pinAction({ cid, options }), {
+  options: [
+    {
+      name: 'strict',
+      description: 'Throw if one of the providers fails',
+      type: 'boolean',
+    },
+    {
+      name: 'providers',
+      description: 'Explicit provider order',
+      type: 'string',
+    },
+    {
+      name: 'verbose',
+      description: 'More verbose logs',
+      type: 'boolean',
+      short: 'v',
+    },
+  ] as const,
+  description: 'Pin an IPFS CID on multiple providers',
 })
 
 cli.help()

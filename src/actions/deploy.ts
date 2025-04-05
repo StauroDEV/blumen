@@ -6,19 +6,16 @@ import { EnsActionArgs, ensAction } from './ens.js'
 import { deployMessage, logger } from '../utils/logger.js'
 import * as colors from 'colorette'
 import { dnsLinkAction } from './dnslink.js'
-import { packAction } from './pack.js'
+import { packAction, PackActionArgs } from './pack.js'
 
 const AsciiBar = mod.default
 
 export type DeployActionArgs = Partial<{
   strict: boolean
   ens: string
-  name: string
-  dist: string
   providers: string
-  verbose: boolean
   dnslink: string
-}> & EnsActionArgs
+}> & PackActionArgs & EnsActionArgs
 
 export const deployAction = async (
   { dir, options = {} }: { dir?: string, options?: DeployActionArgs },
@@ -33,11 +30,16 @@ export const deployAction = async (
 
   const apiTokens = parseTokensFromEnv()
 
-  const providers = providersList ? providersList.split(',') : tokensToProviderNames(apiTokens.keys())
+  const providerNames = providersList ? providersList.split(',') : tokensToProviderNames(apiTokens.keys())
+
+  const providers = providerNames.map(providerName => PROVIDERS[findEnvVarProviderName(providerName)!]).sort((a) => {
+    if (a.supported === 'both' || a.supported === 'upload') return -1
+    else return 1
+  })
 
   if (!providers.length) throw new NoProvidersError()
 
-  logger.info(`Deploying with providers: ${providers.join(', ')}`)
+  logger.info(`Deploying with providers: ${providers.map(p => p.name).join(', ')}`)
 
   let total = 0
 
@@ -54,22 +56,27 @@ export const deployAction = async (
   const errors: Error[] = []
 
   for (const provider of providers) {
-    const envVar = findEnvVarProviderName(provider)!
+    const envVar = findEnvVarProviderName(provider.name)!
     const token = apiTokens.get(envVar)!
 
-    bar?.update(total++, deployMessage(provider, PROVIDERS[envVar].supported))
+    bar?.update(total++, deployMessage(provider.name, PROVIDERS[envVar].supported))
+
+    let bucketName: string | undefined
+
+    if (envVar.includes('FILEBASE')) bucketName = apiTokens.get('FILEBASE_BUCKET_NAME')
+    else if (envVar.includes('4EVERLAND')) bucketName = apiTokens.get('4EVERLAND_BUCKET_NAME')
 
     try {
       await PROVIDERS[envVar].upload({
         name,
         car: blob,
         token,
-        accessKey: apiTokens.get('GW3_ACCESS_KEY'),
-        bucketName: apiTokens.get('FILEBASE_BUCKET_NAME'),
+        bucketName,
         proof: apiTokens.get('STORACHA_PROOF'),
         cid,
         first: providers.indexOf(provider) === 0,
         verbose,
+        baseURL: apiTokens.get('SPEC_URL'),
       })
     }
     catch (e) {
@@ -107,6 +114,6 @@ export const deployAction = async (
   }
 
   if (dnslink) {
-    await dnsLinkAction({ cid, name, options: { verbose } })
+    await dnsLinkAction({ cid, name: dnslink, options: { verbose } })
   }
 }

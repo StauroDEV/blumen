@@ -18,7 +18,6 @@ export interface FileEntry extends FileLike {
 
 type AuthArgs = {
   token: string
-  accessKey?: string
 }
 
 export type UploadArgs<T = object> = (

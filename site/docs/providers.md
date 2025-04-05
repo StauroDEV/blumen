@@ -2,6 +2,19 @@
 
 We support a wide range of different IPFS providers. If you would like to integrate your provider, feel free to submit a pull request.
 
+## Spec-compliant Pinning Service
+
+- API Docs: https://ipfs.github.io/pinning-services-api-spec
+- API token env variables: `BLUMEN_SPEC_TOKEN`, `BLUMEN_SPEC_URL`
+- Supported methods: Pin
+
+Obtain an opaque access token from the service. Populate your environment as such:
+
+```
+BLUMEN_SPEC_TOKEN=<access_token>
+BLUMEN_SPEC_URL=https://pinning-service.example.com
+```
+
 ## Filebase
 
 - URL: https://filebase.com
@@ -16,7 +29,7 @@ We support a wide range of different IPFS providers. If you would like to integr
 The easiest way to generate an S3 API token is using the `base64` command:
 
 ```sh
-echo "accessKey:accessSecret" | base64
+echo "$accessKey:$accessSecret" | base64
 ```
 
 ## Storacha
@@ -87,3 +100,45 @@ Save the command output in a `BLUMEN_STORACHA_PROOF` environment variable or sav
 ```sh
 BLUMEN_STORACHA_PROOF=`cat proof.txt`
 ```
+
+## Pinata
+
+- URL: https://pinata.cloud
+- API Docs: https://docs.pinata.cloud/files/uploading-files
+- API token env variables: `BLUMEN_PINATA_TOKEN`
+- Supported methods: Pin, Status
+
+Go to the dashboard page, then "API Keys" under "Developer" section. Click "New Key". An API key creation dialog should apppear. Select the checkboxes related to pinning. Click "Generate API Key".
+
+![Pinata dashboard](/pinata.png)
+
+Save the JWT token to the `BLUMEN_PINATA_TOKEN` environment variable.
+
+## 4EVERLAND
+
+- URL: https://www.4everland.org/
+- API Docs: https://docs.4everland.org/
+- API token env variables: `BLUMEN_4EVERLAND_TOKEN`
+- Supported methods: Pin, Status
+
+Open 4EVERLAND dashboard. Navigate to Storage > 4Ever Pin. Click "Access token". Copy the token and save it to the `BLUMEN_4EVERLAND_TOKEN` environment variable.
+
+## QuickNode
+
+- URL: https://quicknode.com
+- API Docs: https://www.quicknode.com/docs/ipfs/Pinning/create-pinnedObject-by-CID
+- API token env variables: `BLUMEN_QUICKNODE_TOKEN`
+- Supported methods: Pin
+
+Go to the dashboard and open the ["API Keys" page](https://dashboard.quicknode.com/api-keys). Click "Add API Key". In the "Applications" modal choose only "IPFS_REST". 
+
+![Quicknode API key modal](/quicknode.png)
+
+## Lighthouse
+
+- URL: https://lighthouse.storage
+- API Docs: https://docs.lighthouse.storage/api-docs/lighthouse-api
+- API token env variables: `BLUMEN_LIGHTHOUSE_TOKEN`
+- Supported methods: Pin
+
+Go to "API Key", enter "Blumen" in the input box and click "Generate".

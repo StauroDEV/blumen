@@ -25,7 +25,7 @@ export const dnsLinkAction = async (
 
     if (response.errors.length !== 0) return logger.error(response.errors[0].message)
 
-    logger.success(`${response.result.name} now points to ${response.result.dnslink}`)
+    logger.success(`https://${response.result.name} now points to ${response.result.dnslink}`)
   }
   catch (e) {
     return logger.error(e)
