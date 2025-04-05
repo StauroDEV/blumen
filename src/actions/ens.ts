@@ -14,7 +14,7 @@ import type { ChainName } from '../types.js'
 import { privateKeyToAccount } from 'viem/accounts'
 import * as chains from 'viem/chains'
 import { walletSafeActions, getSafeNonce } from '@stauro/piggybank/actions'
-import { EIP3770Address, OperationType } from '@stauro/piggybank/types'
+import { EIP3770Address, OperationType, type SafeTransactionData } from '@stauro/piggybank/types'
 import { getEip3770Address } from '@stauro/piggybank/utils'
 import { ApiClient } from '@stauro/piggybank/api'
 import { chainToSafeApiUrl, prepareSafeTransactionData } from '../utils/safe.js'
@@ -24,10 +24,12 @@ import { isTTY } from '../constants.js'
 import { CID } from 'multiformats'
 
 export type EnsActionArgs = Partial<{
-  chain: ChainName
-  safe: Address | EIP3770Address
-  rpcUrl: string
-  resolverAddress: Address
+  'chain': ChainName
+  'safe': Address | EIP3770Address
+  'rpcUrl': string
+  'resolverAddress': Address
+  'verbose': boolean
+  'dry-run': boolean
 }>
 
 export const ensAction = async (
@@ -94,15 +96,21 @@ export const ensAction = async (
     ? getEip3770Address({ fullAddress: safeAddress, chainId: chain.id }).address
     : account.address
 
+  const data = encodeFunctionData({
+    functionName: 'setContenthash',
+    abi,
+    args: [node, `0x${contentHash}`],
+  })
+
+  if (options.verbose) {
+    console.log('Transaction encoded data:', data)
+  }
+  const to = resolverAddress || PUBLIC_RESOLVER_ADDRESS[chainName]
   const request = await publicClient.prepareTransactionRequest({
     account: from,
-    to: resolverAddress || PUBLIC_RESOLVER_ADDRESS[chainName],
+    to,
     chain,
-    data: encodeFunctionData({
-      functionName: 'setContenthash',
-      abi,
-      args: [node, `0x${contentHash}`],
-    }),
+    data,
   })
 
   if (safeAddress) {
@@ -111,14 +119,18 @@ export const ensAction = async (
 
     const nonce = await getSafeNonce(publicClient, safeAddress)
 
-    const txData = {
+    if (options.verbose) {
+      logger.info(`Nonce: ${nonce}`)
+    }
+
+    const txData: Omit<SafeTransactionData, 'safeTxGas' | 'baseGas'> = {
       ...request,
-      to: request.to as Address,
+      to,
       operation: OperationType.Call,
       gasPrice: request.gasPrice ?? 0n,
       nonce,
-      value: request.value ?? 0n,
-      data: request.data ?? '0x',
+      value: 0n,
+      data,
     }
 
     const { safeTxGas, baseGas, safeTxHash } = await prepareSafeTransactionData({
@@ -126,7 +138,14 @@ export const ensAction = async (
       safeAddress,
       publicClient,
     })
-    logger.info('Signing a Safe transaction')
+    if (options.verbose) {
+      logger.info(`Signing a Safe transaction with a hash ${safeTxHash}`)
+      logger.info(`Safe tx gas: ${safeTxGas}`)
+      logger.info(`Safe base gas: ${baseGas}`)
+    }
+    else {
+      logger.info(`Signing a Safe transaction with a hash ${safeTxHash}`)
+    }
 
     const senderSignature = await safeWalletClient.generateSafeTransactionSignature({
       ...txData,
@@ -134,27 +153,29 @@ export const ensAction = async (
       baseGas,
     })
 
-    logger.info('Proposing a Safe transaction')
+    if (!options['dry-run']) {
+      logger.info('Proposing a Safe transaction')
 
-    const apiClient = new ApiClient({ url: chainToSafeApiUrl(chainName), safeAddress, chainId: chain.id })
+      const apiClient = new ApiClient({ url: chainToSafeApiUrl(chainName), safeAddress, chainId: chain.id })
 
-    try {
-      await apiClient.proposeTransaction({
-        safeTransactionData: { ...txData, safeTxGas, baseGas, nonce },
-        senderAddress: walletClient.account.address,
-        safeTxHash,
-        senderSignature,
-        chainId: chain.id,
-        origin: 'Piggybank',
-      })
-      const safeLink = `https://app.safe.global/transactions/queue?safe=${safeAddress}`
-      logger.success(`Transaction proposed to a Safe wallet.\nOpen in a browser: ${
-        isTTY ? colors.underline(safeLink) : safeLink
-      }`)
-    }
-    catch (e) {
-      logger.error('Failed to propose a transaction', e)
-      return
+      try {
+        await apiClient.proposeTransaction({
+          safeTransactionData: { ...txData, safeTxGas, baseGas, nonce },
+          senderAddress: walletClient.account.address,
+          safeTxHash,
+          senderSignature,
+          chainId: chain.id,
+          origin: 'Piggybank',
+        })
+        const safeLink = `https://app.safe.global/transactions/queue?safe=${safeAddress}`
+        logger.success(`Transaction proposed to a Safe wallet.\nOpen in a browser: ${
+          isTTY ? colors.underline(safeLink) : safeLink
+        }`)
+      }
+      catch (e) {
+        logger.error('Failed to propose a transaction', e)
+        return
+      }
     }
   }
   else {

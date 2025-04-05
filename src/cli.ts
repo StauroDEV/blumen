@@ -35,6 +35,15 @@ const ensOptions = [{
   name: 'rpc-url',
   description: 'Custom Ethereum RPC',
   type: 'string',
+}, {
+  name: 'verbose',
+  description: 'More verbose logs',
+  type: 'boolean',
+  short: 'v',
+}, {
+  name: 'dry-run',
+  description: 'Do not send a transaction',
+  type: 'boolean',
 }] as const
 
 cli.command('deploy', ([dir], options) => deployAction({
