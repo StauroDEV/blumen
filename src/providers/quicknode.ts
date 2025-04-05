@@ -11,7 +11,7 @@ export const pinOnQuicknode: UploadFunction = async ({ first, token, verbose, ..
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': `Bearer ${token}`,
+      'x-api-key': token,
     },
     body: JSON.stringify({
       cid: args.cid,
