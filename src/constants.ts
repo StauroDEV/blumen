@@ -1,5 +1,6 @@
 import { statusOn4everland, uploadOn4everland } from './providers/4everland.js'
 import { statusOnFilebase, uploadOnFilebase } from './providers/filebase.js'
+import { pinOnLighthouse } from './providers/lighthouse.js'
 import { pinOnPinata, statusOnPinata } from './providers/pinata.js'
 import { pinOnQuicknode } from './providers/quicknode.js'
 import { specPin, specStatus } from './providers/spec.js'
@@ -43,6 +44,11 @@ export const PROVIDERS: Record<
   'QUICKNODE_TOKEN': {
     name: 'QuickNode',
     upload: pinOnQuicknode,
+    supported: 'pin',
+  },
+  'LIGHTHOUSE_TOKEN': {
+    name: 'Lighthouse',
+    upload: pinOnLighthouse,
     supported: 'pin',
   },
 }
