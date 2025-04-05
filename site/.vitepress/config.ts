@@ -69,6 +69,10 @@ export default defineConfig({
             text: 'DNSLink',
             link: '/docs/cli/dnslink',
           },
+          {
+            text: 'Pack',
+            link: '/docs/cli/pack',
+          },
         ],
       },
     ],

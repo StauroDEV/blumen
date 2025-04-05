@@ -112,7 +112,7 @@ export const deployAction = async (
 
   if (typeof ens === 'string') {
     console.log('\n')
-    await ensAction({ cid, domain: ens, options: { chain, safe, resolverAddress, rpcUrl } })
+    await ensAction({ cid, domain: ens, options: { chain, safe, resolverAddress, rpcUrl, verbose } })
   }
 
   if (dnslink) {

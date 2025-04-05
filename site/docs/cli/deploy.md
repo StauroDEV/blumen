@@ -28,6 +28,10 @@ After finishing the deployment, update content hash of an ENS domain to point to
 blumen deploy --ens v1rtl.eth
 ```
 
+### `rpc-url`
+
+Use a custom Ethereum RPC for transactions. By default, [Public nodes](https://ethereum-rpc.publicnode.com) are used.
+
 ### `resolver-address`
 
 Use a custom ENS Resolver address. Resolvers for mainnet and sepolia are set by default.
