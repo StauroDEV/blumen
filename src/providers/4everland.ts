@@ -20,7 +20,7 @@ export const uploadOn4everland: UploadFunction<{ bucketName?: string }> = async 
     // return { cid: res.headers.get('x-amz-meta-cid')!, status: 'queued' }
   }
   else {
-    return specPin({ providerName: '4EVERLAND', baseURL: 'https://api.4everland.dev', first, ...args })
+    return specPin({ first, ...args, providerName: '4EVERLAND', baseURL: 'https://api.4everland.dev' })
   }
 }
 

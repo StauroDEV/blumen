@@ -1,6 +1,7 @@
 import { statusOn4everland, uploadOn4everland } from './providers/4everland.js'
 import { statusOnFilebase, uploadOnFilebase } from './providers/filebase.js'
 import { pinOnPinata, statusOnPinata } from './providers/pinata.js'
+import { pinOnQuicknode } from './providers/quicknode.js'
 import { specPin, specStatus } from './providers/spec.js'
 import { uploadOnWStoracha } from './providers/storacha.js'
 import type { StatusFunction, SupportedMethods, UploadFunction } from './types.js'
@@ -35,8 +36,13 @@ export const PROVIDERS: Record<
   },
   'SPEC_TOKEN': {
     name: 'Spec',
-    upload: ({ baseURL, ...args }) => specPin({ ...args, providerName: 'Self hosted', baseURL }),
+    upload: ({ baseURL, ...args }) => specPin({ ...args, providerName: 'Spec-compliant Pinning Service', baseURL }),
     status: ({ baseURL, ...args }) => specStatus({ ...args, baseURL }),
+    supported: 'pin',
+  },
+  'QUICKNODE_TOKEN': {
+    name: 'QuickNode',
+    upload: pinOnQuicknode,
     supported: 'pin',
   },
 }

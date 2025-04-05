@@ -2,6 +2,19 @@
 
 We support a wide range of different IPFS providers. If you would like to integrate your provider, feel free to submit a pull request.
 
+## Spec-compliant Pinning Service
+
+- API Docs: https://ipfs.github.io/pinning-services-api-spec
+- API token env variables: `BLUMEN_SPEC_TOKEN`, `BLUMEN_SPEC_URL`
+- Supported methods: Pin
+
+Obtain an opaque access token from the service. Populate your environment as such:
+
+```
+BLUMEN_SPEC_TOKEN=<access_token>
+BLUMEN_SPEC_URL=https://pinning-service.example.com
+```
+
 ## Filebase
 
 - URL: https://filebase.com
@@ -110,15 +123,13 @@ Save the JWT token to the `BLUMEN_PINATA_TOKEN` environment variable.
 
 Open 4EVERLAND dashboard. Navigate to Storage > 4Ever Pin. Click "Access token". Copy the token and save it to the `BLUMEN_4EVERLAND_TOKEN` environment variable.
 
-## Spec-compliant Pinning Service
+## QuickNode
 
-- API Docs: https://ipfs.github.io/pinning-services-api-spec
-- API token env variables: `BLUMEN_SPEC_TOKEN`, `BLUMEN_SPEC_URL`
+- URL: https://quicknode.com
+- API Docs: https://www.quicknode.com/docs/ipfs/Pinning/create-pinnedObject-by-CID
+- API token env variables: `BLUMEN_QUICKNODE_TOKEN`
 - Supported methods: Pin
 
-Obtain an opaque access token from the service. Populate your environment as such:
+Go to the dashboard and open the ["API Keys" page](https://dashboard.quicknode.com/api-keys). Click "Add API Key". In the "Applications" modal choose only "IPFS_REST". 
 
-```
-BLUMEN_SPEC_TOKEN=<access_token>
-BLUMEN_SPEC_URL=https://pinning-service.example.com
-```
+![Quicknode API key modal](/quicknode.png)
