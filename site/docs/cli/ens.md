@@ -33,7 +33,7 @@ blumen ens bafybeibp54tslsez36quqptgzwyda3vo66za3rraujksmsb3d5q247uht4 v1rtl.eth
 
 ### `rpc-url`
 
-Use a custom Ethereum RPC for transactions. By default, [Ankr RPCs](https://ankr.com/rpc) are used.
+Use a custom Ethereum RPC for transactions. By default, [Public nodes](https://ethereum-rpc.publicnode.com) are used.
 
 ### `resolver-address`
 
