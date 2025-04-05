@@ -93,25 +93,32 @@ BLUMEN_STORACHA_PROOF=`cat proof.txt`
 - URL: https://pinata.cloud
 - API Docs: https://docs.pinata.cloud/files/uploading-files
 - API token env variables: `BLUMEN_PINATA_TOKEN`
-- Supported methods: Pin
+- Supported methods: Pin, Status
 
 Go to the dashboard page, then "API Keys" under "Developer" section. Click "New Key". An API key creation dialog should apppear. Select the checkboxes related to pinning. Click "Generate API Key".
 
 ![Pinata dashboard](/pinata.png)
 
-Save the API key and secret. Join the key and secret together and obtain a base64 encoded token.
-
-```sh
-echo "$accessKey:$accessSecret" | base64
-```
-
-Save the result output to the `BLUMEN_PINATA_TOKEN` environment variable.
+Save the JWT token to the `BLUMEN_PINATA_TOKEN` environment variable.
 
 ## 4EVERLAND
 
 - URL: https://www.4everland.org/
 - API Docs: https://docs.4everland.org/
 - API token env variables: `BLUMEN_4EVERLAND_TOKEN`
-- Supported methods: Pin
+- Supported methods: Pin, Status
 
 Open 4EVERLAND dashboard. Navigate to Storage > 4Ever Pin. Click "Access token". Copy the token and save it to the `BLUMEN_4EVERLAND_TOKEN` environment variable.
+
+## Spec-compliant Pinning Service
+
+- API Docs: https://ipfs.github.io/pinning-services-api-spec
+- API token env variables: `BLUMEN_SPEC_TOKEN`, `BLUMEN_SPEC_URL`
+- Supported methods: Pin
+
+Obtain an opaque access token from the service. Populate your environment as such:
+
+```
+BLUMEN_SPEC_TOKEN=<access_token>
+BLUMEN_SPEC_URL=https://pinning-service.example.com
+```

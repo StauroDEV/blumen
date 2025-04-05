@@ -1,6 +1,7 @@
 import { statusOn4everland, uploadOn4everland } from './providers/4everland.js'
 import { statusOnFilebase, uploadOnFilebase } from './providers/filebase.js'
 import { pinOnPinata, statusOnPinata } from './providers/pinata.js'
+import { specPin, specStatus } from './providers/spec.js'
 import { uploadOnWStoracha } from './providers/storacha.js'
 import type { StatusFunction, SupportedMethods, UploadFunction } from './types.js'
 
@@ -30,6 +31,12 @@ export const PROVIDERS: Record<
     name: 'Pinata',
     upload: pinOnPinata,
     status: statusOnPinata,
+    supported: 'pin',
+  },
+  'SPEC_TOKEN': {
+    name: 'Spec',
+    upload: ({ baseURL, ...args }) => specPin({ ...args, providerName: 'Self hosted', baseURL }),
+    status: ({ baseURL, ...args }) => specStatus({ ...args, baseURL }),
     supported: 'pin',
   },
 }

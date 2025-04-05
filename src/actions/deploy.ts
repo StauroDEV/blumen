@@ -79,6 +79,7 @@ export const deployAction = async (
         cid,
         first: providers.indexOf(provider) === 0,
         verbose,
+        baseURL: apiTokens.get('SPEC_URL'),
       })
     }
     catch (e) {
