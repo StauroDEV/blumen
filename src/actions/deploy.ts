@@ -116,6 +116,6 @@ export const deployAction = async (
   }
 
   if (dnslink) {
-    await dnsLinkAction({ cid, name, options: { verbose } })
+    await dnsLinkAction({ cid, name: dnslink, options: { verbose } })
   }
 }
