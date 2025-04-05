@@ -10,7 +10,7 @@ Requires a ENS owner's private key (`BLUMEN_PK`) to be defined.
 
 ::: warning
 
-It is recommended to use multisig wallets for deployments instead of using a private key of an Ethereum wallet to avoid centralization.
+It is recommended to use multisig wallets for deployments instead of using a private key of an Ethereum wallet to avoid wallet compromise risks.
 
 :::
 
