@@ -16,7 +16,7 @@ We support a wide range of different IPFS providers. If you would like to integr
 The easiest way to generate an S3 API token is using the `base64` command:
 
 ```sh
-echo "accessKey:accessSecret" | base64
+echo "$accessKey:$accessSecret" | base64
 ```
 
 ## Storacha
@@ -87,3 +87,31 @@ Save the command output in a `BLUMEN_STORACHA_PROOF` environment variable or sav
 ```sh
 BLUMEN_STORACHA_PROOF=`cat proof.txt`
 ```
+
+## Pinata
+
+- URL: https://pinata.cloud
+- API Docs: https://docs.pinata.cloud/files/uploading-files
+- API token env variables: `BLUMEN_PINATA_TOKEN`
+- Supported methods: Pin
+
+Go to the dashboard page, then "API Keys" under "Developer" section. Click "New Key". An API key creation dialog should apppear. Select the checkboxes related to pinning. Click "Generate API Key".
+
+![Pinata dashboard](/pinata.png)
+
+Save the API key and secret. Join the key and secret together and obtain a base64 encoded token.
+
+```sh
+echo "$accessKey:$accessSecret" | base64
+```
+
+Save the result output to the `BLUMEN_PINATA_TOKEN` environment variable.
+
+## 4EVERLAND
+
+- URL: https://www.4everland.org/
+- API Docs: https://docs.4everland.org/
+- API token env variables: `BLUMEN_4EVERLAND_TOKEN`
+- Supported methods: Pin
+
+Open 4EVERLAND dashboard. Navigate to Storage > 4Ever Pin. Click "Access token". Copy the token and save it to the `BLUMEN_4EVERLAND_TOKEN` environment variable.
