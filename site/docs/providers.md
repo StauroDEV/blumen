@@ -133,3 +133,12 @@ Open 4EVERLAND dashboard. Navigate to Storage > 4Ever Pin. Click "Access token".
 Go to the dashboard and open the ["API Keys" page](https://dashboard.quicknode.com/api-keys). Click "Add API Key". In the "Applications" modal choose only "IPFS_REST". 
 
 ![Quicknode API key modal](/quicknode.png)
+
+## Lighthouse
+
+- URL: https://lighthouse.storage
+- API Docs: https://docs.lighthouse.storage/api-docs/lighthouse-api
+- API token env variables: `BLUMEN_LIGHTHOUSE_TOKEN`
+- Supported methods: Pin
+
+Go to "API Key", enter "Blumen" in the input box and click "Generate".
