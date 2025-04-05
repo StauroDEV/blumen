@@ -3,7 +3,7 @@ import { Address, parseAbi } from 'viem'
 import { namehash, normalize } from 'viem/ens'
 import type { ChainName } from '../types.js'
 
-export const prepareUpdateEnsArgs = async ({ cid, domain }: { cid: string, domain: string }) => {
+export const prepareUpdateEnsArgs = ({ cid, domain }: { cid: string, domain: string }) => {
   const contentHash = encode('ipfs', cid)
 
   const node = namehash(normalize(domain))
@@ -21,8 +21,8 @@ export const PUBLIC_RESOLVER_ADDRESS: Record<ChainName, Address> = {
 export const chainToRpcUrl = (chain: ChainName) => {
   switch (chain) {
     case 'mainnet':
-      return 'https://rpc.ankr.com/eth'
+      return 'https://ethereum-rpc.publicnode.com'
     case 'sepolia':
-      return 'https://rpc.ankr.com/eth_sepolia'
+      return 'https://ethereum-sepolia-rpc.publicnode.com'
   }
 }

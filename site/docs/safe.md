@@ -2,18 +2,18 @@
 
 An unique feature that Blumen offers is that it lets you deploy a website on ENS with a [Safe](https://safe.global) multi-sig, thus splitting the domain update process in two stages:
 
-1. An update transaction is created from a delegate. Delegate is a special Ethereum account that does not have access to an ENS name but is allowed to propose transactions to a wallet without actually executing them.
-2. One of the Safe owners approves the transaction sent by a delegate and updates an ENS name record.
+1. An update transaction is created from a "proposer". Proposer is a special Ethereum account that does not have access to a Safe wallet but is allowed to propose transactions to a wallet without actually executing them.
+2. One of the Safe owners approves the transaction sent by a proposer and updates an ENS name record.
 
 ## Setup
 
 First, we need to create a Safe multi-sig account. It's required to control our ENS name, which will point to our website. If you already have one set up, you can skip this step. If you don't, go to the [Safe app](https://safe.global) and create a new wallet.
 
-After a successful safe creation, you will get your safe's address. Next we need to add a delegate account. A delegate is not allowed to approve transactions but can propose them to the wallet. Unfortunately, it's not possible to create a delegate from the dashboard; we need to use [another web app](https://gnosis-delegator.badger.com) for that. Connect with your browser wallet, choose your safe and then add the delegate address of some other account:
+After a successful safe creation, you will get your safe's address. Next we need to add a proposer account. A proposer is not allowed to approve transactions but can propose them to the wallet. To add a proposer, go to the Safe app > Settings > Setup. Scroll down to "Proposers" and click "Add Proposer". You can add multiple proposers to your Safe.
 
-![Delegate app](/delegate.png)
+![Proposer UI](/proposer.png)
 
-Lastly, add the private key of your delegate to environment variables:
+Lastly, add the private key of your proposer(s) to environment variables:
 
 ```
 BLUMEN_PK=0x...
@@ -45,8 +45,12 @@ blumen deploy --safe=sep:0x... --ens=mydomain.eth
 
 Your web app got deployed on IPFS. The last step is approving a transaction proposal to update your ENS name record that points to the CID of your app, which we just deployed.
 
-Go back to the Safe app > Transactions and confirm your deployment:
+Go back to the Safe app > Transactions and find the transaction proposal:
 
-![Safe app](/safe.jpg)
+![Safe app](/safe.png)
+
+Verify the transaction data and click "Continue" and then "Execute".
+
+![Safe tx](/safe-tx-view.png)
 
 Once it finishes getting processed, your ENS record should start pointing to your new deployment. Now your web app should be discoverable through any ENS gateway (such as .eth.limo).
