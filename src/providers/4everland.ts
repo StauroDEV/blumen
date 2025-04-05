@@ -1,7 +1,7 @@
 import { UploadNotSupportedError } from '../errors.js'
-import { UploadFunction } from '../types.js'
+import { StatusFunction, UploadFunction } from '../types.js'
 // import { uploadOnS3 } from './s3.js'
-import { specPin } from './spec.js'
+import { specPin, specStatus } from './spec.js'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const uploadOn4everland: UploadFunction<{ bucketName?: string }> = async ({ first, bucketName, ...args }) => {
@@ -23,3 +23,6 @@ export const uploadOn4everland: UploadFunction<{ bucketName?: string }> = async 
     return specPin({ providerName: '4EVERLAND', baseURL: 'https://api.4everland.dev', first, ...args })
   }
 }
+
+export const statusOn4everland: StatusFunction = async ({ cid, auth }) =>
+  specStatus({ baseURL: 'https://api.4everland.dev', cid, auth })

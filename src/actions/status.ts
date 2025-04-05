@@ -26,7 +26,10 @@ export const statusAction = async (
   const env = parseTokensFromEnv()
   const tokens: string[] = []
 
-  if (!providersOptionList) for (const option of env.keys()) tokens.push(option)
+  if (!providersOptionList) for (const option of env.keys()) {
+    if (option && option.endsWith('_TOKEN'))
+      tokens.push(option)
+  }
 
   if (providersOptionList) {
     for (const option of providersOptionList.split(',').map(s => s.trim())) {
@@ -38,18 +41,19 @@ export const statusAction = async (
 
   if (tokens.length === 0) throw new NoProvidersError()
 
-  for (const token of tokens) {
-    const provider = PROVIDERS[token]
+  const providers = tokens.map(token => PROVIDERS[token])
+
+  await Promise.all(providers.map(async (provider, i) => {
+    const token = tokens[i]
     if (provider?.status) {
       const { pin, deals } = await provider.status({
         cid,
         auth: {
-          accessKey: env.get('GW3_ACCESS_KEY'),
           token: env.get(token),
         },
         verbose,
       })
       pinStatus(provider.name, pin, deals)
     }
-  }
+  }))
 }

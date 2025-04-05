@@ -33,11 +33,16 @@ export const deployAction = async (
 
   const apiTokens = parseTokensFromEnv()
 
-  const providers = providersList ? providersList.split(',') : tokensToProviderNames(apiTokens.keys())
+  const providerNames = providersList ? providersList.split(',') : tokensToProviderNames(apiTokens.keys())
+
+  const providers = providerNames.map(providerName => PROVIDERS[findEnvVarProviderName(providerName)!]).sort((a) => {
+    if (a.supported === 'both' || a.supported === 'upload') return -1
+    else return 1
+  })
 
   if (!providers.length) throw new NoProvidersError()
 
-  logger.info(`Deploying with providers: ${providers.join(', ')}`)
+  logger.info(`Deploying with providers: ${providers.map(p => p.name).join(', ')}`)
 
   let total = 0
 
@@ -54,10 +59,10 @@ export const deployAction = async (
   const errors: Error[] = []
 
   for (const provider of providers) {
-    const envVar = findEnvVarProviderName(provider)!
+    const envVar = findEnvVarProviderName(provider.name)!
     const token = apiTokens.get(envVar)!
 
-    bar?.update(total++, deployMessage(provider, PROVIDERS[envVar].supported))
+    bar?.update(total++, deployMessage(provider.name, PROVIDERS[envVar].supported))
 
     let bucketName: string | undefined
 

@@ -1,4 +1,4 @@
-import { uploadOn4everland } from './providers/4everland.js'
+import { statusOn4everland, uploadOn4everland } from './providers/4everland.js'
 import { statusOnFilebase, uploadOnFilebase } from './providers/filebase.js'
 import { pinOnPinata, statusOnPinata } from './providers/pinata.js'
 import { uploadOnWStoracha } from './providers/storacha.js'
@@ -23,6 +23,7 @@ export const PROVIDERS: Record<
   '4EVERLAND_TOKEN': {
     name: '4EVERLAND',
     upload: uploadOn4everland,
+    status: statusOn4everland,
     supported: 'pin',
   },
   'PINATA_TOKEN': {
