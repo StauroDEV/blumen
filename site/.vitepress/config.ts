@@ -73,6 +73,10 @@ export default defineConfig({
             text: 'Pack',
             link: '/docs/cli/pack',
           },
+          {
+            text: 'Pin',
+            link: '/docs/cli/pin',
+          },
         ],
       },
     ],

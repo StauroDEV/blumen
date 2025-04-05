@@ -6,11 +6,17 @@ import { packCAR } from '../utils/ipfs.js'
 import { logger } from '../utils/logger.js'
 import * as colors from 'colorette'
 
+export type PackActionArgs = Partial<{
+  name: string
+  dist: string
+  verbose: boolean
+}>
+
 export const packAction = async (
   { dir, options = {} }:
   {
     dir?: string
-    options?: { name?: string, dist?: string, verbose?: boolean }
+    options?: PackActionArgs
   }) => {
   const { name: customName, dist, verbose } = options
   if (!dir) {

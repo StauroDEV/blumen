@@ -6,19 +6,16 @@ import { EnsActionArgs, ensAction } from './ens.js'
 import { deployMessage, logger } from '../utils/logger.js'
 import * as colors from 'colorette'
 import { dnsLinkAction } from './dnslink.js'
-import { packAction } from './pack.js'
+import { packAction, PackActionArgs } from './pack.js'
 
 const AsciiBar = mod.default
 
 export type DeployActionArgs = Partial<{
   strict: boolean
   ens: string
-  name: string
-  dist: string
   providers: string
-  verbose: boolean
   dnslink: string
-}> & EnsActionArgs
+}> & PackActionArgs & EnsActionArgs
 
 export const deployAction = async (
   { dir, options = {} }: { dir?: string, options?: DeployActionArgs },

@@ -66,7 +66,7 @@ file ./dist.car
 
 ### `providers`
 
-A list of providers to deploy on.
+An explicit list of providers to deploy on.
 
 ```sh
 blumen deploy --providers Storacha
