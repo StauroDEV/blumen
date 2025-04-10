@@ -18,8 +18,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@stauro/piggybank':
-        specifier: ^0.1.2
-        version: 0.1.2(viem@2.23.13(typescript@5.8.3))
+        specifier: ^0.2.0
+        version: 0.2.0(viem@2.23.13(typescript@5.8.3))
       '@ucanto/client':
         specifier: ^9.0.1
         version: 9.0.1
@@ -700,8 +700,8 @@ packages:
   '@stauro/filebase-upload@1.0.0':
     resolution: {integrity: sha512-tDDEx6aKlRn0NogmsW4Tsi6j+WGUVaw6HSJn482gMa+lgdstK3wAFj7CJwYKlL539kD0ZMPdHiVzdHKSfaPa2A==}
 
-  '@stauro/piggybank@0.1.2':
-    resolution: {integrity: sha512-DHPy/hVgLgbUTSu5k+UHqCpV2Vahao+qHfRE9gOTqIeOu730iIXw7AWXsJORNsFDmEjLEXSUQaMPdkFdDZMOdQ==}
+  '@stauro/piggybank@0.2.0':
+    resolution: {integrity: sha512-HuoQ8f0pmxOCX4vIG++NONfIP2GXhWhFzjohOkaXOXEyZ5vL0QCMBInWKbRk0Y5sVkxQlNBBRfNs0KQqOVdviA==}
     peerDependencies:
       viem: '>=1.16'
 
@@ -3282,9 +3282,8 @@ snapshots:
       '@smithy/types': 4.1.0
       aws4: 1.13.2
 
-  '@stauro/piggybank@0.1.2(viem@2.23.13(typescript@5.8.3))':
+  '@stauro/piggybank@0.2.0(viem@2.23.13(typescript@5.8.3))':
     dependencies:
-      semver: 7.7.1
       viem: 2.23.13(typescript@5.8.3)
 
   '@storacha/one-webcrypto@1.0.1': {}
