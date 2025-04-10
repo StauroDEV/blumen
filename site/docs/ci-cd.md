@@ -26,9 +26,9 @@ jobs:
       - name: Install Blumen
         run: pnpm i -g blumen@0.14.3
       - name: Build website
-        run: cd site && pnpm i && pnpm build
+        run: pnpm i && pnpm build
       - name: Deploy
-        run: cd site && blumen deploy --dnslink
+        run: blumen deploy --dnslink
         env: # your provider API tokens go here
           BLUMEN_CF_KEY: ${{ secrets.BLUMEN_CF_KEY }}
           BLUMEN_CF_ZONE_ID: ${{ secrets.BLUMEN_CF_ZONE_ID }}
@@ -55,8 +55,8 @@ deploy:
   image: node:22
   script:
     - pnpm i -g blumen@0.14.3
-    - cd site && pnpm i && pnpm build
-    - cd site && blumen deploy --dnslink
+    - pnpm i && pnpm build
+    - blumen deploy --dnslink
   only:
     - main
 ```

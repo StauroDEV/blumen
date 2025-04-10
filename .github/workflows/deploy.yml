@@ -21,7 +21,7 @@ jobs:
       - name: Build website
         run: cd site && pnpm i && pnpm build
       - name: Deploy
-        run: cd site && blumen deploy --dnslink
+        run: cd site && blumen deploy .vitepress/dist --dnslink
         env:
           BLUMEN_CF_KEY: ${{ secrets.BLUMEN_CF_KEY }}
           BLUMEN_CF_ZONE_ID: ${{ secrets.BLUMEN_CF_ZONE_ID }}
