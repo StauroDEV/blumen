@@ -44,6 +44,10 @@ export default defineConfig({
             text: 'DNSLink',
             link: '/docs/dnslink',
           },
+          {
+            text: 'CI/CD',
+            link: '/docs/ci-cd',
+          },
         ],
       },
       {
