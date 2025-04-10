@@ -28,7 +28,7 @@ jobs:
       - name: Build website
         run: pnpm i && pnpm build
       - name: Deploy
-        run: blumen deploy --dnslink
+        run: blumen deploy
         env: # your provider API tokens go here
           BLUMEN_CF_KEY: ${{ secrets.BLUMEN_CF_KEY }}
           BLUMEN_CF_ZONE_ID: ${{ secrets.BLUMEN_CF_ZONE_ID }}
@@ -56,7 +56,7 @@ deploy:
   script:
     - pnpm i -g blumen@0.14.3
     - pnpm i && pnpm build
-    - blumen deploy --dnslink
+    - blumen deploy
   only:
     - main
 ```
