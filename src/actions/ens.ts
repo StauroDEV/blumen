@@ -119,11 +119,9 @@ export const ensAction = async (
 
     const nonce = await getSafeNonce(publicClient, safeAddress)
 
-    if (options.verbose) {
-      logger.info(`Nonce: ${nonce}`)
-    }
+    if (options.verbose) logger.info(`Nonce: ${nonce}`)
 
-    const txData: Omit<SafeTransactionData, 'safeTxGas' | 'baseGas'> = {
+    const txData: SafeTransactionData = {
       ...request,
       to,
       operation: OperationType.Call,
@@ -133,25 +131,15 @@ export const ensAction = async (
       data,
     }
 
-    const { safeTxGas, baseGas, safeTxHash } = await prepareSafeTransactionData({
+    const { safeTxHash } = await prepareSafeTransactionData({
       txData,
       safeAddress,
       publicClient,
     })
-    if (options.verbose) {
-      logger.info(`Signing a Safe transaction with a hash ${safeTxHash}`)
-      logger.info(`Safe tx gas: ${safeTxGas}`)
-      logger.info(`Safe base gas: ${baseGas}`)
-    }
-    else {
-      logger.info(`Signing a Safe transaction with a hash ${safeTxHash}`)
-    }
 
-    const senderSignature = await safeWalletClient.generateSafeTransactionSignature({
-      ...txData,
-      safeTxGas,
-      baseGas,
-    })
+    logger.info(`Signing a Safe transaction with a hash ${safeTxHash}`)
+
+    const senderSignature = await safeWalletClient.generateSafeTransactionSignature(txData)
 
     if (!options['dry-run']) {
       logger.info('Proposing a Safe transaction')
@@ -160,7 +148,7 @@ export const ensAction = async (
 
       try {
         await apiClient.proposeTransaction({
-          safeTransactionData: { ...txData, safeTxGas, baseGas, nonce },
+          safeTransactionData: txData,
           senderAddress: walletClient.account.address,
           safeTxHash,
           senderSignature,
