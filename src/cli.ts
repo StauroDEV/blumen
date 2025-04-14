@@ -7,7 +7,6 @@ import { EnsActionArgs, ensAction } from './actions/ens.js'
 import { statusAction } from './actions/status.js'
 import { DeployActionArgs, deployAction } from './actions/deploy.js'
 
-import './polyfills/globals.js'
 import { pingAction } from './actions/ping.js'
 import { BLUMEN_VERSION } from './utils/version.js'
 import { dnsLinkAction } from './actions/dnslink.js'
