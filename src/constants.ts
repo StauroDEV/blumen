@@ -5,6 +5,7 @@ import { pinOnPinata, statusOnPinata } from './providers/pinata.js'
 import { pinOnQuicknode } from './providers/quicknode.js'
 import { specPin, specStatus } from './providers/spec.js'
 import { uploadOnWStoracha } from './providers/storacha.js'
+import { uploadOnSwarmy } from './providers/swarmy.js'
 import type { StatusFunction, SupportedMethods, UploadFunction } from './types.js'
 
 export const PROVIDERS: Record<
@@ -50,6 +51,11 @@ export const PROVIDERS: Record<
     name: 'Lighthouse',
     upload: pinOnLighthouse,
     supported: 'pin',
+  },
+  'SWARMY_TOKEN': {
+    name: 'Swarmy',
+    upload: uploadOnSwarmy,
+    supported: 'upload',
   },
 }
 

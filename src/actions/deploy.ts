@@ -7,6 +7,8 @@ import { deployMessage, logger } from '../utils/logger.js'
 import * as colors from 'colorette'
 import { dnsLinkAction } from './dnslink.js'
 import { packAction, PackActionArgs } from './pack.js'
+import { uploadOnSwarmy } from '../providers/swarmy.js'
+import { packTAR } from '../utils/tar.js'
 
 const AsciiBar = mod.default
 
@@ -26,13 +28,28 @@ export const deployAction = async (
     dnslink, rpcUrl,
   } = options
 
-  const { name, cid, blob } = await packAction({ dir, options: { name: customName, dist, verbose } })
+  const { name, cid, blob, files } = await packAction({ dir, options: { name: customName, dist, verbose } })
 
   const apiTokens = parseTokensFromEnv()
 
   const providerNames = providersList ? providersList.split(',') : tokensToProviderNames(apiTokens.keys())
 
-  const providers = providerNames.map(providerName => PROVIDERS[findEnvVarProviderName(providerName)!]).sort((a) => {
+  let swarmyProvider: typeof PROVIDERS[keyof typeof PROVIDERS] | undefined
+  const providers = providerNames.reduce((acc, providerName) => {
+    const envVarName = findEnvVarProviderName(providerName)!
+    const provider = PROVIDERS[envVarName]
+
+    if (providerName === 'Swarmy') {
+      swarmyProvider = provider
+    }
+    else {
+      acc.push(provider)
+    }
+
+    return acc
+  }, [] as typeof PROVIDERS[keyof typeof PROVIDERS][])
+
+  providers.sort((a) => {
     if (a.supported === 'both' || a.supported === 'upload') return -1
     else return 1
   })
@@ -55,58 +72,68 @@ export const deployAction = async (
 
   const errors: Error[] = []
 
-  for (const provider of providers) {
-    const envVar = findEnvVarProviderName(provider.name)!
-    const token = apiTokens.get(envVar)!
+  if (swarmyProvider) {
+    const tar = await packTAR(files)
+    const { cid } = await uploadOnSwarmy({
+      car: new Blob([tar]), token: apiTokens.get('SWARMY_TOKEN')!, verbose, cid: '', name, first: true,
+    })
+    logger.success(`Deployed on Swarmy: ${cid}`)
+    console.log(`Open in a browser: https://${cid}.bzz.limo/ `)
+  }
+  else {
+    for (const provider of providers) {
+      const envVar = findEnvVarProviderName(provider.name)!
+      const token = apiTokens.get(envVar)!
 
-    bar?.update(total++, deployMessage(provider.name, PROVIDERS[envVar].supported))
+      bar?.update(total++, deployMessage(provider.name, PROVIDERS[envVar].supported))
 
-    let bucketName: string | undefined
+      let bucketName: string | undefined
 
-    if (envVar.includes('FILEBASE')) bucketName = apiTokens.get('FILEBASE_BUCKET_NAME')
-    else if (envVar.includes('4EVERLAND')) bucketName = apiTokens.get('4EVERLAND_BUCKET_NAME')
+      if (envVar.includes('FILEBASE')) bucketName = apiTokens.get('FILEBASE_BUCKET_NAME')
+      else if (envVar.includes('4EVERLAND')) bucketName = apiTokens.get('4EVERLAND_BUCKET_NAME')
 
-    try {
-      await PROVIDERS[envVar].upload({
-        name,
-        car: blob,
-        token,
-        bucketName,
-        proof: apiTokens.get('STORACHA_PROOF'),
-        cid,
-        first: providers.indexOf(provider) === 0,
-        verbose,
-        baseURL: apiTokens.get('SPEC_URL'),
-      })
+      try {
+        await PROVIDERS[envVar].upload({
+          name,
+          car: blob,
+          token,
+          bucketName,
+          proof: apiTokens.get('STORACHA_PROOF'),
+          cid,
+          first: providers.indexOf(provider) === 0,
+          verbose,
+          baseURL: apiTokens.get('SPEC_URL'),
+        })
+      }
+      catch (e) {
+        if (strict) throw e
+        else errors.push(e as Error)
+      }
     }
-    catch (e) {
-      if (strict) throw e
-      else errors.push(e as Error)
+    bar?.update(total)
+
+    if (errors.length === providers.length) {
+      logger.error('Deploy failed')
+      errors.forEach(e => logger.error(e))
+      return
     }
-  }
-  bar?.update(total)
+    else if (errors.length) {
+      logger.warn('There were some problems with deploying')
+      errors.forEach(e => logger.error(e))
+    }
+    else logger.success('Deployed across all providers')
 
-  if (errors.length === providers.length) {
-    logger.error('Deploy failed')
-    errors.forEach(e => logger.error(e))
-    return
-  }
-  else if (errors.length) {
-    logger.warn('There were some problems with deploying')
-    errors.forEach(e => logger.error(e))
-  }
-  else logger.success('Deployed across all providers')
+    const dwebLink = `https://${cid}.ipfs.dweb.link`
+    const providersLink = `https://delegated-ipfs.dev/routing/v1/providers/${cid}`
 
-  const dwebLink = `https://${cid}.ipfs.dweb.link`
-  const providersLink = `https://delegated-ipfs.dev/routing/v1/providers/${cid}`
-
-  console.log(
-    `\nOpen in a browser:\n${isTTY ? colors.bold('IPFS') : 'IPFS'}:      ${
-      isTTY ? colors.underline(dwebLink) : dwebLink
-    }\n${isTTY ? colors.bold('Providers') : 'Providers'}: ${
-      isTTY ? colors.underline(providersLink) : providersLink
-    }`,
-  )
+    console.log(
+      `\nOpen in a browser:\n${isTTY ? colors.bold('IPFS') : 'IPFS'}:      ${
+        isTTY ? colors.underline(dwebLink) : dwebLink
+      }\n${isTTY ? colors.bold('Providers') : 'Providers'}: ${
+        isTTY ? colors.underline(providersLink) : providersLink
+      }`,
+    )
+  }
 
   if (typeof ens === 'string') {
     console.log('\n')

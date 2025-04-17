@@ -37,5 +37,5 @@ export const packAction = async (
   const cid = rootCID.toString()
   logger.info(`Root CID: ${isTTY ? colors.white(cid) : cid}`)
 
-  return { name, cid, blob }
+  return { name, cid, blob, files }
 }
