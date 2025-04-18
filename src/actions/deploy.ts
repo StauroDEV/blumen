@@ -79,13 +79,14 @@ export const deployAction = async (
 
   if (swarmyProvider) {
     bar?.update(total++, deployMessage('Swarmy', swarmyProvider.supported))
-    const { cid: swarmCid } = await uploadOnSwarmy({
+    const { cid: swarmCid, rID } = await uploadOnSwarmy({
       car: blob, token: apiTokens.get('SWARMY_TOKEN')!, verbose, cid: '', name: '', first: true,
     })
-    cid = swarmCid
+    cid = rID!
     bar?.update(total)
     logger.success('Deployed on Swarm')
-    console.log(`\nOpen in a browser: https://${cid}.bzz.limo/ `)
+    logger.info(`Swarm Reference ID: ${rID}`)
+    console.log(`\nOpen in a browser: https://${swarmCid}.bzz.limo/ `)
   }
   else {
     for (const provider of providers) {
@@ -148,6 +149,7 @@ export const deployAction = async (
   }
 
   if (dnslink) {
+    if (swarmyProvider) throw new Error('DNSLink is not supported with Swarm')
     await dnsLinkAction({ cid, name: dnslink, options: { verbose } })
   }
 }
