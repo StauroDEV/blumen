@@ -16,7 +16,7 @@
 
 ## Installation
 
-Node.js 20 or newer is required.
+Blumen supports Node.js (20+), Deno (2.2.11+) and Bun.
 
 ::: code-group
 
@@ -30,6 +30,10 @@ pnpm i -g blumen
 
 ```bash [bun]
 bun i -g blumen
+```
+
+```bash [deno]
+deno install --global --allow-read --allow-env --allow-write --allow-net npm:blumen
 ```
 
 :::
