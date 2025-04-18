@@ -5,6 +5,8 @@
 
 **Blumen** is a CLI to deploy apps on the decentralized web with IPFS, Swarm and Ethereum.
 
+<video src="/blumen.webm" height="1254" width="960" controls />
+
 > Blumen is in an alpha stage and has been neither audited nor tested yet. Use with caution!
 
 ## Features

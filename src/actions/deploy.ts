@@ -62,7 +62,7 @@ export const deployAction = async (
   const errors: Error[] = []
   const bar = isTTY
     ? new AsciiBar({
-      total: swarmProviders ? swarmProviders.length : ipfsProviders.length,
+      total: swarmProviders.length !== 0 ? swarmProviders.length : ipfsProviders.length,
       formatString: '#spinner #bar #message',
       hideCursor: false,
       enableSpinner: true,
@@ -71,7 +71,7 @@ export const deployAction = async (
     : undefined
 
   let swarmCid = ''
-  if (swarmProviders) {
+  if (swarmProviders.length !== 0) {
     for (const provider of swarmProviders) {
       bar?.update(total++, deployMessage(provider.name, provider.supported))
       const envVar = findEnvVarProviderName(provider.name)!
