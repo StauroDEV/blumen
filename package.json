@@ -34,7 +34,7 @@
   "author": "v1rtl <hi@v1rtl.site>",
   "engineStrict": true,
   "engines": {
-    "node": ">=20"
+    "node": "^20.9.0 || >=21.1.0"
   },
   "license": "MIT",
   "dependencies": {
@@ -53,6 +53,7 @@
     "colorette": "^2.0.20",
     "ipfs-car": "^3.0.0",
     "multiformats": "^13.3.2",
+    "nanotar": "^0.2.0",
     "spektr": "^0.1.1",
     "table": "^6.9.0",
     "tinyglobby": "^0.2.12",

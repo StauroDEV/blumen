@@ -1,6 +1,6 @@
-# Supported providers
+# IPFS
 
-We support a wide range of different IPFS providers. If you would like to integrate your provider, feel free to submit a pull request.
+Blumen supports a wide range of different IPFS providers. If you would like to integrate your provider, feel free to submit a pull request.
 
 ## Spec-compliant Pinning Service
 

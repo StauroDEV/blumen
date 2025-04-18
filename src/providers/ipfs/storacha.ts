@@ -1,6 +1,6 @@
-import type { UploadFunction } from '../types.js'
-import { DeployError, MissingKeyError } from '../errors.js'
-import { setupW3Up } from '../utils/w3up.js'
+import type { UploadFunction } from '../../types.js'
+import { DeployError, MissingKeyError } from '../../errors.js'
+import { setupW3Up } from '../../utils/w3up.js'
 import { uploadCAR } from '@web3-storage/upload-client'
 import {
   Blob as BlobCapabilities,

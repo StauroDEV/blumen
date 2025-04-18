@@ -1,6 +1,6 @@
-import { StatusFunction, UploadFunction } from '../types.js'
+import { StatusFunction, UploadFunction } from '../../types.js'
 import { specPin, specStatus } from './spec.js'
-import { MissingKeyError } from '../errors.js'
+import { MissingKeyError } from '../../errors.js'
 import { uploadOnS3 } from './s3.js'
 
 const providerName = 'Filebase'

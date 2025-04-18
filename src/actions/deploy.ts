@@ -26,26 +26,43 @@ export const deployAction = async (
     dnslink, rpcUrl,
   } = options
 
-  const { name, cid, blob } = await packAction({ dir, options: { name: customName, dist, verbose } })
-
   const apiTokens = parseTokensFromEnv()
 
   const providerNames = providersList ? providersList.split(',') : tokensToProviderNames(apiTokens.keys())
 
-  const providers = providerNames.map(providerName => PROVIDERS[findEnvVarProviderName(providerName)!]).sort((a) => {
+  const allProviders = providerNames.map((providerName) => {
+    const envVarName = findEnvVarProviderName(providerName)!
+    return PROVIDERS[envVarName]
+  })
+
+  const ipfsProviders = allProviders.filter(p => p.protocol === 'ipfs')
+  const swarmProviders = allProviders.filter(p => p.protocol === 'swarm')
+
+  ipfsProviders.sort((a) => {
     if (a.supported === 'both' || a.supported === 'upload') return -1
     else return 1
   })
 
-  if (!providers.length) throw new NoProvidersError()
+  if (!allProviders.length) throw new NoProvidersError()
 
-  logger.info(`Deploying with providers: ${providers.map(p => p.name).join(', ')}`)
+  logger.info(`Deploying with providers: ${(
+    swarmProviders.length ? swarmProviders : ipfsProviders).map(p => p.name).join(', ')
+  }`)
+
+  let cid: string = undefined!
+
+  const { name, cid: ipfsCid, blob } = await packAction({ dir, options: {
+    name: customName, dist, verbose, tar: swarmProviders.length !== 0,
+  } })
+
+  if (swarmProviders.length === 0) cid = ipfsCid!
 
   let total = 0
 
+  const errors: Error[] = []
   const bar = isTTY
     ? new AsciiBar({
-      total: providers.length,
+      total: swarmProviders.length !== 0 ? swarmProviders.length : ipfsProviders.length,
       formatString: '#spinner #bar #message',
       hideCursor: false,
       enableSpinner: true,
@@ -53,40 +70,61 @@ export const deployAction = async (
     })
     : undefined
 
-  const errors: Error[] = []
+  let swarmCid = ''
+  if (swarmProviders.length !== 0) {
+    for (const provider of swarmProviders) {
+      bar?.update(total++, deployMessage(provider.name, provider.supported))
+      const envVar = findEnvVarProviderName(provider.name)!
+      try {
+        const result = await provider.upload({
+          car: blob, token: apiTokens.get(envVar)!, verbose, cid: '', name: '', first: true,
+          beeURL: apiTokens.get('BEE_URL'),
+        })
+        swarmCid = result.cid
+        cid = result.rID!
+      }
+      catch (e) {
+        if (strict) throw e
+        else errors.push(e as Error)
+      }
 
-  for (const provider of providers) {
-    const envVar = findEnvVarProviderName(provider.name)!
-    const token = apiTokens.get(envVar)!
-
-    bar?.update(total++, deployMessage(provider.name, PROVIDERS[envVar].supported))
-
-    let bucketName: string | undefined
-
-    if (envVar.includes('FILEBASE')) bucketName = apiTokens.get('FILEBASE_BUCKET_NAME')
-    else if (envVar.includes('4EVERLAND')) bucketName = apiTokens.get('4EVERLAND_BUCKET_NAME')
-
-    try {
-      await PROVIDERS[envVar].upload({
-        name,
-        car: blob,
-        token,
-        bucketName,
-        proof: apiTokens.get('STORACHA_PROOF'),
-        cid,
-        first: providers.indexOf(provider) === 0,
-        verbose,
-        baseURL: apiTokens.get('SPEC_URL'),
-      })
-    }
-    catch (e) {
-      if (strict) throw e
-      else errors.push(e as Error)
+      bar?.update(total)
     }
   }
-  bar?.update(total)
+  else {
+    for (const provider of ipfsProviders) {
+      const envVar = findEnvVarProviderName(provider.name)!
+      const token = apiTokens.get(envVar)!
 
-  if (errors.length === providers.length) {
+      bar?.update(total++, deployMessage(provider.name, provider.supported))
+
+      let bucketName: string | undefined
+
+      if (envVar.includes('FILEBASE')) bucketName = apiTokens.get('FILEBASE_BUCKET_NAME')
+      else if (envVar.includes('4EVERLAND')) bucketName = apiTokens.get('4EVERLAND_BUCKET_NAME')
+
+      try {
+        await provider.upload({
+          name,
+          car: blob,
+          token,
+          bucketName,
+          proof: apiTokens.get('STORACHA_PROOF'),
+          cid,
+          first: ipfsProviders.indexOf(provider) === 0,
+          verbose,
+          baseURL: apiTokens.get('SPEC_URL'),
+        })
+      }
+      catch (e) {
+        if (strict) throw e
+        else errors.push(e as Error)
+      }
+    }
+    bar?.update(total)
+  }
+
+  if (errors.length !== 0 && (errors.length === ipfsProviders.length || errors.length === swarmProviders.length)) {
     logger.error('Deploy failed')
     errors.forEach(e => logger.error(e))
     return
@@ -97,16 +135,23 @@ export const deployAction = async (
   }
   else logger.success('Deployed across all providers')
 
-  const dwebLink = `https://${cid}.ipfs.dweb.link`
-  const providersLink = `https://delegated-ipfs.dev/routing/v1/providers/${cid}`
+  if (swarmCid) {
+    logger.success('Deployed on Swarm')
+    logger.info(`Swarm Reference ID: ${cid}`)
+    console.log(`\nOpen in a browser: https://${swarmCid}.bzz.limo/ `)
+  }
+  else {
+    const dwebLink = `https://${cid}.ipfs.dweb.link`
+    const providersLink = `https://delegated-ipfs.dev/routing/v1/providers/${cid}`
 
-  console.log(
-    `\nOpen in a browser:\n${isTTY ? colors.bold('IPFS') : 'IPFS'}:      ${
-      isTTY ? colors.underline(dwebLink) : dwebLink
-    }\n${isTTY ? colors.bold('Providers') : 'Providers'}: ${
-      isTTY ? colors.underline(providersLink) : providersLink
-    }`,
-  )
+    console.log(
+      `\nOpen in a browser:\n${isTTY ? colors.bold('IPFS') : 'IPFS'}:      ${
+        isTTY ? colors.underline(dwebLink) : dwebLink
+      }\n${isTTY ? colors.bold('Providers') : 'Providers'}: ${
+        isTTY ? colors.underline(providersLink) : providersLink
+      }`,
+    )
+  }
 
   if (typeof ens === 'string') {
     console.log('\n')
@@ -114,6 +159,7 @@ export const deployAction = async (
   }
 
   if (dnslink) {
+    if (swarmProviders.length) throw new Error('DNSLink is not supported with Swarm')
     await dnsLinkAction({ cid, name: dnslink, options: { verbose } })
   }
 }

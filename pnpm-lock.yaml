@@ -53,6 +53,9 @@ importers:
       multiformats:
         specifier: ^13.3.2
         version: 13.3.2
+      nanotar:
+        specifier: ^0.2.0
+        version: 0.2.0
       spektr:
         specifier: ^0.1.1
         version: 0.1.1
@@ -1826,6 +1829,9 @@ packages:
     resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+
+  nanotar@0.2.0:
+    resolution: {integrity: sha512-9ca1h0Xjvo9bEkE4UOxgAzLV0jHKe6LMaxo37ND2DAhhAtd0j8pR1Wxz+/goMrZO8AEZTWCmyaOsFI/W5AdpCQ==}
 
   native-fetch@3.0.0:
     resolution: {integrity: sha512-G3Z7vx0IFb/FQ4JxvtqGABsOTIqRWvgQz6e+erkB+JJD6LrszQtMozEHI4EkmgZQvnGHrpLVzUWk7t4sJCIkVw==}
@@ -4554,6 +4560,8 @@ snapshots:
       thenify-all: 1.6.0
 
   nanoid@3.3.11: {}
+
+  nanotar@0.2.0: {}
 
   native-fetch@3.0.0(node-fetch@2.7.0(encoding@0.1.13)):
     dependencies:

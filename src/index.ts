@@ -1,4 +1,4 @@
-export * from './providers/storacha.js'
+export * from './providers/ipfs/storacha.js'
 export * from './utils/ipfs.js'
 export { walk, fileSize } from './utils/fs.js'
 export * from './utils/env.js'

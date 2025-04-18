@@ -38,6 +38,7 @@ export type UploadReturnType = {
   cid: string
   providers?: string[]
   status?: PinStatus
+  rID?: string
 }
 
 export type UploadFunction<T = object> = (args: UploadArgs<T>) => Promise<UploadReturnType>

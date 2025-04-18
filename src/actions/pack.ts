@@ -5,11 +5,13 @@ import { fileSize, exists, walk } from '../utils/fs.js'
 import { packCAR } from '../utils/ipfs.js'
 import { logger } from '../utils/logger.js'
 import * as colors from 'colorette'
+import { packTAR } from '../utils/tar.js'
 
 export type PackActionArgs = Partial<{
   name: string
   dist: string
   verbose: boolean
+  tar: boolean
 }>
 
 export const packAction = async (
@@ -18,7 +20,7 @@ export const packAction = async (
     dir?: string
     options?: PackActionArgs
   }) => {
-  const { name: customName, dist, verbose } = options
+  const { name: customName, dist, verbose, tar } = options
   if (!dir) {
     if (await exists('dist')) dir = 'dist'
     else dir = '.'
@@ -32,10 +34,17 @@ export const packAction = async (
 
   logger.start(`Packing ${isTTY ? colors.cyan(distName) : distName} (${fileSize(size, 2)})`)
 
-  const { rootCID, blob } = await packCAR(files, name, dist)
+  if (tar) {
+    const tar = await packTAR(files)
+    const blob = new Blob([tar])
+    return { blob }
+  }
+  else {
+    const { rootCID, blob } = await packCAR(files, name, dist)
 
-  const cid = rootCID.toString()
-  logger.info(`Root CID: ${isTTY ? colors.white(cid) : cid}`)
+    const cid = rootCID.toString()
+    logger.info(`Root CID: ${isTTY ? colors.white(cid) : cid}`)
 
-  return { name, cid, blob }
+    return { name, cid, blob, files }
+  }
 }

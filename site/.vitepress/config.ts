@@ -33,8 +33,8 @@ export default defineConfig({
             link: '/docs/get-started',
           },
           {
-            text: 'Providers',
-            link: '/docs/providers',
+            text: 'IPFS',
+            link: '/docs/ipfs',
           },
           {
             text: 'Deploying with Safe',
@@ -43,11 +43,15 @@ export default defineConfig({
           {
             text: 'DNSLink',
             link: '/docs/dnslink',
+          }, {
+            text: 'Swarm',
+            link: '/docs/swarm',
           },
           {
             text: 'CI/CD',
             link: '/docs/ci-cd',
           },
+
         ],
       },
       {
