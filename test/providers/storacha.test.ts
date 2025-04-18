@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test'
 
-import { uploadOnWStoracha } from '../../src/providers/storacha.js'
+import { uploadOnWStoracha } from '../../src/providers/ipfs/storacha.js'
 import assert from 'node:assert'
 import { MissingKeyError } from '../../src/errors'
 
