@@ -16,7 +16,7 @@ Status][gh-actions-img]][github-actions] ![npm](https://img.shields.io/npm/dt/bl
 
 ## Features
 
-- **Multi-Provider Deployment**: Deploy your web app simultaneously on multiple IPFS providers, including [Storacha](https://storacha.network) and [Filebase](https://filebase.com).
+- **Multi-Provider Deployment**: Deploy your web app simultaneously on multiple IPFS providers, including [Storacha](https://storacha.network), [Filebase](https://filebase.com) and many others.
 - **Multiple Storage Protocols**: Blumen supports both IPFS and Swarm first-class.
 - **ENS and DNSLink Integration**: Seamlessly integrate with [ENS](https://ens.domains) and [DNSLink](https://dnslink.dev) to update your decentralized website.
 - **Safe Integration**: Add an extra layer of security and decentralization with a [Safe](https://safe.global) multi-sig.

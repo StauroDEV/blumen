@@ -33,8 +33,8 @@ export default defineConfig({
             link: '/docs/get-started',
           },
           {
-            text: 'Providers',
-            link: '/docs/providers',
+            text: 'IPFS',
+            link: '/docs/ipfs',
           },
           {
             text: 'Deploying with Safe',
