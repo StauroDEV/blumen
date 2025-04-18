@@ -75,12 +75,19 @@ export const deployAction = async (
     for (const provider of swarmProviders) {
       bar?.update(total++, deployMessage(provider.name, provider.supported))
       const envVar = findEnvVarProviderName(provider.name)!
-      const result = await provider.upload({
-        car: blob, token: apiTokens.get(envVar)!, verbose, cid: '', name: '', first: true,
-        beeURL: apiTokens.get('BEE_URL'),
-      })
-      swarmCid = result.cid
-      cid = result.rID!
+      try {
+        const result = await provider.upload({
+          car: blob, token: apiTokens.get(envVar)!, verbose, cid: '', name: '', first: true,
+          beeURL: apiTokens.get('BEE_URL'),
+        })
+        swarmCid = result.cid
+        cid = result.rID!
+      }
+      catch (e) {
+        if (strict) throw e
+        else errors.push(e as Error)
+      }
+
       bar?.update(total)
     }
   }
@@ -117,7 +124,7 @@ export const deployAction = async (
     bar?.update(total)
   }
 
-  if (errors.length === ipfsProviders.length) {
+  if (errors.length !== 0 && (errors.length === ipfsProviders.length || errors.length === swarmProviders.length)) {
     logger.error('Deploy failed')
     errors.forEach(e => logger.error(e))
     return

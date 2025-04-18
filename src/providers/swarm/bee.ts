@@ -6,7 +6,7 @@ import { referenceToCID } from '../../utils/swarm.js'
 const providerName = 'Bee'
 
 export const uploadOnBee: UploadFunction<{ beeURL: string }> = async ({ token, car, verbose, beeURL }) => {
-  const res = await fetch(`https://${beeURL}/bzz`, {
+  const res = await fetch(`${beeURL}/bzz`, {
     body: car,
     headers: {
       'Swarm-Postage-Batch-Id': token,
