@@ -43,11 +43,15 @@ export default defineConfig({
           {
             text: 'DNSLink',
             link: '/docs/dnslink',
+          }, {
+            text: 'Swarm',
+            link: '/docs/swarm',
           },
           {
             text: 'CI/CD',
             link: '/docs/ci-cd',
           },
+
         ],
       },
       {
