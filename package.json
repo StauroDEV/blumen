@@ -34,7 +34,7 @@
   "author": "v1rtl <hi@v1rtl.site>",
   "engineStrict": true,
   "engines": {
-    "node": ">=20"
+    "node": "^20.9.0 || >=21.1.0"
   },
   "license": "MIT",
   "dependencies": {
