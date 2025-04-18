@@ -37,14 +37,21 @@ blumen deploy --ens blumen.stauro.eth --safe eth:0x...
 - Supported methods: Upload
 
 1. Fund your node wallet by [depositing BZZ](https://docs.ethswarm.org/docs/develop/access-the-swarm/buy-a-stamp-batch/#fund-your-nodes-wallet).
-2. Buy a postage stamp batch for the [Bee node](https://docs.ethswarm.org/docs/develop/access-the-swarm/buy-a-stamp-batch/#buying-a-stamp-batch):
+2. Calculate the amount and depth parameters for a postage stamp batch using the [batch calculator](https://docs.ethswarm.org/docs/develop/access-the-swarm/buy-a-stamp-batch/#time--volume-to-depth--amount-calculator). Select how much storage you need and for how long you would like your website to stay on the network. It is possible to top up a batch later.
+3. Buy a postage stamp batch for the [Bee node](https://docs.ethswarm.org/docs/develop/access-the-swarm/buy-a-stamp-batch/#buying-a-stamp-batch):
 
 ```sh
-curl -sX POST http://localhost:1633/stamps/100000000/20
+curl -sX POST http://localhost:1633/stamps/<amount>/<depth>
 # {
-#   "batchID": "8fcec40c65841e0c3c56679315a29a6495d32b9ed506f2757e03cdd778552c6b", <-- you need this to upload the file
+#   "batchID": "8fcec40c65841e0c3c56679315a29a6495d32b9ed506f2757e03cdd778552c6b", <-- you need this
 #   "txHash": "0x51c77ac171efd930eca8f3a77e3fcd5aca0a7353b84d5562f8e9c13f5907b675"
 # }
+```
+
+Add the batch ID to the environment variables:
+
+```sh
+BLUMEN_BEE_TOKEN=8fcec40c65841e0c3c56679315a29a6495d32b9ed506f2757e03cdd778552c6b
 ```
 
 Then run the the deployment command:
