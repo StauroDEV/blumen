@@ -8,7 +8,6 @@ import * as colors from 'colorette'
 import { dnsLinkAction } from './dnslink.js'
 import { packAction, PackActionArgs } from './pack.js'
 import { uploadOnSwarmy } from '../providers/swarmy.js'
-import { packTAR } from '../utils/tar.js'
 
 const AsciiBar = mod.default
 
@@ -27,8 +26,6 @@ export const deployAction = async (
     dist, verbose = false, providers: providersList, resolverAddress,
     dnslink, rpcUrl,
   } = options
-
-  const { name, cid, blob, files } = await packAction({ dir, options: { name: customName, dist, verbose } })
 
   const apiTokens = parseTokensFromEnv()
 
@@ -56,13 +53,23 @@ export const deployAction = async (
 
   if (!providers.length) throw new NoProvidersError()
 
-  logger.info(`Deploying with providers: ${providers.map(p => p.name).join(', ')}`)
+  if (swarmyProvider) logger.info(`Deploying with Swarmy`)
+  else logger.info(`Deploying with providers: ${providers.map(p => p.name).join(', ')}`)
+
+  let cid: string = undefined!
+
+  const { name, cid: ipfsCid, blob } = await packAction({ dir, options: {
+    name: customName, dist, verbose, tar: Boolean(swarmyProvider),
+  } })
+
+  if (!swarmyProvider) cid = ipfsCid!
 
   let total = 0
 
+  const errors: Error[] = []
   const bar = isTTY
     ? new AsciiBar({
-      total: providers.length,
+      total: swarmyProvider ? 1 : providers.length,
       formatString: '#spinner #bar #message',
       hideCursor: false,
       enableSpinner: true,
@@ -70,15 +77,15 @@ export const deployAction = async (
     })
     : undefined
 
-  const errors: Error[] = []
-
   if (swarmyProvider) {
-    const tar = await packTAR(files)
-    const { cid } = await uploadOnSwarmy({
-      car: new Blob([tar]), token: apiTokens.get('SWARMY_TOKEN')!, verbose, cid: '', name, first: true,
+    bar?.update(total++, deployMessage('Swarmy', swarmyProvider.supported))
+    const { cid: swarmCid } = await uploadOnSwarmy({
+      car: blob, token: apiTokens.get('SWARMY_TOKEN')!, verbose, cid: '', name: '', first: true,
     })
-    logger.success(`Deployed on Swarmy: ${cid}`)
-    console.log(`Open in a browser: https://${cid}.bzz.limo/ `)
+    cid = swarmCid
+    bar?.update(total)
+    logger.success('Deployed on Swarm')
+    console.log(`\nOpen in a browser: https://${cid}.bzz.limo/ `)
   }
   else {
     for (const provider of providers) {

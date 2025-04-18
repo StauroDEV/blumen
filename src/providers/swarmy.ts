@@ -11,9 +11,9 @@ export const uploadOnSwarmy: UploadFunction = async ({ token, car, verbose }) =>
   const res = await fetch('https://api.swarmy.cloud/api/files?website=true', {
     body,
     headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${token}`,
     },
+    method: 'POST',
   })
 
   const json = await res.json()
@@ -24,5 +24,5 @@ export const uploadOnSwarmy: UploadFunction = async ({ token, car, verbose }) =>
     throw new DeployError(providerName, json.message)
   }
 
-  return { cid: referenceToCID(`0x${json.swarmReference}`) }
+  return { cid: referenceToCID(`0x${json.swarmReference}`), rID: json.swarmReference }
 }
