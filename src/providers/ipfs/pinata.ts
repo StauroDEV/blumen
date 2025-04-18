@@ -1,4 +1,4 @@
-import { StatusFunction, UploadFunction } from '../types.js'
+import { StatusFunction, UploadFunction } from '../../types.js'
 import { specPin, specStatus } from './spec.js'
 
 export const pinOnPinata: UploadFunction = (args) => {

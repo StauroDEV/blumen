@@ -1,6 +1,6 @@
-import { DeployError, UploadNotSupportedError } from '../errors.js'
-import { StatusFunction, UploadFunction } from '../types.js'
-import { logger } from '../utils/logger.js'
+import { DeployError, UploadNotSupportedError } from '../../errors.js'
+import { StatusFunction, UploadFunction } from '../../types.js'
+import { logger } from '../../utils/logger.js'
 
 type SpecPinFunction = UploadFunction<{ baseURL: string, providerName: string }>
 

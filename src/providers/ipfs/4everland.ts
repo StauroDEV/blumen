@@ -1,5 +1,5 @@
-import { UploadNotSupportedError } from '../errors.js'
-import { StatusFunction, UploadFunction } from '../types.js'
+import { UploadNotSupportedError } from '../../errors.js'
+import { StatusFunction, UploadFunction } from '../../types.js'
 // import { uploadOnS3 } from './s3.js'
 import { specPin, specStatus } from './spec.js'
 

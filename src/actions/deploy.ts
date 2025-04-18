@@ -7,7 +7,6 @@ import { deployMessage, logger } from '../utils/logger.js'
 import * as colors from 'colorette'
 import { dnsLinkAction } from './dnslink.js'
 import { packAction, PackActionArgs } from './pack.js'
-import { uploadOnSwarmy } from '../providers/swarmy.js'
 
 const AsciiBar = mod.default
 
@@ -31,45 +30,39 @@ export const deployAction = async (
 
   const providerNames = providersList ? providersList.split(',') : tokensToProviderNames(apiTokens.keys())
 
-  let swarmyProvider: typeof PROVIDERS[keyof typeof PROVIDERS] | undefined
-  const providers = providerNames.reduce((acc, providerName) => {
+  const allProviders = providerNames.map((providerName) => {
     const envVarName = findEnvVarProviderName(providerName)!
-    const provider = PROVIDERS[envVarName]
+    return PROVIDERS[envVarName]
+  })
 
-    if (providerName === 'Swarmy') {
-      swarmyProvider = provider
-    }
-    else {
-      acc.push(provider)
-    }
+  const ipfsProviders = allProviders.filter(p => p.protocol === 'ipfs')
+  const swarmProviders = allProviders.filter(p => p.protocol === 'swarm')
 
-    return acc
-  }, [] as typeof PROVIDERS[keyof typeof PROVIDERS][])
-
-  providers.sort((a) => {
+  ipfsProviders.sort((a) => {
     if (a.supported === 'both' || a.supported === 'upload') return -1
     else return 1
   })
 
-  if (!providers.length) throw new NoProvidersError()
+  if (!allProviders.length) throw new NoProvidersError()
 
-  if (swarmyProvider) logger.info(`Deploying with Swarmy`)
-  else logger.info(`Deploying with providers: ${providers.map(p => p.name).join(', ')}`)
+  logger.info(`Deploying with providers: ${(
+    swarmProviders.length ? swarmProviders : ipfsProviders).map(p => p.name).join(', ')
+  }`)
 
   let cid: string = undefined!
 
   const { name, cid: ipfsCid, blob } = await packAction({ dir, options: {
-    name: customName, dist, verbose, tar: Boolean(swarmyProvider),
+    name: customName, dist, verbose, tar: swarmProviders.length !== 0,
   } })
 
-  if (!swarmyProvider) cid = ipfsCid!
+  if (swarmProviders.length === 0) cid = ipfsCid!
 
   let total = 0
 
   const errors: Error[] = []
   const bar = isTTY
     ? new AsciiBar({
-      total: swarmyProvider ? 1 : providers.length,
+      total: swarmProviders ? swarmProviders.length : ipfsProviders.length,
       formatString: '#spinner #bar #message',
       hideCursor: false,
       enableSpinner: true,
@@ -77,23 +70,26 @@ export const deployAction = async (
     })
     : undefined
 
-  if (swarmyProvider) {
-    bar?.update(total++, deployMessage('Swarmy', swarmyProvider.supported))
-    const { cid: swarmCid, rID } = await uploadOnSwarmy({
-      car: blob, token: apiTokens.get('SWARMY_TOKEN')!, verbose, cid: '', name: '', first: true,
-    })
-    cid = rID!
-    bar?.update(total)
-    logger.success('Deployed on Swarm')
-    logger.info(`Swarm Reference ID: ${rID}`)
-    console.log(`\nOpen in a browser: https://${swarmCid}.bzz.limo/ `)
+  let swarmCid = ''
+  if (swarmProviders) {
+    for (const provider of swarmProviders) {
+      bar?.update(total++, deployMessage(provider.name, provider.supported))
+      const envVar = findEnvVarProviderName(provider.name)!
+      const result = await provider.upload({
+        car: blob, token: apiTokens.get(envVar)!, verbose, cid: '', name: '', first: true,
+        beeURL: apiTokens.get('BEE_URL'),
+      })
+      swarmCid = result.cid
+      cid = result.rID!
+      bar?.update(total)
+    }
   }
   else {
-    for (const provider of providers) {
+    for (const provider of ipfsProviders) {
       const envVar = findEnvVarProviderName(provider.name)!
       const token = apiTokens.get(envVar)!
 
-      bar?.update(total++, deployMessage(provider.name, PROVIDERS[envVar].supported))
+      bar?.update(total++, deployMessage(provider.name, provider.supported))
 
       let bucketName: string | undefined
 
@@ -101,14 +97,14 @@ export const deployAction = async (
       else if (envVar.includes('4EVERLAND')) bucketName = apiTokens.get('4EVERLAND_BUCKET_NAME')
 
       try {
-        await PROVIDERS[envVar].upload({
+        await provider.upload({
           name,
           car: blob,
           token,
           bucketName,
           proof: apiTokens.get('STORACHA_PROOF'),
           cid,
-          first: providers.indexOf(provider) === 0,
+          first: ipfsProviders.indexOf(provider) === 0,
           verbose,
           baseURL: apiTokens.get('SPEC_URL'),
         })
@@ -119,18 +115,25 @@ export const deployAction = async (
       }
     }
     bar?.update(total)
+  }
 
-    if (errors.length === providers.length) {
-      logger.error('Deploy failed')
-      errors.forEach(e => logger.error(e))
-      return
-    }
-    else if (errors.length) {
-      logger.warn('There were some problems with deploying')
-      errors.forEach(e => logger.error(e))
-    }
-    else logger.success('Deployed across all providers')
+  if (errors.length === ipfsProviders.length) {
+    logger.error('Deploy failed')
+    errors.forEach(e => logger.error(e))
+    return
+  }
+  else if (errors.length) {
+    logger.warn('There were some problems with deploying')
+    errors.forEach(e => logger.error(e))
+  }
+  else logger.success('Deployed across all providers')
 
+  if (swarmCid) {
+    logger.success('Deployed on Swarm')
+    logger.info(`Swarm Reference ID: ${cid}`)
+    console.log(`\nOpen in a browser: https://${swarmCid}.bzz.limo/ `)
+  }
+  else {
     const dwebLink = `https://${cid}.ipfs.dweb.link`
     const providersLink = `https://delegated-ipfs.dev/routing/v1/providers/${cid}`
 
@@ -149,7 +152,7 @@ export const deployAction = async (
   }
 
   if (dnslink) {
-    if (swarmyProvider) throw new Error('DNSLink is not supported with Swarm')
+    if (swarmProviders.length) throw new Error('DNSLink is not supported with Swarm')
     await dnsLinkAction({ cid, name: dnslink, options: { verbose } })
   }
 }

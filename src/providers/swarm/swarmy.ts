@@ -1,7 +1,7 @@
-import { DeployError } from '../errors.js'
-import type { UploadFunction } from '../types.js'
-import { logger } from '../utils/logger.js'
-import { referenceToCID } from '../utils/swarm.js'
+import { DeployError } from '../../errors.js'
+import type { UploadFunction } from '../../types.js'
+import { logger } from '../../utils/logger.js'
+import { referenceToCID } from '../../utils/swarm.js'
 
 const providerName = 'Swarmy'
 

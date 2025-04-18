@@ -1,7 +1,7 @@
 import { uploadCar } from '@stauro/filebase-upload'
-import { DeployError } from '../errors.js'
-import type { UploadArgs } from '../types.js'
-import { logger } from '../utils/logger.js'
+import { DeployError } from '../../errors.js'
+import type { UploadArgs } from '../../types.js'
+import { logger } from '../../utils/logger.js'
 
 export const uploadOnS3 = async ({
   name, car, token, bucketName, apiUrl,
