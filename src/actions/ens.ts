@@ -43,11 +43,13 @@ export const ensAction = async (
     chain: chainName = 'mainnet', safe: safeAddress, rpcUrl, resolverAddress,
   } = options
 
-  try {
-    CID.parse(cid)
-  }
-  catch {
-    throw new InvalidCIDError(cid)
+  if (cid.length !== 64) {
+    try {
+      CID.parse(cid)
+    }
+    catch {
+      throw new InvalidCIDError(cid)
+    }
   }
   if (!domain) throw new MissingCLIArgsError([domain])
   const chain = chains[chainName] as chains.Chain
@@ -75,7 +77,7 @@ export const ensAction = async (
     node: Hex = '0x'
 
   try {
-    const result = prepareUpdateEnsArgs({ cid, domain })
+    const result = prepareUpdateEnsArgs({ cid, domain, codec: cid.length === 64 ? 'swarm' : 'ipfs' })
     contentHash = result.contentHash
     node = result.node
   }
@@ -106,12 +108,6 @@ export const ensAction = async (
     console.log('Transaction encoded data:', data)
   }
   const to = resolverAddress || PUBLIC_RESOLVER_ADDRESS[chainName]
-  const request = await publicClient.prepareTransactionRequest({
-    account: from,
-    to,
-    chain,
-    data,
-  })
 
   if (safeAddress) {
     logger.info(`Preparing a transaction for Safe ${safeAddress} on ${chainName}`)
@@ -121,16 +117,7 @@ export const ensAction = async (
 
     if (options.verbose) logger.info(`Nonce: ${nonce}`)
 
-    const txData: SafeTransactionData = {
-      ...request,
-      to,
-      operation: OperationType.Call,
-      gasPrice: request.gasPrice ?? 0n,
-      nonce,
-      value: 0n,
-      data,
-    }
-
+    const txData: SafeTransactionData = { nonce, operation: OperationType.Call, to, data, value: 0n }
     const { safeTxHash } = await prepareSafeTransactionData({
       txData,
       safeAddress,
@@ -148,12 +135,12 @@ export const ensAction = async (
 
       try {
         await apiClient.proposeTransaction({
-          safeTransactionData: txData,
+          safeTransactionData: { ...txData, gasPrice: 0n, safeTxGas: 0n },
           senderAddress: walletClient.account.address,
           safeTxHash,
           senderSignature,
           chainId: chain.id,
-          origin: 'Piggybank',
+          origin: 'Blumen',
         })
         const safeLink = `https://app.safe.global/transactions/queue?safe=${safeAddress}`
         logger.success(`Transaction proposed to a Safe wallet.\nOpen in a browser: ${
@@ -170,6 +157,12 @@ export const ensAction = async (
     let hash: Hash = '0x'
 
     try {
+      const request = await publicClient.prepareTransactionRequest({
+        account: from,
+        to,
+        chain,
+        data,
+      })
       hash = await walletClient.sendTransaction(request)
     }
     catch (e) {
