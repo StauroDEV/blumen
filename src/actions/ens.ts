@@ -1,19 +1,19 @@
 import {
-  Hash,
+  type Hash,
   TransactionExecutionError,
-  Address,
+  type Address,
   createWalletClient,
   http,
   createPublicClient,
-  Hex,
-  encodeFunctionData,
+  type Hex,
 } from 'viem'
+import { encodeFunctionData } from 'viem/utils'
 import { InvalidCIDError, MissingCLIArgsError, MissingKeyError } from '../errors.js'
 import { PUBLIC_RESOLVER_ADDRESS, prepareUpdateEnsArgs, abi, chainToRpcUrl } from '../utils/ens.js'
 import type { ChainName } from '../types.js'
 import { privateKeyToAccount } from 'viem/accounts'
 import * as chains from 'viem/chains'
-import { walletSafeActions, getSafeNonce } from '@stauro/piggybank/actions'
+import { getSafeNonce, generateSafeTransactionSignature } from '@stauro/piggybank/actions'
 import { EIP3770Address, OperationType, type SafeTransactionData } from '@stauro/piggybank/types'
 import { getEip3770Address } from '@stauro/piggybank/utils'
 import { ApiClient } from '@stauro/piggybank/api'
@@ -111,7 +111,6 @@ export const ensAction = async (
 
   if (safeAddress) {
     logger.info(`Preparing a transaction for Safe ${safeAddress} on ${chainName}`)
-    const safeWalletClient = walletClient.extend(walletSafeActions(safeAddress))
 
     const nonce = await getSafeNonce(publicClient, safeAddress)
 
@@ -126,7 +125,7 @@ export const ensAction = async (
 
     logger.info(`Signing a Safe transaction with a hash ${safeTxHash}`)
 
-    const senderSignature = await safeWalletClient.generateSafeTransactionSignature(txData)
+    const senderSignature = await generateSafeTransactionSignature(walletClient, safeAddress, txData)
 
     if (!options['dry-run']) {
       logger.info('Proposing a Safe transaction')

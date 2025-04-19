@@ -46,14 +46,14 @@ export const statusAction = async (
   await Promise.all(providers.map(async (provider, i) => {
     const token = tokens[i]
     if (provider?.status) {
-      const { pin, deals } = await provider.status({
+      const { pin } = await provider.status({
         cid,
         auth: {
           token: env.get(token),
         },
         verbose,
       })
-      pinStatus(provider.name, pin, deals)
+      pinStatus(provider.name, pin)
     }
   }))
 }

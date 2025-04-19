@@ -1,5 +1,5 @@
 import { CID } from 'multiformats/cid'
-import { Hex } from 'viem'
+import type { Hex } from 'viem'
 import { hexToBytes } from 'viem/utils'
 
 import { create as createMultihashDigest } from 'multiformats/hashes/digest'

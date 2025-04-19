@@ -1,5 +1,6 @@
 import { Codec, encode } from '@ensdomains/content-hash'
-import { Address, parseAbi } from 'viem'
+import { parseAbi } from 'viem'
+import type { Address } from 'viem/accounts'
 import { namehash, normalize } from 'viem/ens'
 import type { ChainName } from '../types.js'
 

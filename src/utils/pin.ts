@@ -1,11 +1,9 @@
-import { table } from 'table'
-import type { PinStatus, FilecoinDeal } from '../types.js'
+import type { PinStatus } from '../types.js'
 import * as colors from 'colorette'
 
 export const pinStatus = (
   provider: string,
   status: PinStatus,
-  deals?: FilecoinDeal[],
 ) => {
   let statusText: string
 
@@ -23,13 +21,4 @@ export const pinStatus = (
   }
 
   console.log(`${colors.cyan(provider)}: ${colors.bold(statusText)}`)
-
-  if (deals) {
-    table(
-      deals.map(({
-        dealId, status,
-      }) => [dealId, status]),
-      { header: { alignment: 'left', content: 'Filecoin deals' } },
-    )
-  }
 }
