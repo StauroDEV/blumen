@@ -38,7 +38,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@ensdomains/content-hash": "^3.0.0",
     "@ipld/car": "^5.4.0",
     "@stauro/filebase-upload": "^1.0.1",
     "@stauro/piggybank": "^0.2.0",
@@ -56,12 +55,14 @@
     "nanotar": "^0.2.0",
     "spektr": "^0.1.1",
     "tinyglobby": "^0.2.12",
+    "varint": "^6.0.0",
     "viem": "^2.23.13"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
     "@stylistic/eslint-plugin": "^4.2.0",
     "@types/node": "^22.14.1",
+    "@types/varint": "^6.0.3",
     "@typescript-eslint/eslint-plugin": "^8.30.1",
     "@typescript-eslint/parser": "^8.30.1",
     "c8": "^10.1.3",

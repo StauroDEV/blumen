@@ -1,15 +1,44 @@
-import { Codec, encode } from '@ensdomains/content-hash'
 import { parseAbi } from 'viem'
+import { bytesToHex } from 'viem/utils'
 import type { Address } from 'viem/accounts'
 import { namehash, normalize } from 'viem/ens'
 import type { ChainName } from '../types.js'
+import varint from 'varint'
+import { CID } from 'multiformats/cid'
+import { referenceToCID } from './swarm.js'
+
+const IFPS_CODEC = 0xe3
+const SWARM_CODEC = 0xe4
+
+const concatUint8Arrays = (
+  array1: Uint8Array,
+  array2: Uint8Array,
+): Uint8Array => {
+  let result = new Uint8Array(array1.length + array2.length)
+  result.set(array1, 0)
+  result.set(array2, array1.length)
+  return result
+}
 
 export const prepareUpdateEnsArgs = ({
   cid, domain, codec = 'ipfs',
-}: { cid: string, domain: string, codec?: Codec }) => {
-  const contentHash = encode(codec, cid)
-
+}: { cid: string, domain: string, codec?: 'ipfs' | 'swarm' }) => {
   const node = namehash(normalize(domain))
+  const code = codec === 'ipfs' ? IFPS_CODEC : SWARM_CODEC
+
+  let bytes: Uint8Array
+  switch (codec) {
+    case 'ipfs':
+      bytes = CID.parse(cid).toV1().bytes
+      break
+    case 'swarm':
+      bytes = referenceToCID(`0x${cid}`).bytes
+      break
+  }
+
+  const codeBytes = Uint8Array.from(varint.encode(code))
+
+  const contentHash = bytesToHex(concatUint8Arrays(codeBytes, bytes)).slice(2)
 
   return { contentHash, node }
 }

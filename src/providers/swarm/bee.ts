@@ -26,5 +26,5 @@ export const uploadOnBee: UploadFunction<{ beeURL: string }> = async ({ token, c
     throw new DeployError(providerName, json.message)
   }
 
-  return { cid: referenceToCID(`0x${json.reference}`), rID: json.reference }
+  return { cid: referenceToCID(`0x${json.reference}`).toString(), rID: json.reference }
 }
