@@ -21,7 +21,7 @@ import { chainToSafeApiUrl, prepareSafeTransactionData } from '../utils/safe.js'
 import * as colors from 'colorette'
 import { logger } from '../utils/logger.js'
 import { isTTY } from '../constants.js'
-import { CID } from 'multiformats'
+import { CID } from 'multiformats/cid'
 
 export type EnsActionArgs = Partial<{
   'chain': ChainName

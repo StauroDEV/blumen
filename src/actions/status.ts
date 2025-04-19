@@ -1,4 +1,4 @@
-import { CID } from 'multiformats'
+import { CID } from 'multiformats/cid'
 import { PROVIDERS } from '../constants.js'
 import {
   InvalidCIDError,
