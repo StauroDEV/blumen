@@ -1,4 +1,4 @@
-import * as colors from 'colorette'
+import * as colors from 'picocolors'
 import { isTTY } from '../constants.js'
 import { logger } from '../utils/logger.js'
 

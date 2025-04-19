@@ -4,7 +4,7 @@ import { parseTokensFromEnv, tokensToProviderNames, findEnvVarProviderName } fro
 import mod from 'ascii-bar'
 import { EnsActionArgs, ensAction } from './ens.js'
 import { deployMessage, logger } from '../utils/logger.js'
-import * as colors from 'colorette'
+import * as colors from 'picocolors'
 import { dnsLinkAction } from './dnslink.js'
 import { packAction, PackActionArgs } from './pack.js'
 

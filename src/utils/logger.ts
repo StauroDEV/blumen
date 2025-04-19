@@ -1,4 +1,4 @@
-import { bgGreen, bgRed, bgYellow, cyan, green } from 'colorette'
+import { bgGreen, bgRed, bgYellow, cyan, green } from 'picocolors'
 import { SupportedMethods } from '../types.js'
 import { isTTY } from '../constants.js'
 
