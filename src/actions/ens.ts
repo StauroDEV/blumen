@@ -18,7 +18,7 @@ import { EIP3770Address, OperationType, type SafeTransactionData } from '@stauro
 import { getEip3770Address } from '@stauro/piggybank/utils'
 import { ApiClient } from '@stauro/piggybank/api'
 import { chainToSafeApiUrl, prepareSafeTransactionData } from '../utils/safe.js'
-import * as colors from 'picocolors'
+import colors from 'picocolors'
 import { logger } from '../utils/logger.js'
 import { isTTY } from '../constants.js'
 import { CID } from 'multiformats/cid'

@@ -1,5 +1,5 @@
 import type { PinStatus } from '../types.js'
-import * as colors from 'picocolors'
+import colors from 'picocolors'
 
 export const pinStatus = (
   provider: string,

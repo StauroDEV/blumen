@@ -24,5 +24,5 @@ export const uploadOnSwarmy: UploadFunction = async ({ token, car, verbose }) =>
     throw new DeployError(providerName, json.message)
   }
 
-  return { cid: referenceToCID(`0x${json.swarmReference}`), rID: json.swarmReference }
+  return { cid: referenceToCID(`0x${json.swarmReference}`).toString(), rID: json.swarmReference }
 }
