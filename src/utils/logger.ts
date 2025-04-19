@@ -1,6 +1,8 @@
-import { bgGreen, bgRed, bgYellow, cyan, green } from 'picocolors'
+import colors from 'picocolors'
 import { SupportedMethods } from '../types.js'
 import { isTTY } from '../constants.js'
+
+const { bgGreen, bgYellow, bgRed, cyan, green } = colors
 
 const responseStatus = (status: number) => {
   if (status < 300) return bgGreen(status)
