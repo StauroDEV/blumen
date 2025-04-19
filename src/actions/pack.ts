@@ -4,7 +4,7 @@ import { MissingDirectoryError } from '../errors.js'
 import { fileSize, exists, walk } from '../utils/fs.js'
 import { packCAR } from '../utils/ipfs.js'
 import { logger } from '../utils/logger.js'
-import * as colors from 'colorette'
+import colors from 'picocolors'
 import { packTAR } from '../utils/tar.js'
 
 export type PackActionArgs = Partial<{

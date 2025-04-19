@@ -29,6 +29,10 @@ export default defineConfig({
         link: '/',
         items: [
           {
+            text: 'Installation',
+            link: '/docs/install',
+          },
+          {
             text: 'Getting Started',
             link: '/docs/get-started',
           },
@@ -37,15 +41,16 @@ export default defineConfig({
             link: '/docs/ipfs',
           },
           {
+            text: 'Swarm',
+            link: '/docs/swarm',
+          },
+          {
             text: 'Deploying with Safe',
             link: '/docs/safe',
           },
           {
             text: 'DNSLink',
             link: '/docs/dnslink',
-          }, {
-            text: 'Swarm',
-            link: '/docs/swarm',
           },
           {
             text: 'CI/CD',

@@ -1,5 +1,7 @@
 # Swarm
 
+Blumen supports uploading on the [Swarm](https://ethswarm.org) decentralized network via [Swarmy](https://swarmy.cloud) and a Bee node.
+
 ## Swarmy
 
 - API token env variables: `BLUMEN_SWARMY_TOKEN`
