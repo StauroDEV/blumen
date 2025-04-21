@@ -4,8 +4,9 @@ import { createWriteStream } from 'node:fs'
 import { CID } from 'multiformats/cid'
 import { Writable } from 'node:stream'
 import type { FileEntry } from '../types.js'
-import { CAREncoderStream, createDirectoryEncoderStream } from 'ipfs-car'
 import { CarWriter } from '@ipld/car/writer'
+import { CAREncoderStream } from './car.js'
+import { createDirectoryEncoderStream } from '@web3-storage/upload-client/unixfs'
 
 const tmp = tmpdir()
 

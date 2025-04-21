@@ -1,4 +1,3 @@
-import { parseAbi } from 'viem'
 import { bytesToHex } from 'viem/utils'
 import type { Address } from 'viem/accounts'
 import { namehash, normalize } from 'viem/ens'
@@ -43,7 +42,19 @@ export const prepareUpdateEnsArgs = ({
   return { contentHash, node }
 }
 
-export const abi = parseAbi(['function setContenthash(bytes32 node, bytes calldata hash) external'])
+export const abi = [{
+  name: 'setContenthash',
+  type: 'function',
+  stateMutability: 'nonpayable',
+  inputs: [{
+    type: 'bytes32',
+    name: 'node',
+  }, {
+    type: 'bytes',
+    name: 'hash',
+  }],
+  outputs: [],
+}] as const
 
 export const PUBLIC_RESOLVER_ADDRESS: Record<ChainName, Address> = {
   mainnet: '0x231b0Ee14048e9dCcD1d247744d114a4EB5E8E63',
