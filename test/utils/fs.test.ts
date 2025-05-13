@@ -9,7 +9,7 @@ describe('fs utils', () => {
       const [size, files] = await walk(
         path.resolve(import.meta.dirname, '../fixtures/walk'),
       )
-      assert.strictEqual(size, 25)
+      assert.strictEqual(size, 29)
       assert.deepStrictEqual(
         files.map(({ name, size }) => ({ name, size })),
         [
@@ -19,7 +19,7 @@ describe('fs utils', () => {
           },
           {
             name: 'b.txt',
-            size: 11,
+            size: 15,
           },
           {
             name: 'c.txt',
