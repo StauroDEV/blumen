@@ -181,7 +181,8 @@ export const ensAction = async ({
         })
         const safeLink = `https://app.safe.global/transactions/queue?safe=${safeAddress}`
         logger.success(
-          `Transaction proposed to a Safe wallet.\nOpen in a browser: ${isTTY ? colors.underline(safeLink) : safeLink
+          `Transaction proposed to a Safe wallet.\nOpen in a browser: ${
+            isTTY ? colors.underline(safeLink) : safeLink
           }`,
         )
       } catch (e) {
