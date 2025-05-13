@@ -181,8 +181,7 @@ export const ensAction = async ({
         })
         const safeLink = `https://app.safe.global/transactions/queue?safe=${safeAddress}`
         logger.success(
-          `Transaction proposed to a Safe wallet.\nOpen in a browser: ${
-            isTTY ? colors.underline(safeLink) : safeLink
+          `Transaction proposed to a Safe wallet.\nOpen in a browser: ${isTTY ? colors.underline(safeLink) : safeLink
           }`,
         )
       } catch (e) {
@@ -211,7 +210,7 @@ export const ensAction = async ({
     })
 
     logger.info(
-      `Transaction pending: ${chain.blockExplorers!.default.url}/tx/${hash}`,
+      `Transaction pending: ${chain.blockExplorers.default.url}/tx/${hash}`,
     )
 
     const receipt = fromRpc(

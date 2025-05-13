@@ -11,7 +11,6 @@ export const pinStatus = (provider: string, status: PinStatus) => {
     case 'queued':
       statusText = colors.cyan(status)
       break
-    case 'unknown':
     default:
       statusText = colors.gray(status || 'unknown')
       break

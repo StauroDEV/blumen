@@ -28,7 +28,7 @@ export const statusAction = async ({
 
   if (!providersOptionList)
     for (const option of env.keys()) {
-      if (option && option.endsWith('_TOKEN')) tokens.push(option)
+      if (option?.endsWith('_TOKEN')) tokens.push(option)
     }
 
   if (providersOptionList) {

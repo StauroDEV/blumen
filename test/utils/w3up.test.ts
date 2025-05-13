@@ -1,5 +1,5 @@
-import assert from 'node:assert'
 import { describe, it } from 'bun:test'
+import assert from 'node:assert'
 import { setupW3Up } from '../../src/utils/w3up.js'
 
 describe('w3up utils', () => {

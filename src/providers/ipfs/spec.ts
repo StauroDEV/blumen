@@ -44,7 +44,7 @@ export const specStatus: StatusFunction<{ baseURL: string }> = async ({
 }) => {
   const res = await fetch(`${baseURL}/pins?cid=${cid}&limit=1`, {
     headers: {
-      Authorization: `Bearer ${auth!.token}`,
+      Authorization: `Bearer ${auth.token}`,
     },
   })
 

@@ -40,7 +40,7 @@ export const exists = async (file: string) => {
 export function fileSize(bytes: number, digits = 1): string {
   const thresh = 1000
 
-  if (Math.abs(bytes) < thresh) return bytes + 'B'
+  if (Math.abs(bytes) < thresh) return `${bytes}B`
 
   const units = ['KB', 'MB', 'GB', 'TB', 'PB']
   let u = -1

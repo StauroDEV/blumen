@@ -1,5 +1,5 @@
-import assert from 'node:assert'
 import { describe, it } from 'bun:test'
+import assert from 'node:assert'
 import { UploadNotSupportedError } from '../../src/errors.js'
 import { specPin } from '../../src/providers/ipfs/spec.js'
 
