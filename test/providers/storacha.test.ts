@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { describe, it } from 'node:test'
+import { describe, it } from 'bun:test'
 import { MissingKeyError } from '../../src/errors'
 import { uploadOnWStoracha } from '../../src/providers/ipfs/storacha.js'
 
