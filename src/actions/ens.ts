@@ -1,27 +1,28 @@
-import {
-  type Hash,
-  TransactionExecutionError,
-  type Address,
-  createWalletClient,
-  http,
-  createPublicClient,
-  type Hex,
-} from 'viem'
-import { encodeFunctionData } from 'viem/utils'
 import { InvalidCIDError, MissingCLIArgsError, MissingKeyError } from '../errors.js'
-import { PUBLIC_RESOLVER_ADDRESS, prepareUpdateEnsArgs, abi, chainToRpcUrl } from '../utils/ens.js'
+import { PUBLIC_RESOLVER_ADDRESS, prepareUpdateEnsArgs, chainToRpcUrl, setContentHash } from '../utils/ens.js'
 import type { ChainName } from '../types.js'
-import { privateKeyToAccount } from 'viem/accounts'
 import * as chains from 'viem/chains'
-import { getSafeNonce, generateSafeTransactionSignature } from '@stauro/piggybank/actions'
-import { EIP3770Address, OperationType, type SafeTransactionData } from '@stauro/piggybank/types'
-import { getEip3770Address } from '@stauro/piggybank/utils'
-import { ApiClient } from '@stauro/piggybank/api'
-import { chainToSafeApiUrl, prepareSafeTransactionData } from '../utils/safe.js'
+import {
+  generateSafeTransactionSignature,
+  prepareSafeTransactionData,
+} from '../utils/safe.js'
 import colors from 'picocolors'
 import { logger } from '../utils/logger.js'
 import { isTTY } from '../constants.js'
 import { CID } from 'multiformats/cid'
+import * as Provider from 'ox/Provider'
+import { encodeData } from 'ox/AbiFunction'
+import { fromPublicKey, type Address } from 'ox/Address'
+import { toBigInt, type Hex } from 'ox/Hex'
+import { fromHttp } from 'ox/RpcTransport'
+import { getEip3770Address, type EIP3770Address } from '../utils/safe/eip3770.js'
+import { OperationType, SafeTransactionData } from '../utils/safe/types.js'
+import { getPublicKey } from 'ox/Secp256k1'
+import { fromRpc } from 'ox/TransactionReceipt'
+import { sendTransaction, simulateTransaction } from '../utils/tx.js'
+import { getNonce } from '../utils/safe/constants.js'
+import { proposeTransaction } from '../utils/safe/propose.js'
+import { toHex } from 'ox/Signature'
 
 export type EnsActionArgs = Partial<{
   'chain': ChainName
@@ -54,28 +55,16 @@ export const ensAction = async (
   if (!domain) throw new MissingCLIArgsError([domain])
   const chain = chains[chainName] as chains.Chain
 
-  const transport = http(rpcUrl ?? chainToRpcUrl(chainName))
+  const transport = fromHttp(rpcUrl ?? chainToRpcUrl(chainName))
 
-  const publicClient = createPublicClient({
-    transport,
-    chain,
-  })
+  const provider = Provider.from(transport)
 
-  const pk = process.env.BLUMEN_PK
+  const pk = process.env.BLUMEN_PK as Hex
 
   if (!pk) throw new MissingKeyError('PK')
 
-  const account = privateKeyToAccount(pk.startsWith('0x') ? pk as `0x${string}` : `0x${pk}`)
-
-  const walletClient = createWalletClient({
-    transport,
-    chain,
-    account,
-  })
-
   let contentHash = '',
     node: Hex = '0x'
-
   try {
     const result = prepareUpdateEnsArgs({ cid, domain, codec: cid.length === 64 ? 'swarm' : 'ipfs' })
     contentHash = result.contentHash
@@ -92,27 +81,40 @@ export const ensAction = async (
     return
   }
 
-  logger.info(`Validating transaction for wallet ${account.address}`)
+  const publicKey = getPublicKey({ privateKey: pk })
+  const address = fromPublicKey(publicKey)
+
+  logger.info(`Validating transaction for wallet ${address}`)
 
   const from = safeAddress
     ? getEip3770Address({ fullAddress: safeAddress, chainId: chain.id }).address
-    : account.address
+    : address
 
-  const data = encodeFunctionData({
-    functionName: 'setContenthash',
-    abi,
-    args: [node, `0x${contentHash}`],
-  })
+  const data = encodeData(
+    setContentHash,
+    [node, `0x${contentHash}`],
+  )
 
   if (options.verbose) {
     console.log('Transaction encoded data:', data)
   }
   const to = resolverAddress || PUBLIC_RESOLVER_ADDRESS[chainName]
 
+  if (to === PUBLIC_RESOLVER_ADDRESS[chainName] && !domain.endsWith('.eth'))
+    throw new Error('Domain must end with .eth')
+
   if (safeAddress) {
     logger.info(`Preparing a transaction for Safe ${safeAddress} on ${chainName}`)
 
-    const nonce = await getSafeNonce(publicClient, safeAddress)
+    const { address: safe } = getEip3770Address({ fullAddress: safeAddress, chainId: chain.id })
+
+    const nonce = toBigInt(await provider.request({
+      method: 'eth_call',
+      params: [{
+        to: safe,
+        data: encodeData(getNonce),
+      }, 'latest'],
+    }))
 
     if (options.verbose) logger.info(`Nonce: ${nonce}`)
 
@@ -120,26 +122,25 @@ export const ensAction = async (
     const { safeTxHash } = await prepareSafeTransactionData({
       txData,
       safeAddress,
-      publicClient,
+      chainId: chain.id,
+      provider,
     })
 
     logger.info(`Signing a Safe transaction with a hash ${safeTxHash}`)
 
-    const senderSignature = await generateSafeTransactionSignature(walletClient, safeAddress, txData)
+    const senderSignature = await generateSafeTransactionSignature({
+      safeAddress, txData, chainId: chain.id, privateKey: pk,
+    })
 
     if (!options['dry-run']) {
       logger.info('Proposing a Safe transaction')
 
-      const apiClient = new ApiClient({ url: chainToSafeApiUrl(chainName), safeAddress, chainId: chain.id })
-
       try {
-        await apiClient.proposeTransaction({
-          safeTransactionData: { ...txData, gasPrice: 0n, safeTxGas: 0n },
-          senderAddress: walletClient.account.address,
-          safeTxHash,
-          senderSignature,
-          chainId: chain.id,
-          origin: 'Blumen',
+        await proposeTransaction({
+          txData, safeAddress, safeTxHash,
+          senderSignature: toHex(senderSignature),
+          chainId: chain.id, chainName: chainName,
+          address,
         })
         const safeLink = `https://app.safe.global/transactions/queue?safe=${safeAddress}`
         logger.success(`Transaction proposed to a Safe wallet.\nOpen in a browser: ${
@@ -153,39 +154,18 @@ export const ensAction = async (
     }
   }
   else {
-    let hash: Hash = '0x'
+    const isValidTransaction = await simulateTransaction({ provider, to, data, abi: setContentHash, from })
+    if (!isValidTransaction) return logger.error('Invalid transaction', isValidTransaction)
 
-    try {
-      const request = await publicClient.prepareTransactionRequest({
-        account: from,
-        to,
-        chain,
-        data,
-      })
-      hash = await walletClient.sendTransaction(request)
-    }
-    catch (e) {
-      if (e instanceof TransactionExecutionError) {
-        if (e.details?.includes('insufficient funds')) {
-          logger.error('Insufficient funds', e)
-        }
-        else {
-          logger.error('Transaction failed', e)
-        }
-      }
-      else {
-        logger.error(e)
-      }
-      return
-    }
+    const hash = await sendTransaction({ privateKey: pk, provider, chainId: chain.id, to, data, from })
 
     logger.info(`Transaction pending: ${chain.blockExplorers!.default.url}/tx/${hash}`)
 
-    const receipt = await publicClient.waitForTransactionReceipt({
-      hash,
-      timeout: 1000 * 60 * 30, // 30 minutes
-    })
-
+    const receipt = fromRpc(await provider.request({
+      method: 'eth_getTransactionReceipt',
+      params: [hash],
+    }))
+    if (!receipt) return logger.error('Transaction not found')
     if (receipt.status === 'reverted') return logger.error('Transaction reverted')
 
     logger.success('Transaction submitted')
