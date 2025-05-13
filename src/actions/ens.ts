@@ -1,14 +1,13 @@
 import { InvalidCIDError, MissingCLIArgsError, MissingKeyError } from '../errors.js'
 import { PUBLIC_RESOLVER_ADDRESS, prepareUpdateEnsArgs, chainToRpcUrl, setContentHash } from '../utils/ens.js'
 import type { ChainName } from '../types.js'
-import * as chains from 'viem/chains'
 import {
   generateSafeTransactionSignature,
   prepareSafeTransactionData,
 } from '../utils/safe.js'
 import colors from 'picocolors'
 import { logger } from '../utils/logger.js'
-import { isTTY } from '../constants.js'
+import { chains, isTTY } from '../constants.js'
 import { CID } from 'multiformats/cid'
 import * as Provider from 'ox/Provider'
 import { encodeData } from 'ox/AbiFunction'
@@ -53,7 +52,7 @@ export const ensAction = async (
     }
   }
   if (!domain) throw new MissingCLIArgsError([domain])
-  const chain = chains[chainName] as chains.Chain
+  const chain = chains[chainName]
 
   const transport = fromHttp(rpcUrl ?? chainToRpcUrl(chainName))
 
