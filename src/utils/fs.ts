@@ -1,16 +1,19 @@
+import { constants, createReadStream } from 'node:fs'
 import { access, stat } from 'node:fs/promises'
-import { constants } from 'node:fs'
-import { FileEntry } from '../types.js'
-import { createReadStream } from 'node:fs'
-import { glob } from 'tinyglobby'
-import { Readable } from 'node:stream'
-import { logger } from './logger.js'
 import { relative } from 'node:path'
+import { Readable } from 'node:stream'
+import { glob } from 'tinyglobby'
+import type { FileEntry } from '../types.js'
+import { logger } from './logger.js'
 
 export const walk = async (dir: string, verbose = false) => {
   let total = 0
   const files: FileEntry[] = []
-  for (const path of await glob(dir, { ignore: ['**/node_modules'], onlyFiles: true, absolute: false })) {
+  for (const path of await glob(dir, {
+    ignore: ['**/node_modules'],
+    onlyFiles: true,
+    absolute: false,
+  })) {
     const size = (await stat(path)).size
     const name = relative(dir, path)
     if (verbose) logger.text(`${name} (${fileSize(size, 2)})`)
@@ -29,8 +32,7 @@ export const exists = async (file: string) => {
   try {
     await access(file, constants.F_OK)
     return true
-  }
-  catch {
+  } catch {
     return false
   }
 }
@@ -48,8 +50,8 @@ export function fileSize(bytes: number, digits = 1): string {
     bytes /= thresh
     ++u
   } while (
-    Math.round(Math.abs(bytes) * r) / r >= thresh
-    && u < units.length - 1
+    Math.round(Math.abs(bytes) * r) / r >= thresh &&
+    u < units.length - 1
   )
 
   return bytes.toFixed(digits) + units[u]

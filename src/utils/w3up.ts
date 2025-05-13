@@ -1,9 +1,9 @@
 import { CarReader } from '@ipld/car/reader'
 import type { Block } from '@ipld/unixfs/file'
-import { StoreMemory } from '@web3-storage/access/stores/store-memory'
+import { importDAG } from '@ucanto/core/delegation'
 import { Signer } from '@ucanto/principal/ed25519'
 import { Agent, AgentData } from '@web3-storage/access/agent'
-import { importDAG } from '@ucanto/core/delegation'
+import { StoreMemory } from '@web3-storage/access/stores/store-memory'
 
 async function parseProof(data: string) {
   const blocks: Array<Block<unknown, number, number, 1>> = []
@@ -14,9 +14,18 @@ async function parseProof(data: string) {
   return importDAG(blocks)
 }
 
-export async function setupW3Up({ pk, proof: _proof }: { pk: string, proof: string }) {
+export async function setupW3Up({
+  pk,
+  proof: _proof,
+}: {
+  pk: string
+  proof: string
+}) {
   const principal = Signer.parse(pk)
-  const agentData = await AgentData.create({ principal }, { store: new StoreMemory() })
+  const agentData = await AgentData.create(
+    { principal },
+    { store: new StoreMemory() },
+  )
   const agent = new Agent(agentData)
   try {
     const proof = await parseProof(_proof)
@@ -24,8 +33,7 @@ export async function setupW3Up({ pk, proof: _proof }: { pk: string, proof: stri
     await agent.setCurrentSpace(space.did())
 
     return agent
-  }
-  catch {
+  } catch {
     throw new Error('Failed to parse UCAN proof')
   }
 }

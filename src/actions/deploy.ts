@@ -1,12 +1,16 @@
-import { PROVIDERS, isTTY } from '../constants.js'
-import { NoProvidersError } from '../errors.js'
-import { parseTokensFromEnv, tokensToProviderNames, findEnvVarProviderName } from '../index.js'
 import mod from 'ascii-bar'
-import { EnsActionArgs, ensAction } from './ens.js'
-import { deployMessage, logger } from '../utils/logger.js'
 import colors from 'picocolors'
+import { isTTY, PROVIDERS } from '../constants.js'
+import { NoProvidersError } from '../errors.js'
+import {
+  findEnvVarProviderName,
+  parseTokensFromEnv,
+  tokensToProviderNames,
+} from '../index.js'
+import { deployMessage, logger } from '../utils/logger.js'
 import { dnsLinkAction } from './dnslink.js'
-import { packAction, PackActionArgs } from './pack.js'
+import { type EnsActionArgs, ensAction } from './ens.js'
+import { type PackActionArgs, packAction } from './pack.js'
 
 const AsciiBar = mod.default
 
@@ -15,28 +19,44 @@ export type DeployActionArgs = Partial<{
   ens: string
   providers: string
   dnslink: string
-}> & PackActionArgs & EnsActionArgs
+}> &
+  PackActionArgs &
+  EnsActionArgs
 
-export const deployAction = async (
-  { dir, options = {} }: { dir?: string, options?: DeployActionArgs },
-) => {
+export const deployAction = async ({
+  dir,
+  options = {},
+}: {
+  dir?: string
+  options?: DeployActionArgs
+}) => {
   const {
-    strict, ens, chain = 'mainnet', safe, name: customName,
-    dist, verbose = false, providers: providersList, resolverAddress,
-    dnslink, rpcUrl,
+    strict,
+    ens,
+    chain = 'mainnet',
+    safe,
+    name: customName,
+    dist,
+    verbose = false,
+    providers: providersList,
+    resolverAddress,
+    dnslink,
+    rpcUrl,
   } = options
 
   const apiTokens = parseTokensFromEnv()
 
-  const providerNames = providersList ? providersList.split(',') : tokensToProviderNames(apiTokens.keys())
+  const providerNames = providersList
+    ? providersList.split(',')
+    : tokensToProviderNames(apiTokens.keys())
 
   const allProviders = providerNames.map((providerName) => {
     const envVarName = findEnvVarProviderName(providerName)!
     return PROVIDERS[envVarName]
   })
 
-  const ipfsProviders = allProviders.filter(p => p.protocol === 'ipfs')
-  const swarmProviders = allProviders.filter(p => p.protocol === 'swarm')
+  const ipfsProviders = allProviders.filter((p) => p.protocol === 'ipfs')
+  const swarmProviders = allProviders.filter((p) => p.protocol === 'swarm')
 
   ipfsProviders.sort((a) => {
     if (a.supported === 'both' || a.supported === 'upload') return -1
@@ -45,15 +65,30 @@ export const deployAction = async (
 
   if (!allProviders.length) throw new NoProvidersError()
 
-  logger.info(`Deploying with providers: ${(
-    swarmProviders.length ? swarmProviders : ipfsProviders).map(p => p.name).join(', ')
-  }`)
+  logger.info(
+    `Deploying with providers: ${(swarmProviders.length
+      ? swarmProviders
+      : ipfsProviders
+    )
+      .map((p) => p.name)
+      .join(', ')}`,
+  )
 
   let cid: string = undefined!
 
-  const { name, cid: ipfsCid, blob } = await packAction({ dir, options: {
-    name: customName, dist, verbose, tar: swarmProviders.length !== 0,
-  } })
+  const {
+    name,
+    cid: ipfsCid,
+    blob,
+  } = await packAction({
+    dir,
+    options: {
+      name: customName,
+      dist,
+      verbose,
+      tar: swarmProviders.length !== 0,
+    },
+  })
 
   if (swarmProviders.length === 0) cid = ipfsCid!
 
@@ -62,7 +97,10 @@ export const deployAction = async (
   const errors: Error[] = []
   const bar = isTTY
     ? new AsciiBar({
-      total: swarmProviders.length !== 0 ? swarmProviders.length : ipfsProviders.length,
+      total:
+        swarmProviders.length !== 0
+          ? swarmProviders.length
+          : ipfsProviders.length,
       formatString: '#spinner #bar #message',
       hideCursor: false,
       enableSpinner: true,
@@ -77,21 +115,24 @@ export const deployAction = async (
       const envVar = findEnvVarProviderName(provider.name)!
       try {
         const result = await provider.upload({
-          car: blob, token: apiTokens.get(envVar)!, verbose, cid: '', name: '', first: true,
+          car: blob,
+          token: apiTokens.get(envVar)!,
+          verbose,
+          cid: '',
+          name: '',
+          first: true,
           beeURL: apiTokens.get('BEE_URL'),
         })
         swarmCid = result.cid
         cid = result.rID!
-      }
-      catch (e) {
+      } catch (e) {
         if (strict) throw e
         else errors.push(e as Error)
       }
 
       bar?.update(total)
     }
-  }
-  else {
+  } else {
     for (const provider of ipfsProviders) {
       const envVar = findEnvVarProviderName(provider.name)!
       const token = apiTokens.get(envVar)!
@@ -100,8 +141,10 @@ export const deployAction = async (
 
       let bucketName: string | undefined
 
-      if (envVar.includes('FILEBASE')) bucketName = apiTokens.get('FILEBASE_BUCKET_NAME')
-      else if (envVar.includes('4EVERLAND')) bucketName = apiTokens.get('4EVERLAND_BUCKET_NAME')
+      if (envVar.includes('FILEBASE'))
+        bucketName = apiTokens.get('FILEBASE_BUCKET_NAME')
+      else if (envVar.includes('4EVERLAND'))
+        bucketName = apiTokens.get('4EVERLAND_BUCKET_NAME')
 
       try {
         await provider.upload({
@@ -115,8 +158,7 @@ export const deployAction = async (
           verbose,
           baseURL: apiTokens.get('SPEC_URL'),
         })
-      }
-      catch (e) {
+      } catch (e) {
         if (strict) throw e
         else errors.push(e as Error)
       }
@@ -124,42 +166,46 @@ export const deployAction = async (
     bar?.update(total)
   }
 
-  if (errors.length !== 0 && (errors.length === ipfsProviders.length || errors.length === swarmProviders.length)) {
+  if (
+    errors.length !== 0 &&
+    (errors.length === ipfsProviders.length ||
+      errors.length === swarmProviders.length)
+  ) {
     logger.error('Deploy failed')
-    errors.forEach(e => logger.error(e))
+    errors.forEach((e) => logger.error(e))
     return
-  }
-  else if (errors.length) {
+  } else if (errors.length) {
     logger.warn('There were some problems with deploying')
-    errors.forEach(e => logger.error(e))
-  }
-  else logger.success('Deployed across all providers')
+    errors.forEach((e) => logger.error(e))
+  } else logger.success('Deployed across all providers')
 
   if (swarmCid) {
     logger.success('Deployed on Swarm')
     logger.info(`Swarm Reference ID: ${cid}`)
     console.log(`\nOpen in a browser: https://${swarmCid}.bzz.limo/ `)
-  }
-  else {
+  } else {
     const dwebLink = `https://${cid}.ipfs.dweb.link`
     const providersLink = `https://delegated-ipfs.dev/routing/v1/providers/${cid}`
 
     console.log(
-      `\nOpen in a browser:\n${isTTY ? colors.bold('IPFS') : 'IPFS'}:      ${
-        isTTY ? colors.underline(dwebLink) : dwebLink
-      }\n${isTTY ? colors.bold('Providers') : 'Providers'}: ${
-        isTTY ? colors.underline(providersLink) : providersLink
+      `\nOpen in a browser:\n${isTTY ? colors.bold('IPFS') : 'IPFS'}:      ${isTTY ? colors.underline(dwebLink) : dwebLink
+      }\n${isTTY ? colors.bold('Providers') : 'Providers'}: ${isTTY ? colors.underline(providersLink) : providersLink
       }`,
     )
   }
 
   if (typeof ens === 'string') {
     console.log('\n')
-    await ensAction({ cid, domain: ens, options: { chain, safe, resolverAddress, rpcUrl, verbose } })
+    await ensAction({
+      cid,
+      domain: ens,
+      options: { chain, safe, resolverAddress, rpcUrl, verbose },
+    })
   }
 
   if (dnslink) {
-    if (swarmProviders.length) throw new Error('DNSLink is not supported with Swarm')
+    if (swarmProviders.length)
+      throw new Error('DNSLink is not supported with Swarm')
     await dnsLinkAction({ cid, name: dnslink, options: { verbose } })
   }
 }

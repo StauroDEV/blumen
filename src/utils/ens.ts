@@ -1,9 +1,9 @@
-import type { Address } from 'ox/Address'
-import type { ChainName } from '../types.js'
-import varint from 'varint'
 import { CID } from 'multiformats/cid'
-import { referenceToCID } from './swarm.js'
 import { AbiFunction, Bytes, Ens } from 'ox'
+import type { Address } from 'ox/Address'
+import varint from 'varint'
+import type { ChainName } from '../types.js'
+import { referenceToCID } from './swarm.js'
 
 const IFPS_CODEC = 0xe3
 const SWARM_CODEC = 0xe4
@@ -19,8 +19,14 @@ const concatUint8Arrays = (
 }
 
 export const prepareUpdateEnsArgs = ({
-  cid, domain, codec = 'ipfs',
-}: { cid: string, domain: string, codec?: 'ipfs' | 'swarm' }) => {
+  cid,
+  domain,
+  codec = 'ipfs',
+}: {
+  cid: string
+  domain: string
+  codec?: 'ipfs' | 'swarm'
+}) => {
   const node = Ens.namehash(Ens.normalize(domain))
   const code = codec === 'ipfs' ? IFPS_CODEC : SWARM_CODEC
 
@@ -41,7 +47,9 @@ export const prepareUpdateEnsArgs = ({
   return { contentHash, node }
 }
 
-export const setContentHash = AbiFunction.from('function setContenthash(bytes32 node, bytes contenthash)')
+export const setContentHash = AbiFunction.from(
+  'function setContenthash(bytes32 node, bytes contenthash)',
+)
 
 export const PUBLIC_RESOLVER_ADDRESS: Record<ChainName, Address> = {
   mainnet: '0x231b0Ee14048e9dCcD1d247744d114a4EB5E8E63',

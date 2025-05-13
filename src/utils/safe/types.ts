@@ -1,6 +1,6 @@
 import type { Address } from 'ox/Address'
-import type { EIP3770Address } from './eip3770.js'
 import type { Hex } from 'ox/Hex'
+import type { EIP3770Address } from './eip3770.js'
 
 export enum OperationType {
   Call, // 0

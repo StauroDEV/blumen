@@ -1,19 +1,29 @@
 import { DeployError, UploadNotSupportedError } from '../../errors.js'
-import { StatusFunction, UploadFunction } from '../../types.js'
+import type { StatusFunction, UploadFunction } from '../../types.js'
 import { logger } from '../../utils/logger.js'
 
-type SpecPinFunction = UploadFunction<{ baseURL: string, providerName: string }>
+type SpecPinFunction = UploadFunction<{ baseURL: string; providerName: string }>
 
-export const specPin: SpecPinFunction = async ({ baseURL, providerName, cid, name, token, first, verbose }) => {
+export const specPin: SpecPinFunction = async ({
+  baseURL,
+  providerName,
+  cid,
+  name,
+  token,
+  first,
+  verbose,
+}) => {
   if (first) throw new UploadNotSupportedError(providerName)
 
   const res = await fetch(new URL(`${baseURL}/pins`), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    }, body: JSON.stringify({
-      cid, name,
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      cid,
+      name,
     }),
   })
 
@@ -26,7 +36,12 @@ export const specPin: SpecPinFunction = async ({ baseURL, providerName, cid, nam
   return { status: json.status, cid: json.pin.cid }
 }
 
-export const specStatus: StatusFunction<{ baseURL: string }> = async ({ cid, baseURL, auth, verbose }) => {
+export const specStatus: StatusFunction<{ baseURL: string }> = async ({
+  cid,
+  baseURL,
+  auth,
+  verbose,
+}) => {
   const res = await fetch(`${baseURL}/pins?cid=${cid}&limit=1`, {
     headers: {
       Authorization: `Bearer ${auth!.token}`,

@@ -1,10 +1,10 @@
-import path from 'path'
+import path from 'node:path'
+import colors from 'picocolors'
 import { isTTY } from '../constants.js'
 import { MissingDirectoryError } from '../errors.js'
-import { fileSize, exists, walk } from '../utils/fs.js'
+import { exists, fileSize, walk } from '../utils/fs.js'
 import { packCAR } from '../utils/ipfs.js'
 import { logger } from '../utils/logger.js'
-import colors from 'picocolors'
 import { packTAR } from '../utils/tar.js'
 
 export type PackActionArgs = Partial<{
@@ -14,12 +14,13 @@ export type PackActionArgs = Partial<{
   tar: boolean
 }>
 
-export const packAction = async (
-  { dir, options = {} }:
-  {
-    dir?: string
-    options?: PackActionArgs
-  }) => {
+export const packAction = async ({
+  dir,
+  options = {},
+}: {
+  dir?: string
+  options?: PackActionArgs
+}) => {
   const { name: customName, dist, verbose, tar } = options
   if (!dir) {
     if (await exists('dist')) dir = 'dist'
@@ -32,14 +33,15 @@ export const packAction = async (
   if (size === 0) throw new MissingDirectoryError(dir)
   const distName = ['.', 'dist'].includes(dir) ? name : dir
 
-  logger.start(`Packing ${isTTY ? colors.cyan(distName) : distName} (${fileSize(size, 2)})`)
+  logger.start(
+    `Packing ${isTTY ? colors.cyan(distName) : distName} (${fileSize(size, 2)})`,
+  )
 
   if (tar) {
     const tar = await packTAR(files)
     const blob = new Blob([tar])
     return { blob }
-  }
-  else {
+  } else {
     const { rootCID, blob } = await packCAR(files, name, dist)
 
     const cid = rootCID.toString()

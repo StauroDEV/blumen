@@ -1,6 +1,6 @@
 import colors from 'picocolors'
-import { SupportedMethods } from '../types.js'
 import { isTTY } from '../constants.js'
+import type { SupportedMethods } from '../types.js'
 
 const { bgGreen, bgYellow, bgRed, cyan, green } = colors
 
@@ -27,7 +27,13 @@ export const logger = {
     console.log('✔', ...args)
   },
   request(method: 'GET' | 'POST' | 'PUT', url: string, status: number) {
-    if (isTTY) console.log('\n', method === 'GET' ? cyan(method) : green(method), url, responseStatus(status))
+    if (isTTY)
+      console.log(
+        '\n',
+        method === 'GET' ? cyan(method) : green(method),
+        url,
+        responseStatus(status),
+      )
     else console.log('\n', method, url, status)
   },
   text(...args: unknown[]) {

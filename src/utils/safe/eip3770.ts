@@ -1,6 +1,8 @@
 import { type Address, checksum, validate } from 'ox/Address'
 
-export function parseEip3770Address(fullAddress: EIP3770Address | Address): Eip3770AddressInterface {
+export function parseEip3770Address(
+  fullAddress: EIP3770Address | Address,
+): Eip3770AddressInterface {
   const parts = fullAddress.split(':')
   const address = checksum(parts.length > 1 ? parts[1] : parts[0])
   const prefix = parts.length > 1 ? parts[0] : ''
@@ -19,15 +21,21 @@ function isValidEip3770NetworkPrefix(prefix: string): boolean {
 }
 
 function getEip3770NetworkPrefixFromChainId(chainId: number): string {
-  const network = networkShortNames.find(network => chainId === network.chainId)
+  const network = networkShortNames.find(
+    (network) => chainId === network.chainId,
+  )
   if (!network) {
     throw new Error('No network prefix supported for the current chainId')
   }
   return network.shortName
 }
 
-function validateEip3770NetworkPrefix(prefix: string, currentChainId: number): void {
-  const isCurrentNetworkPrefix = prefix === getEip3770NetworkPrefixFromChainId(currentChainId)
+function validateEip3770NetworkPrefix(
+  prefix: string,
+  currentChainId: number,
+): void {
+  const isCurrentNetworkPrefix =
+    prefix === getEip3770NetworkPrefixFromChainId(currentChainId)
   if (!isValidEip3770NetworkPrefix(prefix) || !isCurrentNetworkPrefix) {
     throw new Error('The network prefix must match the current network')
   }

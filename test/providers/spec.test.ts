@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { describe, it } from 'node:test'
-import { specPin } from '../../src/providers/ipfs/spec.js'
 import { UploadNotSupportedError } from '../../src/errors.js'
+import { specPin } from '../../src/providers/ipfs/spec.js'
 
 describe('spec provider', () => {
   describe('pin', () => {

@@ -5,7 +5,12 @@ import { referenceToCID } from '../../utils/swarm.js'
 
 const providerName = 'Bee'
 
-export const uploadOnBee: UploadFunction<{ beeURL: string }> = async ({ token, car, verbose, beeURL }) => {
+export const uploadOnBee: UploadFunction<{ beeURL: string }> = async ({
+  token,
+  car,
+  verbose,
+  beeURL,
+}) => {
   const res = await fetch(`${beeURL}/bzz`, {
     body: car,
     headers: {
@@ -26,5 +31,8 @@ export const uploadOnBee: UploadFunction<{ beeURL: string }> = async ({ token, c
     throw new DeployError(providerName, json.message)
   }
 
-  return { cid: referenceToCID(`0x${json.reference}`).toString(), rID: json.reference }
+  return {
+    cid: referenceToCID(`0x${json.reference}`).toString(),
+    rID: json.reference,
+  }
 }

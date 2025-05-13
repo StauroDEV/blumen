@@ -4,13 +4,21 @@ import type { UploadArgs } from '../../types.js'
 import { logger } from '../../utils/logger.js'
 
 export const uploadOnS3 = async ({
-  name, car, token, bucketName, apiUrl,
-  providerName, verbose,
-}: Omit<UploadArgs<{
-  providerName: string
-  bucketName: string
-  apiUrl: string
-}>, 'first'>): Promise<Response> => {
+  name,
+  car,
+  token,
+  bucketName,
+  apiUrl,
+  providerName,
+  verbose,
+}: Omit<
+  UploadArgs<{
+    providerName: string
+    bucketName: string
+    apiUrl: string
+  }>,
+  'first'
+>): Promise<Response> => {
   const file = new File([car], name)
 
   const res = await uploadCar({ apiUrl, file, token, bucketName })

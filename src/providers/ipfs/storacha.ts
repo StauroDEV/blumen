@@ -1,17 +1,17 @@
-import type { UploadFunction } from '../../types.js'
-import { DeployError, MissingKeyError } from '../../errors.js'
-import { setupW3Up } from '../../utils/w3up.js'
-import { uploadCAR } from '@web3-storage/upload-client'
-import {
-  Blob as BlobCapabilities,
-  Index as IndexCapabilities,
-  Upload as UploadCapabilities,
-  Filecoin as FilecoinCapabilities,
-} from '@web3-storage/capabilities'
-import { DID } from '@ucanto/core'
 import * as client from '@ucanto/client'
+import { DID } from '@ucanto/core'
 import * as CAR from '@ucanto/transport/car'
 import * as HTTP from '@ucanto/transport/http'
+import {
+  Blob as BlobCapabilities,
+  Filecoin as FilecoinCapabilities,
+  Index as IndexCapabilities,
+  Upload as UploadCapabilities,
+} from '@web3-storage/capabilities'
+import { uploadCAR } from '@web3-storage/upload-client'
+import { DeployError, MissingKeyError } from '../../errors.js'
+import type { UploadFunction } from '../../types.js'
+import { setupW3Up } from '../../utils/w3up.js'
 
 const providerName = 'Storacha'
 
@@ -45,17 +45,17 @@ export const uploadOnWStoracha: UploadFunction<{ proof: string }> = async ({
     UploadCapabilities.add.can,
   ]
   const issuer = agent.issuer
-  const proofs = agent.proofs(
-    abilities.map(can => ({ can, with: resource })),
-  )
+  const proofs = agent.proofs(abilities.map((can) => ({ can, with: resource })))
   const audience = uploadServiceConnection.id
 
   try {
-    const cid = await uploadCAR({ issuer, proofs, audience, with: resource }, car)
+    const cid = await uploadCAR(
+      { issuer, proofs, audience, with: resource },
+      car,
+    )
 
     return { cid: cid.toV1().toString() }
-  }
-  catch (e) {
+  } catch (e) {
     throw new DeployError(providerName, (e as Error).message)
   }
 }

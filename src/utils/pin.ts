@@ -1,10 +1,7 @@
-import type { PinStatus } from '../types.js'
 import colors from 'picocolors'
+import type { PinStatus } from '../types.js'
 
-export const pinStatus = (
-  provider: string,
-  status: PinStatus,
-) => {
+export const pinStatus = (provider: string, status: PinStatus) => {
   let statusText: string
 
   switch (status) {
