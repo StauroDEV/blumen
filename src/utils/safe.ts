@@ -51,37 +51,38 @@ export const generateSafeTransactionSignature = async ({ txData, safeAddress, ch
   const { address: safeAddressWithoutPrefix } = getEip3770Address({ fullAddress: safeAddress, chainId })
   const { address: to } = getEip3770Address({ fullAddress: txData.to, chainId })
 
-  const payload = getSignPayload({ types: {
-    EIP712Domain: [
-      {
-        type: 'uint256',
-        name: 'chainId',
-      }, {
-        type: 'address',
-        name: 'verifyingContract',
-      },
-    ],
-    SafeTx: [
-      { name: 'to', type: 'address' }, { name: 'value', type: 'uint256' }, { name: 'data', type: 'bytes' }, { name: 'operation', type: 'uint8' }, { name: 'safeTxGas', type: 'uint256' }, { name: 'baseGas', type: 'uint256' }, { name: 'gasPrice', type: 'uint256' }, { name: 'gasToken', type: 'address' }, { name: 'refundReceiver', type: 'address' }, { name: 'nonce', type: 'uint256' },
-    ],
-  },
-  primaryType: 'SafeTx',
-  domain: {
-    chainId: BigInt(chainId),
-    verifyingContract: safeAddressWithoutPrefix,
-  },
-  message: {
-    to: to,
-    value: txData.value ?? 0n,
-    data: txData.data ?? '0x',
-    operation: txData.operation ?? 0,
-    safeTxGas: txData.safeTxGas ?? 0n,
-    baseGas: txData.baseGas ?? 0n,
-    gasPrice: txData.gasPrice ?? 0n,
-    gasToken: txData.gasToken ?? zeroAddress,
-    refundReceiver: txData.refundReceiver ?? zeroAddress,
-    nonce: txData.nonce ?? 0n,
-  },
+  const payload = getSignPayload({
+    types: {
+      EIP712Domain: [
+        {
+          type: 'uint256',
+          name: 'chainId',
+        }, {
+          type: 'address',
+          name: 'verifyingContract',
+        },
+      ],
+      SafeTx: [
+        { name: 'to', type: 'address' }, { name: 'value', type: 'uint256' }, { name: 'data', type: 'bytes' }, { name: 'operation', type: 'uint8' }, { name: 'safeTxGas', type: 'uint256' }, { name: 'baseGas', type: 'uint256' }, { name: 'gasPrice', type: 'uint256' }, { name: 'gasToken', type: 'address' }, { name: 'refundReceiver', type: 'address' }, { name: 'nonce', type: 'uint256' },
+      ],
+    },
+    primaryType: 'SafeTx',
+    domain: {
+      chainId: BigInt(chainId),
+      verifyingContract: safeAddressWithoutPrefix,
+    },
+    message: {
+      to: to,
+      value: txData.value ?? 0n,
+      data: txData.data ?? '0x',
+      operation: txData.operation ?? 0,
+      safeTxGas: txData.safeTxGas ?? 0n,
+      baseGas: txData.baseGas ?? 0n,
+      gasPrice: txData.gasPrice ?? 0n,
+      gasToken: txData.gasToken ?? zeroAddress,
+      refundReceiver: txData.refundReceiver ?? zeroAddress,
+      nonce: txData.nonce ?? 0n,
+    },
   })
 
   return sign({
