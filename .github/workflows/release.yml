@@ -21,21 +21,13 @@ jobs:
       pull-requests: write # to be able to comment on released pull requests
       id-token: write # to enable use of OIDC for npm provenance
     steps:
-      - uses: actions/checkout@v4
-      - name: install pnpm
-        uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: "lts/*"
-          cache: "pnpm"
-      - name: Install deps
-        run: pnpm i
-      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
-        run: pnpm audit signatures
+          bun-version: 1.2.13
       - name: Build
-        run: pnpm build
+        run: bun run build
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm semantic-release
+        run: bun run semantic-release
