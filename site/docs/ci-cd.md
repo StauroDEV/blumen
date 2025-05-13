@@ -24,7 +24,7 @@ jobs:
           node-version: "lts/*"
           cache: "pnpm"
       - name: Install Blumen
-        run: pnpm i -g blumen@0.14.3
+        run: pnpm i -g blumen@0.16.1
       - name: Build website
         run: pnpm i && pnpm build
       - name: Deploy
@@ -54,7 +54,7 @@ deploy:
   stage: deploy
   image: node:22
   script:
-    - pnpm i -g blumen@0.14.3
+    - pnpm i -g blumen@0.16.1
     - pnpm i && pnpm build
     - blumen deploy
   only:
