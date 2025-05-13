@@ -10,7 +10,6 @@ import { pinAction } from './actions/pin.js'
 import { pingAction } from './actions/ping.js'
 import { statusAction } from './actions/status.js'
 import { isTTY } from './constants.js'
-import { BLUMEN_VERSION } from './utils/version.js'
 
 const cli = new CLI({ name: 'blumen', plugins: isTTY ? [colorPlugin] : [] })
 
@@ -239,5 +238,4 @@ cli.command<[string]>('pin', ([cid], options) => pinAction({ cid, options }), {
 })
 
 cli.help()
-cli.version(BLUMEN_VERSION)
 cli.handle(process.argv.slice(2))
