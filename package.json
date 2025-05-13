@@ -68,6 +68,5 @@
   },
   "publishConfig": {
     "provenance": true
-  },
-  "packageManager": "pnpm@10.1.0"
+  }
 }

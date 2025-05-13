@@ -15,7 +15,7 @@ jobs:
       - name: Install Blumen
         run: bun i -g blumen@0.14.3
       - name: Build website
-        run: cd site && pnpm i && pnpm build
+        run: cd site && bun i && bun run build
       - name: Deploy
         run: cd site && blumen deploy .vitepress/dist --dnslink blumen.stauro.dev
         env:
