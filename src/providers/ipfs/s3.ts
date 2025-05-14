@@ -17,7 +17,7 @@ export const uploadOnS3 = async ({
     bucketName: string
     apiUrl: string
   }>,
-  'first'
+  'first' | 'cid'
 >): Promise<Response> => {
   const file = new File([car], name)
 
