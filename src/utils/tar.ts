@@ -1,7 +1,9 @@
-import { createTar, TarFileItem } from 'nanotar'
+import { createTar, type TarFileItem } from 'nanotar'
 import type { FileEntry } from '../types.js'
 
-async function readableStreamToUint8Array(stream: ReadableStream): Promise<Uint8Array> {
+async function readableStreamToUint8Array(
+  stream: ReadableStream,
+): Promise<Uint8Array> {
   const reader = stream.getReader()
   const chunks: ArrayLike<number>[] = []
   let totalLength = 0
@@ -23,7 +25,9 @@ async function readableStreamToUint8Array(stream: ReadableStream): Promise<Uint8
   return result
 }
 
-export const packTAR = async (files: Omit<FileEntry, 'size'>[]): Promise<Uint8Array> => {
+export const packTAR = async (
+  files: Omit<FileEntry, 'size'>[],
+): Promise<Uint8Array> => {
   const entries: TarFileItem[] = []
 
   for (const file of files) {

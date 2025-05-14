@@ -5,7 +5,11 @@ import { referenceToCID } from '../../utils/swarm.js'
 
 const providerName = 'Swarmy'
 
-export const uploadOnSwarmy: UploadFunction = async ({ token, car, verbose }) => {
+export const uploadOnSwarmy: UploadFunction = async ({
+  token,
+  car,
+  verbose,
+}) => {
   const body = new FormData()
   body.append('file', new Blob([car], { type: 'application/x-tar' }))
   const res = await fetch('https://api.swarmy.cloud/api/files?website=true', {
@@ -24,5 +28,8 @@ export const uploadOnSwarmy: UploadFunction = async ({ token, car, verbose }) =>
     throw new DeployError(providerName, json.message)
   }
 
-  return { cid: referenceToCID(`0x${json.swarmReference}`).toString(), rID: json.swarmReference }
+  return {
+    cid: referenceToCID(`0x${json.swarmReference}`).toString(),
+    rID: json.swarmReference,
+  }
 }

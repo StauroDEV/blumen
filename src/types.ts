@@ -20,19 +20,17 @@ type AuthArgs = {
   token: string
 }
 
-export type UploadArgs<T = object> = (
-  {
-    cid: string
-    name: string
-    car: Blob
-    verbose?: boolean
-    /**
-     * Where the provider goes first or it's subsequent
-     */
-    first: boolean
-  }
-) &
-AuthArgs & T
+export type UploadArgs<T = object> = {
+  cid: string
+  name: string
+  car: Blob
+  verbose?: boolean
+  /**
+   * Where the provider goes first or it's subsequent
+   */
+  first: boolean
+} & AuthArgs &
+  T
 
 export type UploadReturnType = {
   cid: string
@@ -41,9 +39,17 @@ export type UploadReturnType = {
   rID?: string
 }
 
-export type UploadFunction<T = object> = (args: UploadArgs<T>) => Promise<UploadReturnType>
+export type UploadFunction<T = object> = (
+  args: UploadArgs<T>,
+) => Promise<UploadReturnType>
 
-export type PinStatus = 'queued' | 'pinned' | 'failed' | 'unpinning' | 'unknown' | 'not pinned'
+export type PinStatus =
+  | 'queued'
+  | 'pinned'
+  | 'failed'
+  | 'unpinning'
+  | 'unknown'
+  | 'not pinned'
 
 type StatusArgs<T> = {
   cid: string
@@ -51,9 +57,7 @@ type StatusArgs<T> = {
   verbose?: boolean
 } & T
 
-export type StatusFunction<T = object> = (
-  args: StatusArgs<T>
-) => Promise<{
+export type StatusFunction<T = object> = (args: StatusArgs<T>) => Promise<{
   pin: PinStatus
 }>
 

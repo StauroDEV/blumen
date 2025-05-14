@@ -10,16 +10,13 @@ jobs:
       cid: ${{ steps.pack_blumen.outputs.cid }}
     steps:
       - uses: actions/checkout@v4
-      - name: install pnpm
-        uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: "lts/*"
-          cache: "pnpm"
+          bun-version: 1.2.13
       - name: Install Blumen
-        run: pnpm i -g blumen@0.14.3
+        run: bun i -g blumen@0.16.1
       - name: Build website
-        run: cd site && pnpm i && pnpm build
+        run: cd site && bun i && bun run build
       - name: Deploy
         run: cd site && blumen deploy .vitepress/dist --dnslink blumen.stauro.dev
         env:

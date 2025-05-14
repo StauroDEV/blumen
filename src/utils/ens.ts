@@ -1,9 +1,8 @@
-import { bytesToHex } from 'viem/utils'
-import type { Address } from 'viem/accounts'
-import { namehash, normalize } from 'viem/ens'
-import type { ChainName } from '../types.js'
-import varint from 'varint'
 import { CID } from 'multiformats/cid'
+import { AbiFunction, Bytes, Ens } from 'ox'
+import type { Address } from 'ox/Address'
+import varint from 'varint'
+import type { ChainName } from '../types.js'
 import { referenceToCID } from './swarm.js'
 
 const IFPS_CODEC = 0xe3
@@ -20,9 +19,15 @@ const concatUint8Arrays = (
 }
 
 export const prepareUpdateEnsArgs = ({
-  cid, domain, codec = 'ipfs',
-}: { cid: string, domain: string, codec?: 'ipfs' | 'swarm' }) => {
-  const node = namehash(normalize(domain))
+  cid,
+  domain,
+  codec = 'ipfs',
+}: {
+  cid: string
+  domain: string
+  codec?: 'ipfs' | 'swarm'
+}) => {
+  const node = Ens.namehash(Ens.normalize(domain))
   const code = codec === 'ipfs' ? IFPS_CODEC : SWARM_CODEC
 
   let bytes: Uint8Array
@@ -37,24 +42,14 @@ export const prepareUpdateEnsArgs = ({
 
   const codeBytes = Uint8Array.from(varint.encode(code))
 
-  const contentHash = bytesToHex(concatUint8Arrays(codeBytes, bytes)).slice(2)
+  const contentHash = Bytes.toHex(concatUint8Arrays(codeBytes, bytes)).slice(2)
 
   return { contentHash, node }
 }
 
-export const abi = [{
-  name: 'setContenthash',
-  type: 'function',
-  stateMutability: 'nonpayable',
-  inputs: [{
-    type: 'bytes32',
-    name: 'node',
-  }, {
-    type: 'bytes',
-    name: 'hash',
-  }],
-  outputs: [],
-}] as const
+export const setContentHash = AbiFunction.from(
+  'function setContenthash(bytes32 node, bytes contenthash)',
+)
 
 export const PUBLIC_RESOLVER_ADDRESS: Record<ChainName, Address> = {
   mainnet: '0x231b0Ee14048e9dCcD1d247744d114a4EB5E8E63',

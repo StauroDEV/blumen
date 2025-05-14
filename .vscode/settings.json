@@ -1,8 +1,12 @@
 {
-  "editor.formatOnSave": false,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  },
+  "npm.packageManager": "bun",
+  "editor.formatOnSave": true,
+  "biome.enabled": true,
+  "eslint.enable": false,
+  "prettier.enable": false,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "prettier.enable": false
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.biome": "explicit",
+    "quickfix.biome": "explicit"
+  }
 }

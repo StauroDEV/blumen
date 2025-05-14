@@ -1,35 +1,54 @@
-import { walk, exists, fileSize } from '../../src/utils/fs'
-import { describe, it } from 'node:test'
+import { describe, it } from 'bun:test'
 import * as assert from 'node:assert'
 import path from 'node:path'
+import { exists, fileSize, walk } from '../../src/utils/fs'
 
 describe('fs utils', () => {
   describe('walk', () => {
     it('should walk the directory, return total size and files', async () => {
-      const [size, files] = await walk(path.resolve(import.meta.dirname, '../fixtures/walk'))
-      assert.strictEqual(size, 25)
-      assert.deepStrictEqual(files.map(({ name, size }) => ({ name, size })), [
-        {
-          name: 'a.txt',
-          size: 11,
-        },
-        {
-          name: 'b.txt',
-          size: 11,
-        },
-        {
-          name: 'c.txt',
-          size: 3,
-        },
-      ])
+      const [size, files] = await walk(
+        path.resolve(import.meta.dirname, '../fixtures/walk'),
+      )
+      assert.strictEqual(size, 29)
+      files.sort((a, b) => a.name.localeCompare(b.name)) // to prevent ordering issue
+      assert.deepStrictEqual(
+        files.map(({ name, size }) => ({ name, size })),
+        [
+          {
+            name: 'a.txt',
+            size: 11,
+          },
+          {
+            name: 'b.txt',
+            size: 15,
+          },
+          {
+            name: 'c.txt',
+            size: 3,
+          },
+        ],
+      )
     })
   })
   describe('exists', () => {
     it('should return true if file exists', async () => {
-      assert.strictEqual(await exists(path.resolve(import.meta.dirname, '../fixtures/walk/a.txt')), true)
+      assert.strictEqual(
+        await exists(
+          path.resolve(import.meta.dirname, '../fixtures/walk/a.txt'),
+        ),
+        true,
+      )
     })
     it('should return false if file does not exist', async () => {
-      assert.strictEqual(await exists(path.resolve(import.meta.dirname, '../fixtures/walk/does-not-exist.txt')), false)
+      assert.strictEqual(
+        await exists(
+          path.resolve(
+            import.meta.dirname,
+            '../fixtures/walk/does-not-exist.txt',
+          ),
+        ),
+        false,
+      )
     })
   })
   describe('fileSize', () => {

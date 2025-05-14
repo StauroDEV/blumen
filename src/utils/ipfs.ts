@@ -1,12 +1,12 @@
-import { tmpdir } from 'node:os'
-import { readFile, open } from 'node:fs/promises'
 import { createWriteStream } from 'node:fs'
-import { CID } from 'multiformats/cid'
+import { open, readFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
 import { Writable } from 'node:stream'
-import type { FileEntry } from '../types.js'
 import { CarWriter } from '@ipld/car/writer'
-import { CAREncoderStream } from './car.js'
 import { createDirectoryEncoderStream } from '@web3-storage/upload-client/unixfs'
+import { CID } from 'multiformats/cid'
+import type { FileEntry } from '../types.js'
+import { CAREncoderStream } from './car.js'
 
 const tmp = tmpdir()
 

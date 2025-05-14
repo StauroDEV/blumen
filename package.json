@@ -12,15 +12,12 @@
   },
   "homepage": "https://github.com/StauroDEV/blumen",
   "scripts": {
-    "dev": "tsx src/cli.ts",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "bun build src/cli.ts --outdir dist --target node --bundle",
     "postbuild": "chmod +x ./dist/cli.js",
-    "prepublishOnly": "pnpm build",
-    "lint": "eslint --config eslint.config.js **/*.ts eslint.config.js",
+    "prepublishOnly": "bun run build",
+    "lint": "biome check",
     "types": "tsc --noEmit",
-    "test": "tsx --test test/**/*.test.ts",
-    "test:coverage": "c8 --include=src pnpm test",
-    "test:report": "c8 report --reporter=text-lcov > coverage.lcov"
+    "test:report": "bun test --coverage --coverage-reporter=lcov"
   },
   "keywords": [
     "ipfs",
@@ -34,15 +31,18 @@
   "author": "v1rtl <hi@v1rtl.site>",
   "engineStrict": true,
   "engines": {
-    "node": "^20.9.0 || >=21.1.0"
+    "node": "^20.10.0 || >=21.1.0"
   },
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
+    "@biomejs/biome": "2.0.0-beta.3",
     "@ipld/car": "^5.4.0",
     "@ipld/dag-cbor": "^9.2.2",
     "@ipld/unixfs": "^3.0.0",
     "@stauro/filebase-upload": "^1.0.1",
-    "@stauro/piggybank": "^0.2.0",
+    "@types/bun": "^1.2.13",
+    "@types/node": "^22.14.1",
+    "@types/varint": "^6.0.3",
     "@ucanto/client": "^9.0.1",
     "@ucanto/core": "^10.3.1",
     "@ucanto/principal": "^9.0.2",
@@ -53,28 +53,13 @@
     "ascii-bar": "^1.0.3",
     "multiformats": "^13.3.2",
     "nanotar": "^0.2.0",
+    "ox": "^0.7.1",
     "picocolors": "^1.1.1",
+    "semantic-release": "^24.2.3",
     "spektr": "^0.2.0",
     "tinyglobby": "^0.2.12",
-    "varint": "^6.0.0",
-    "viem": "^2.23.13"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.25.0",
-    "@hyrious/esbuild-plugin-commonjs": "^0.2.5",
-    "@stylistic/eslint-plugin": "^4.2.0",
-    "@types/node": "^22.14.1",
-    "@types/varint": "^6.0.3",
-    "@typescript-eslint/eslint-plugin": "^8.30.1",
-    "@typescript-eslint/parser": "^8.30.1",
-    "c8": "^10.1.3",
-    "cjs-module-lexer": "^2.1.0",
-    "esbuild": "^0.25.2",
-    "eslint": "^9.25.0",
-    "globals": "^16.0.0",
-    "semantic-release": "^24.2.3",
-    "tsx": "^4.19.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "varint": "^6.0.0"
   },
   "release": {
     "branches": [
@@ -83,6 +68,5 @@
   },
   "publishConfig": {
     "provenance": true
-  },
-  "packageManager": "pnpm@10.1.0"
+  }
 }

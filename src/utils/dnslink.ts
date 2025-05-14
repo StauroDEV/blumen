@@ -25,40 +25,55 @@ import { logger } from './logger.js'
 //   return json
 // }
 
-export const updateDnsLink = async (
-  { cid, zoneId, apiKey, name, verbose }:
-  { cid: string, zoneId: string, apiKey: string, name: string, verbose: boolean },
-) => {
-  const res = await fetch(`${CLOUDFLARE_API_URL}/zones/${zoneId}/web3/hostnames`, {
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
+export const updateDnsLink = async ({
+  cid,
+  zoneId,
+  apiKey,
+  name,
+  verbose,
+}: {
+  cid: string
+  zoneId: string
+  apiKey: string
+  name: string
+  verbose: boolean
+}) => {
+  const res = await fetch(
+    `${CLOUDFLARE_API_URL}/zones/${zoneId}/web3/hostnames`,
+    {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
     },
-  })
+  )
   if (verbose) logger.request('GET', res.url, res.status)
-  const json = await res.json() as {
-    result: { name: string, id: string }[]
-    errors: { message: string, code: number }[]
+  const json = (await res.json()) as {
+    result: { name: string; id: string }[]
+    errors: { message: string; code: number }[]
   }
 
   if (!res.ok) throw new DnsLinkError(json.errors[0].message)
 
   if (!json.result.length) throw new MissingDnsLinkError()
 
-  const record = json.result.find(item => name === item.name)
+  const record = json.result.find((item) => name === item.name)
 
   if (!record) throw new MissingDnsLinkError()
 
-  const res2 = await fetch(`${CLOUDFLARE_API_URL}/zones/${zoneId}/web3/hostnames/${record.id}`, {
-    method: 'PATCH',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
+  const res2 = await fetch(
+    `${CLOUDFLARE_API_URL}/zones/${zoneId}/web3/hostnames/${record.id}`,
+    {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        dnslink: `/ipfs/${cid}`,
+        description: `Powered by Blumen`,
+      }),
     },
-    body: JSON.stringify({
-      dnslink: `/ipfs/${cid}`,
-      description: `Powered by Blumen`,
-    }),
-  })
+  )
   if (verbose) logger.request('POST', res.url, res.status)
   return res2.json()
 }

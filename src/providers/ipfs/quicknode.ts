@@ -1,10 +1,15 @@
 import { DeployError, UploadNotSupportedError } from '../../errors.js'
-import { UploadFunction } from '../../types.js'
+import type { UploadFunction } from '../../types.js'
 import { logger } from '../../utils/logger.js'
 
 const providerName = 'QuickNode'
 
-export const pinOnQuicknode: UploadFunction = async ({ first, token, verbose, ...args }) => {
+export const pinOnQuicknode: UploadFunction = async ({
+  first,
+  token,
+  verbose,
+  ...args
+}) => {
   if (first) throw new UploadNotSupportedError(providerName)
 
   const res = await fetch('https://api.quicknode.com/ipfs/rest/v1/pinning', {

@@ -1,11 +1,12 @@
 // import { FileLike } from '../types.js'
-import * as UnixFS from '@ipld/unixfs'
+
+import { encode as cborEncode } from '@ipld/dag-cbor'
+import type * as UnixFS from '@ipld/unixfs'
 // import { withMaxChunkSize } from '@ipld/unixfs/file/chunker/fixed'
 // import { withWidth } from '@ipld/unixfs/file/layout/balanced'
-import { UnknownLink } from 'multiformats'
+import type { UnknownLink } from 'multiformats'
 // import * as raw from 'multiformats/codecs/raw'
 import varint from 'varint'
-import { encode as cborEncode } from '@ipld/dag-cbor'
 
 // const SHARD_THRESHOLD = 1000 // shard directory after > 1,000 items
 // const queuingStrategy = UnixFS.withCapacity()
@@ -102,7 +103,9 @@ function encodeHeader(roots: UnknownLink[]): Uint8Array {
 
 function encodeBlock(block: UnixFS.Block) {
   const varintBytes = varint.encode(block.cid.bytes.length + block.bytes.length)
-  const bytes = new Uint8Array(varintBytes.length + block.cid.bytes.length + block.bytes.length)
+  const bytes = new Uint8Array(
+    varintBytes.length + block.cid.bytes.length + block.bytes.length,
+  )
   bytes.set(varintBytes)
   bytes.set(block.cid.bytes, varintBytes.length)
   bytes.set(block.bytes, varintBytes.length + block.cid.bytes.length)
@@ -113,7 +116,7 @@ export class CAREncoderStream extends TransformStream {
   finalBlock: UnixFS.Block | null
   constructor(roots: UnknownLink[] = []) {
     super({
-      start: controller => controller.enqueue(encodeHeader(roots)),
+      start: (controller) => controller.enqueue(encodeHeader(roots)),
       transform: (block, controller) => {
         controller.enqueue(encodeBlock(block))
         this.finalBlock = block

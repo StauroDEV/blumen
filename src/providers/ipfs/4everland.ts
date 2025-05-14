@@ -1,10 +1,12 @@
 import { UploadNotSupportedError } from '../../errors.js'
-import { StatusFunction, UploadFunction } from '../../types.js'
+import type { StatusFunction, UploadFunction } from '../../types.js'
 // import { uploadOnS3 } from './s3.js'
 import { specPin, specStatus } from './spec.js'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const uploadOn4everland: UploadFunction<{ bucketName?: string }> = async ({ first, bucketName, ...args }) => {
+export const uploadOn4everland: UploadFunction<{
+  bucketName?: string
+}> = async ({ first, bucketName, ...args }) => {
   if (first) {
     throw new UploadNotSupportedError('4EVERLAND')
     // if (!bucketName) throw new MissingKeyError(`4EVERLAND_BUCKET_NAME`)
@@ -18,9 +20,13 @@ export const uploadOn4everland: UploadFunction<{ bucketName?: string }> = async 
     // console.log(await res.json())
 
     // return { cid: res.headers.get('x-amz-meta-cid')!, status: 'queued' }
-  }
-  else {
-    return specPin({ first, ...args, providerName: '4EVERLAND', baseURL: 'https://api.4everland.dev' })
+  } else {
+    return specPin({
+      first,
+      ...args,
+      providerName: '4EVERLAND',
+      baseURL: 'https://api.4everland.dev',
+    })
   }
 }
 
