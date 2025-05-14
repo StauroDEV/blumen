@@ -1,5 +1,6 @@
 import { describe, mock, it, expect } from 'bun:test'
 import { uploadOnS3 } from '../../src/providers/ipfs/s3'
+import { DeployError } from '../../src/errors'
 
 
 const success = new Response(null, { status: 200 })
@@ -32,6 +33,6 @@ describe('s3', () => {
       token: 'token', bucketName: 'bucketName',
       apiUrl: 'https://example.com', providerName: 'S3', verbose: false
     })
-    ).rejects.toThrow('Failed to deploy on S3:')
+    ).rejects.toThrow(DeployError)
   })
 })
