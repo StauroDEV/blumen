@@ -25,7 +25,7 @@ export const simulateTransaction = async ({
         data,
         from,
       },
-      'latest'
+      'latest',
     ],
   })
 
