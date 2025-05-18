@@ -1,8 +1,11 @@
 import { Secp256k1, TransactionEnvelopeEip1559 } from 'ox'
 import { type AbiFunction, decodeResult } from 'ox/AbiFunction'
 import type { Address } from 'ox/Address'
-import type { Hex } from 'ox/Hex'
+import { toHex } from 'ox/Bytes'
+import { type Hex, toBigInt } from 'ox/Hex'
 import type { Provider } from 'ox/Provider'
+import { fromRpc } from 'ox/TransactionReceipt'
+import { logger } from './logger.js'
 
 export const simulateTransaction = async ({
   provider,
@@ -52,6 +55,29 @@ export const sendTransaction = async ({
     params: ['0x5', 'latest', [10, 50, 90]],
   })
 
+  const estimatedGas = toBigInt(
+    await provider.request({
+      method: 'eth_estimateGas',
+      params: [
+        {
+          from,
+          to,
+          data,
+          value: '0x0',
+        },
+      ],
+    }),
+  )
+
+  logger.info(`Estimated gas: ${estimatedGas}`)
+
+  const nonce = toBigInt(
+    await provider.request({
+      method: 'eth_getTransactionCount',
+      params: [from, 'latest'],
+    }),
+  )
+
   // Extract base fee and priority fee from feeHistory as needed
   const baseFeePerGas = BigInt(feeHistory.baseFeePerGas.slice(-1)[0])
   if (!feeHistory.reward) throw new Error('No reward in feeHistory')
@@ -67,6 +93,8 @@ export const sendTransaction = async ({
     to,
     data,
     value: 0n,
+    gas: estimatedGas,
+    nonce,
   })
 
   const signature = Secp256k1.sign({
@@ -82,4 +110,31 @@ export const sendTransaction = async ({
     method: 'eth_sendRawTransaction',
     params: [serialized],
   })
+}
+
+export const waitForTransaction = async (provider: Provider, hash: Hex) => {
+  const pollInterval = 1000
+  const maxAttempts = 12
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const rawReceipt = await provider.request({
+      method: 'eth_getTransactionReceipt',
+      params: [hash],
+    })
+
+    if (rawReceipt) {
+      // Handle Ox-specific status format
+      if (rawReceipt.status === '0x0') {
+        throw new Error(
+          `Transaction ${hash} reverted with status: ${rawReceipt.status}`,
+        )
+      }
+      return fromRpc({ ...rawReceipt, chainId: toHex })
+    }
+
+    const delay = pollInterval * 2 ** attempt + Math.random() * 100
+    await new Promise((resolve) => setTimeout(resolve, delay))
+  }
+
+  throw new Error(`Transaction ${hash} not mined within timeout period`)
 }
