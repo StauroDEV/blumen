@@ -6,7 +6,6 @@ import * as Provider from 'ox/Provider'
 import { fromHttp } from 'ox/RpcTransport'
 import { getPublicKey } from 'ox/Secp256k1'
 import { toHex } from 'ox/Signature'
-import { fromRpc } from 'ox/TransactionReceipt'
 import colors from 'picocolors'
 import { chains, isTTY } from '../constants.js'
 import {
@@ -33,7 +32,11 @@ import {
   generateSafeTransactionSignature,
   prepareSafeTransactionData,
 } from '../utils/safe.js'
-import { sendTransaction, simulateTransaction } from '../utils/tx.js'
+import {
+  sendTransaction,
+  simulateTransaction,
+  waitForTransaction,
+} from '../utils/tx.js'
 
 export type EnsActionArgs = Partial<{
   chain: ChainName
@@ -191,15 +194,13 @@ export const ensAction = async ({
       }
     }
   } else {
-    const isValidTransaction = await simulateTransaction({
+    await simulateTransaction({
       provider,
       to,
       data,
       abi: setContentHash,
       from,
     })
-    if (!isValidTransaction)
-      return logger.error('Invalid transaction', isValidTransaction)
 
     const hash = await sendTransaction({
       privateKey: pk,
@@ -214,17 +215,13 @@ export const ensAction = async ({
       `Transaction pending: ${chain.blockExplorers.default.url}/tx/${hash}`,
     )
 
-    const receipt = fromRpc(
-      await provider.request({
-        method: 'eth_getTransactionReceipt',
-        params: [hash],
-      }),
-    )
-    if (!receipt) return logger.error('Transaction not found')
-    if (receipt.status === 'reverted')
-      return logger.error('Transaction reverted')
+    try {
+      await waitForTransaction(provider, hash)
+    } catch (e) {
+      return logger.error(e)
+    }
 
-    logger.success('Transaction submitted')
+    logger.success('Transaction succeeded')
     const browserLink = `https://${domain}.limo`
     logger.info(
       `Open in a browser: ${isTTY ? colors.underline(browserLink) : browserLink}`,
