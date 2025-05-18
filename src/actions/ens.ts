@@ -220,7 +220,7 @@ export const ensAction = async ({
       return logger.error(e)
     }
 
-    logger.success('Transaction submitted')
+    logger.success('Transaction succeeded')
     const browserLink = `https://${domain}.limo`
     logger.info(
       `Open in a browser: ${isTTY ? colors.underline(browserLink) : browserLink}`,
