@@ -2,8 +2,6 @@ import colors from 'picocolors'
 import { isTTY } from '../constants.js'
 import { logger } from '../utils/logger.js'
 
-let retryCount = 0
-
 const gwOfflineMessage = `😞 Max retries exceeded. Gateway is ${isTTY ? colors.bold(colors.red('Offline')) : 'Offline'}.`
 
 export const pingAction = async ({
@@ -20,62 +18,54 @@ export const pingAction = async ({
   }>
 }): Promise<void> => {
   const {
-    maxRetries: retries = Infinity,
+    maxRetries = Infinity,
     retryInterval = 5000,
     timeout = 10000,
   } = options
 
-  retryCount++
   const url = `https://${cid}.ipfs.${endpoint}`
-  logger.text(
-    `${
-      isTTY
-        ? `${colors.bold(`[${retryCount}]`)}: Requesting content at ${url}`
-        : `[${retryCount}]`
-    }: Requesting content at ${url}`,
-  )
-  try {
-    const response = await fetch(url, {
-      signal: AbortSignal.timeout(timeout),
-      redirect: 'follow',
-    })
-    if (response.status === 504) {
-      if (retries > 1) {
-        logger.text(`🔄 Retrying in ${retryInterval / 1000} seconds...`)
-        await new Promise((resolve) => setTimeout(resolve, retryInterval))
-        return pingAction({
-          cid,
-          endpoint,
-          options: { maxRetries: retries - 1, retryInterval },
-        })
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    logger.text(
+      `${isTTY ? colors.bold(`[${attempt}]`) : `[${attempt}]`}: Requesting content at ${url}`,
+    )
+
+    try {
+      const response = await fetch(url, {
+        signal: AbortSignal.timeout(timeout),
+        redirect: 'follow',
+      })
+
+      if (response.status === 504) {
+        if (attempt < maxRetries) {
+          logger.text(`🔄 Retrying in ${retryInterval / 1000} seconds...`)
+          await new Promise((resolve) => setTimeout(resolve, retryInterval))
+        } else {
+          return logger.error(gwOfflineMessage)
+        }
       } else {
-        return logger.error(gwOfflineMessage)
+        return logger.text(
+          `Gateway status: ${
+            response.status >= 200 && response.status < 400
+              ? isTTY
+                ? colors.bold(colors.green(`🟢 Online ${response.status}`))
+                : `🟢 Online ${response.status}`
+              : response.status
+          }`,
+        )
       }
-    } else {
-      return logger.text(
-        `Gateway status: ${
-          response.status >= 200 && response.status < 400
-            ? isTTY
-              ? colors.bold(colors.green(`🟢 Online ${response.status}`))
-              : `🟢 Online ${response.status}`
-            : response.status
-        }`,
-      )
-    }
-  } catch (error) {
-    if (error instanceof DOMException) {
-      if (retries > 1) {
+    } catch (error) {
+      if (error instanceof DOMException && attempt < maxRetries) {
         logger.info(`⌛ Timed out. Retrying...`)
-        return pingAction({
-          cid,
-          endpoint,
-          options: { maxRetries: retries - 1, retryInterval },
-        })
+        await new Promise((resolve) => setTimeout(resolve, retryInterval))
       } else {
-        return logger.error(gwOfflineMessage)
+        logger.error(
+          error instanceof DOMException
+            ? gwOfflineMessage
+            : 'Error fetching endpoint: ' + (error as Error).message,
+        )
+        throw error
       }
     }
-    logger.error('Error fetching endpoint:', (error as Error).message)
-    throw error
   }
 }
