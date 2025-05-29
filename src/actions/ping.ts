@@ -45,11 +45,12 @@ export const pingAction = async ({
         }
       } else {
         return logger.text(
-          `Gateway status: ${response.status >= 200 && response.status < 400
-            ? isTTY
-              ? colors.bold(colors.green(`🟢 Online ${response.status}`))
-              : `🟢 Online ${response.status}`
-            : response.status
+          `Gateway status: ${
+            response.status >= 200 && response.status < 400
+              ? isTTY
+                ? colors.bold(colors.green(`🟢 Online ${response.status}`))
+                : `🟢 Online ${response.status}`
+              : response.status
           }`,
         )
       }
