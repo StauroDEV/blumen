@@ -1,5 +1,5 @@
-import type { Delegation } from "@ucanto/client"
-import { SpaceDID } from "@web3-storage/capabilities/utils"
+import type { Delegation } from '@ucanto/client'
+import { SpaceDID } from '@web3-storage/capabilities/utils'
 
 type SharedSpaceModel = {
   id: `did:key:${string}`
@@ -7,7 +7,7 @@ type SharedSpaceModel = {
   meta: { name?: string }
 }
 
-export class SharedSpace {
+class SharedSpace {
   model: SharedSpaceModel
   constructor(model: SharedSpaceModel) {
     this.model = model
@@ -45,11 +45,11 @@ export const fromDelegation = (delegation: Delegation) => {
   if (result.error) {
     throw Object.assign(
       new Error(
-        `Invalid delegation, expected capabilities[0].with to be DID, ${result.error}`
+        `Invalid delegation, expected capabilities[0].with to be DID, ${result.error}`,
       ),
       {
         cause: result.error,
-      }
+      },
     )
   }
 

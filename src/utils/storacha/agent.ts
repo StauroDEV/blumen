@@ -3,19 +3,16 @@ import { type API, DID } from '@ucanto/core'
 import * as CAR from '@ucanto/transport/car'
 import * as HTTP from '@ucanto/transport/http'
 
-
 import { type AgentData, getSessionProofs } from './agent-data.js'
 import { canDelegateCapability, isExpired, isTooEarly } from './delegations.js'
 import { fromDelegation } from './space.js'
 import type { DelegationMeta, ResourceQuery } from './types.js'
-
 
 interface CapabilityQuery {
   can: Client.Ability
   with: ResourceQuery
   nb?: unknown
 }
-
 
 const HOST = 'https://up.web3.storage'
 const PRINCIPAL = DID.parse('did:web:web3.storage')
@@ -48,7 +45,6 @@ interface AgentOptions<S extends Record<string, any>> {
   connection?: Client.ConnectionView<S>
   servicePrincipal?: Client.Principal
 }
-
 
 export class Agent<S extends Record<string, any> = Record<string, any>> {
   #data: AgentData
@@ -91,7 +87,9 @@ export class Agent<S extends Record<string, any> = Record<string, any>> {
         // check if we need to filter for caps
         if (Array.isArray(caps) && caps.length > 0) {
           for (const cap of _caps) {
-            if (canDelegateCapability(value.delegation, cap as Client.Capability)) {
+            if (
+              canDelegateCapability(value.delegation, cap as Client.Capability)
+            ) {
               values.push(value)
             }
           }
@@ -104,7 +102,10 @@ export class Agent<S extends Record<string, any> = Record<string, any>> {
   }
 
   proofs(caps: CapabilityQuery[]) {
-    const authorizations: Map<string, API.Delegation<API.Capabilities>> = new Map()
+    const authorizations: Map<
+      string,
+      API.Delegation<API.Capabilities>
+    > = new Map()
     for (const { delegation } of this.#delegations(caps)) {
       if (delegation.audience.did() === this.issuer.did()) {
         authorizations.set(delegation.cid.toString(), delegation)
@@ -122,9 +123,7 @@ export class Agent<S extends Record<string, any> = Record<string, any>> {
     return [...authorizations.values()]
   }
 
-  async importSpaceFromDelegation(
-    delegation: Client.Delegation,
-  ) {
+  async importSpaceFromDelegation(delegation: Client.Delegation) {
     const space = fromDelegation(delegation)
 
     this.#data.spaces.set(space.did(), { ...space.meta, name: space.name })

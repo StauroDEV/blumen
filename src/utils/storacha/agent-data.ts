@@ -20,7 +20,10 @@ interface AgentDataModel {
   currentSpace?: Ucanto.DID<'key'>
   /** @deprecated */
   spaces: Map<Ucanto.DID, SpaceMeta>
-  delegations: Map<string, { meta: DelegationMeta; delegation: Ucanto.Delegation }>
+  delegations: Map<
+    string,
+    { meta: DelegationMeta; delegation: Ucanto.Delegation }
+  >
 }
 
 /**
@@ -118,7 +121,6 @@ export class AgentData implements AgentDataModel {
    * @param {import('@ucanto/interface').DID<'key'>} did
    */
   async setCurrentSpace(did: import('@ucanto/interface').DID<'key'>) {
-    console.log('setCurrentSpace called')
     this.currentSpace = did
     await this.#save(this.export())
   }
@@ -127,7 +129,6 @@ export class AgentData implements AgentDataModel {
     delegation: import('@ucanto/interface').Delegation,
     meta?: DelegationMeta,
   ) {
-    console.log('addDelegation called')
     this.delegations.set(delegation.cid.toString(), {
       delegation,
       meta: meta ?? {},
@@ -136,22 +137,10 @@ export class AgentData implements AgentDataModel {
   }
 }
 
-/**
- * Is the given capability a session attestation?
- *
- * @param {Ucanto.Capability} cap
- * @returns {boolean}
- */
 const isSessionCapability = (cap: Ucanto.Capability): boolean =>
   cap.can === UCAN.attest.can
 
-/**
- * Is the given delegation a session proof?
- *
- * @param {Ucanto.Delegation} delegation
- * @returns {delegation is Ucanto.Delegation<[UCANAttest]>}
- */
-export const isSessionProof = (
+const isSessionProof = (
   delegation: Ucanto.Delegation,
 ): delegation is Ucanto.Delegation<[UCANAttest]> =>
   delegation.capabilities.some((cap) => isSessionCapability(cap))
@@ -160,12 +149,7 @@ type SessionProofIndexedByAuthorizationAndIssuer = Record<
   string,
   Record<Ucanto.DID, [Ucanto.Delegation, ...Ucanto.Delegation[]]>
 >
-/**
- * Get a map from CIDs to the session proofs that reference them
- *
- * @param {AgentData} data
- * @returns {SessionProofIndexedByAuthorizationAndIssuer}
- */
+
 export function getSessionProofs(
   data: AgentData,
 ): SessionProofIndexedByAuthorizationAndIssuer {
