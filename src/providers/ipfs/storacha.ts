@@ -1,5 +1,5 @@
+import * as DID from '@ipld/dag-ucan/did'
 import * as client from '@ucanto/client'
-import { DID } from '@ucanto/core'
 import * as CAR from '@ucanto/transport/car'
 import * as HTTP from '@ucanto/transport/http'
 import {
@@ -11,7 +11,7 @@ import {
 import { uploadCAR } from '@web3-storage/upload-client'
 import { DeployError, MissingKeyError } from '../../errors.js'
 import type { UploadFunction } from '../../types.js'
-import { setupW3Up } from '../../utils/w3up.js'
+import { setup } from '../../utils/storacha/setup.js'
 
 const providerName = 'Storacha'
 
@@ -34,7 +34,7 @@ export const uploadOnWStoracha: UploadFunction<{ proof: string }> = async ({
 }) => {
   if (!proof) throw new MissingKeyError(`STORACHA_PROOF`)
 
-  const agent = await setupW3Up({ pk: token, proof })
+  const agent = await setup({ pk: token, proof })
 
   const resource = agent.currentSpace()!
 

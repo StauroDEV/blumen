@@ -2,8 +2,9 @@ import { CarReader } from '@ipld/car/reader'
 import type { Block } from '@ipld/unixfs/file'
 import { importDAG } from '@ucanto/core/delegation'
 import { Signer } from '@ucanto/principal/ed25519'
-import { Agent, AgentData } from '@web3-storage/access/agent'
-import { StoreMemory } from '@web3-storage/access/stores/store-memory'
+import { Agent } from './agent.js'
+import { AgentData } from './agent-data.js'
+import { StoreMemory } from './memory-store.js'
 
 async function parseProof(data: string) {
   const blocks: Array<Block<unknown, number, number, 1>> = []
@@ -14,7 +15,7 @@ async function parseProof(data: string) {
   return importDAG(blocks)
 }
 
-export async function setupW3Up({
+export async function setup({
   pk,
   proof: _proof,
 }: {

@@ -1,19 +1,18 @@
 import { describe, it } from 'bun:test'
 import assert from 'node:assert'
-import { setupW3Up } from '../../src/utils/w3up.js'
+import { setup } from '../../src/utils/storacha/setup'
 
 describe('w3up utils', () => {
   describe('setupW3Up', () => {
     it('throws if fails to parse a UCAN delegate private key', () => {
       assert.rejects(
         async () => {
-          return await setupW3Up({
+          return await setup({
             pk: 'private key',
             proof: 'proof',
           })
         },
         {
-          // eslint-disable-next-line @stylistic/max-len
           message:
             'Unable to decode multibase string "private key", base64pad decoder only supports inputs prefixed with M',
         },
@@ -22,7 +21,7 @@ describe('w3up utils', () => {
     it('throws if fails to parse a UCAN proof', () => {
       assert.rejects(
         async () => {
-          return await setupW3Up({
+          return await setup({
             // randomly generated via `pnpx ucan-key ed`
             pk: 'MgCab19pJVNmv3hPJFnciLpZIlVGsTtLWoWU/+30KpiUzgO0Bfk+h6nzqc2u0lrgbis8MJnJVNlooc+YRni3uY2ZpXxQ=',
             proof: 'proof',

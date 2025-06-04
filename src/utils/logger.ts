@@ -1,13 +1,11 @@
-import colors from 'picocolors'
+import { styleText } from 'node:util'
 import { isTTY } from '../constants.js'
 import type { SupportedMethods } from '../types.js'
 
-const { bgGreen, bgYellow, bgRed, cyan, green } = colors
-
 const responseStatus = (status: number) => {
-  if (status < 300) return bgGreen(status)
-  else if (status < 400) return bgYellow(status)
-  else return bgRed(status)
+  if (status < 300) return styleText('bgGreen', status.toString())
+  else if (status < 400) return styleText('bgYellow', status.toString())
+  else return styleText('bgRed', status.toString())
 }
 
 export const logger = {
@@ -30,7 +28,9 @@ export const logger = {
     if (isTTY)
       console.log(
         '\n',
-        method === 'GET' ? cyan(method) : green(method),
+        method === 'GET'
+          ? styleText('cyan', method)
+          : styleText('green', method),
         url,
         responseStatus(status),
       )

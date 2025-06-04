@@ -1,8 +1,8 @@
-import colors from 'picocolors'
+import { styleText } from 'node:util'
 import { isTTY } from '../constants.js'
 import { logger } from '../utils/logger.js'
 
-const gwOfflineMessage = `😞 Max retries exceeded. Gateway is ${isTTY ? colors.bold(colors.red('Offline')) : 'Offline'}.`
+const gwOfflineMessage = `😞 Max retries exceeded. Gateway is ${isTTY ? styleText('bold', styleText('red', 'Offline')) : 'Offline'}.`
 
 export const pingAction = async ({
   cid,
@@ -27,7 +27,7 @@ export const pingAction = async ({
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     logger.text(
-      `${isTTY ? colors.bold(`[${attempt}]`) : `[${attempt}]`}: Requesting content at ${url}`,
+      `${isTTY ? styleText('bold', `[${attempt}]`) : `[${attempt}]`}: Requesting content at ${url}`,
     )
 
     try {
@@ -48,7 +48,10 @@ export const pingAction = async ({
           `Gateway status: ${
             response.status >= 200 && response.status < 400
               ? isTTY
-                ? colors.bold(colors.green(`🟢 Online ${response.status}`))
+                ? styleText(
+                    'bold',
+                    styleText('green', `🟢 Online ${response.status}`),
+                  )
                 : `🟢 Online ${response.status}`
               : response.status
           }`,
@@ -62,7 +65,7 @@ export const pingAction = async ({
         logger.error(
           error instanceof DOMException
             ? gwOfflineMessage
-            : 'Error fetching endpoint: ' + (error as Error).message,
+            : `Error fetching endpoint: ${(error as Error).message}`,
         )
         throw error
       }

@@ -1,5 +1,5 @@
+import { styleText } from 'node:util'
 import mod from 'ascii-bar'
-import colors from 'picocolors'
 import { isTTY, PROVIDERS } from '../constants.js'
 import { NoProvidersError } from '../errors.js'
 import {
@@ -188,10 +188,10 @@ export const deployAction = async ({
     const providersLink = `https://delegated-ipfs.dev/routing/v1/providers/${cid}`
 
     console.log(
-      `\nOpen in a browser:\n${isTTY ? colors.bold('IPFS') : 'IPFS'}:      ${
-        isTTY ? colors.underline(dwebLink) : dwebLink
-      }\n${isTTY ? colors.bold('Providers') : 'Providers'}: ${
-        isTTY ? colors.underline(providersLink) : providersLink
+      `\nOpen in a browser:\n${isTTY ? styleText('bold', 'IPFS') : 'IPFS'}:      ${
+        isTTY ? styleText('underline', dwebLink) : dwebLink
+      }\n${isTTY ? styleText('bold', 'Providers') : 'Providers'}: ${
+        isTTY ? styleText('underline', providersLink) : providersLink
       }`,
     )
   }

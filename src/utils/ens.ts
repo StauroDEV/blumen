@@ -1,7 +1,8 @@
 import { CID } from 'multiformats/cid'
-import { AbiFunction, Bytes, Ens } from 'ox'
 import type { Address } from 'ox/Address'
-import varint from 'varint'
+import { toHex } from 'ox/Bytes'
+import { namehash, normalize } from 'ox/Ens'
+import * as varint from 'varint'
 import type { ChainName } from '../types.js'
 import { referenceToCID } from './swarm.js'
 
@@ -27,7 +28,7 @@ export const prepareUpdateEnsArgs = ({
   domain: string
   codec?: 'ipfs' | 'swarm'
 }) => {
-  const node = Ens.namehash(Ens.normalize(domain))
+  const node = namehash(normalize(domain))
   const code = codec === 'ipfs' ? IFPS_CODEC : SWARM_CODEC
 
   let bytes: Uint8Array
@@ -42,14 +43,28 @@ export const prepareUpdateEnsArgs = ({
 
   const codeBytes = Uint8Array.from(varint.encode(code))
 
-  const contentHash = Bytes.toHex(concatUint8Arrays(codeBytes, bytes)).slice(2)
+  const contentHash = toHex(concatUint8Arrays(codeBytes, bytes)).slice(2)
 
   return { contentHash, node }
 }
 
-export const setContentHash = AbiFunction.from(
-  'function setContenthash(bytes32 node, bytes contenthash)',
-)
+export const setContentHash = {
+  name: 'setContenthash',
+  type: 'function',
+  stateMutability: 'nonpayable',
+  inputs: [
+    {
+      type: 'bytes32',
+      name: 'node',
+    },
+    {
+      type: 'bytes',
+      name: 'contenthash',
+    },
+  ],
+  outputs: [],
+  hash: '0x304e6adeefe2004c6cc29faecbd0f0f604a064063c9bee48cb1e52e2f80d9ad5',
+} as const
 
 export const PUBLIC_RESOLVER_ADDRESS: Record<ChainName, Address> = {
   mainnet: '0x231b0Ee14048e9dCcD1d247744d114a4EB5E8E63',

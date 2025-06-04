@@ -1,3 +1,4 @@
+import { styleText } from 'node:util'
 import { CID } from 'multiformats/cid'
 import { encodeData } from 'ox/AbiFunction'
 import { type Address, fromPublicKey } from 'ox/Address'
@@ -6,7 +7,6 @@ import * as Provider from 'ox/Provider'
 import { fromHttp } from 'ox/RpcTransport'
 import { getPublicKey } from 'ox/Secp256k1'
 import { toHex } from 'ox/Signature'
-import colors from 'picocolors'
 import { chains, isTTY } from '../constants.js'
 import {
   InvalidCIDError,
@@ -185,7 +185,7 @@ export const ensAction = async ({
         const safeLink = `https://app.safe.global/transactions/queue?safe=${safeAddress}`
         logger.success(
           `Transaction proposed to a Safe wallet.\nOpen in a browser: ${
-            isTTY ? colors.underline(safeLink) : safeLink
+            isTTY ? styleText('underline', safeLink) : safeLink
           }`,
         )
       } catch (e) {
@@ -224,7 +224,7 @@ export const ensAction = async ({
     logger.success('Transaction succeeded')
     const browserLink = `https://${domain}.limo`
     logger.info(
-      `Open in a browser: ${isTTY ? colors.underline(browserLink) : browserLink}`,
+      `Open in a browser: ${isTTY ? styleText('underline', browserLink) : browserLink}`,
     )
   }
   return process.exit()

@@ -1,25 +1,68 @@
 /* eslint-disable @stylistic/max-len */
 
-import { from } from 'ox/AbiFunction'
+export const getTransactionHash = {
+  name: 'getTransactionHash',
+  type: 'function',
+  stateMutability: 'view',
+  inputs: [
+    {
+      type: 'address',
+      name: 'to',
+    },
+    {
+      type: 'uint256',
+      name: 'value',
+    },
+    {
+      type: 'bytes',
+      name: 'data',
+    },
+    {
+      type: 'uint8',
+      name: 'operation',
+    },
+    {
+      type: 'uint256',
+      name: 'safeTxGas',
+    },
+    {
+      type: 'uint256',
+      name: 'baseGas',
+    },
+    {
+      type: 'uint256',
+      name: 'gasPrice',
+    },
+    {
+      type: 'address',
+      name: 'gasToken',
+    },
+    {
+      type: 'address',
+      name: 'refundReceiver',
+    },
+    {
+      type: 'uint256',
+      name: '_nonce',
+    },
+  ],
+  outputs: [
+    {
+      type: 'bytes32',
+    },
+  ],
+  hash: '0xd8d11f786b243022ceb2ed0c945f49b175419eab6a0c57d843e579bf5e89d9fb',
+} as const
 
-export const simulateTxAccessorAddress =
-  '0x59AD6735bCd8152B84860Cb256dD9e96b85F69Da'
-
-export const safeSingletonAddress = '0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552'
-
-export const simulateAndRevert = from(
-  'function simulateAndRevert(address targetContract, bytes memory calldataPayload)',
-)
-export const getTransactionHash = from(
-  'function getTransactionHash(address to, uint256 value, bytes calldata data, uint8 operation, uint256 safeTxGas, uint256 baseGas, uint256 gasPrice, address gasToken, address refundReceiver, uint256 _nonce) public view returns (bytes32)',
-)
-export const execTransaction = from(
-  'function execTransaction(address to, uint256 value, bytes calldata data, uint8 operation, uint256 safeTxGas, uint256 baseGas, uint256 gasPrice, address gasToken, address refundReceiver, bytes memory signatures) public payable returns (bool)',
-)
-export const getNonce = from('function nonce() public view returns (uint256)')
-export const getThreshold = from(
-  'function getThreshold() public view returns (uint256)',
-)
-export const getOwners = from(
-  'function getOwners() public view returns (address[])',
-)
+export const getNonce = {
+  name: 'nonce',
+  type: 'function',
+  stateMutability: 'view',
+  inputs: [],
+  outputs: [
+    {
+      type: 'uint256',
+    },
+  ],
+  hash: '0xaffed0e0ba94adda3772e73093f9f42c54ccf7ebf1e7dabc728520a58f80bdf5',
+} as const
