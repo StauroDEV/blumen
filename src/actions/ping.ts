@@ -62,7 +62,7 @@ export const pingAction = async ({
         logger.error(
           error instanceof DOMException
             ? gwOfflineMessage
-            : 'Error fetching endpoint: ' + (error as Error).message,
+            : `Error fetching endpoint: ${(error as Error).message}`,
         )
         throw error
       }

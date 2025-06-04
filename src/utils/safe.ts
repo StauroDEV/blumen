@@ -1,6 +1,6 @@
 /* eslint-disable @stylistic/max-len */
 
-import { AbiFunction } from 'ox'
+import { encodeData } from 'ox/AbiFunction'
 import type { Address } from 'ox/Address'
 import type { Hex } from 'ox/Hex'
 import type { Provider } from 'ox/Provider'
@@ -38,7 +38,7 @@ export const prepareSafeTransactionData = async ({
     params: [
       {
         to: safeAddressWithoutPrefix,
-        data: AbiFunction.encodeData(getTransactionHash, [
+        data: encodeData(getTransactionHash, [
           to,
           txData.value ?? 0n,
           txData.data,

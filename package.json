@@ -47,7 +47,6 @@
     "@ucanto/core": "^10.3.1",
     "@ucanto/principal": "^9.0.2",
     "@ucanto/transport": "^9.2.0",
-    "@web3-storage/access": "^20.2.0",
     "@web3-storage/capabilities": "^18.1.0",
     "@web3-storage/upload-client": "^17.1.4",
     "ascii-bar": "^1.0.3",
