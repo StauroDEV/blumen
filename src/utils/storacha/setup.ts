@@ -38,8 +38,3 @@ export async function setup({
     throw new Error('Failed to parse UCAN proof')
   }
 }
-
-// await setup({
-//   pk: process.env.BLUMEN_STORACHA_TOKEN,
-//   proof: process.env.BLUMEN_STORACHA_PROOF,
-// })

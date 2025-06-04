@@ -16,10 +16,7 @@ interface AgentDataOptions {
 interface AgentDataModel {
   meta: AgentMeta
   principal: Ucanto.Signer<Ucanto.DID<'key'>>
-  /** @deprecated */
-  currentSpace?: Ucanto.DID<'key'>
-  /** @deprecated */
-  spaces: Map<Ucanto.DID, SpaceMeta>
+
   delegations: Map<
     string,
     { meta: DelegationMeta; delegation: Ucanto.Delegation }
@@ -31,7 +28,7 @@ interface AgentDataModel {
  */
 type AgentDataExport = Pick<
   AgentDataModel,
-  'meta' | 'currentSpace' | 'spaces'
+  'meta'
 > & {
   principal: Ucanto.SignerArchive<Ucanto.DID, Ucanto.SigAlg>
   delegations: Map<
@@ -51,13 +48,12 @@ export class AgentData implements AgentDataModel {
     { meta: DelegationMeta; delegation: Ucanto.Delegation }
   >
   meta: AgentMeta
-  spaces: Map<`did:${string}:${string}`, SpaceMeta>
+  spaces: Map<`did:${string}:${string}`, SpaceMeta> = new Map()
   currentSpace: `did:key:${string}` | undefined
 
   constructor(data: AgentDataModel, options: AgentDataOptions = {}) {
     this.meta = data.meta
     this.principal = data.principal
-    this.spaces = data.spaces
     this.delegations = data.delegations
     this.#save = (data) =>
       options.store ? options.store.save(data) : undefined
@@ -65,9 +61,6 @@ export class AgentData implements AgentDataModel {
 
   /**
    * Create a new AgentData instance from the passed initialization data.
-   *
-   * @param {Partial<AgentDataModel>} [init]
-   * @param {AgentDataOptions} [options]
    */
   static async create(
     init: Partial<AgentDataModel> = {},
@@ -77,9 +70,7 @@ export class AgentData implements AgentDataModel {
       {
         meta: { name: 'agent', type: 'device', ...init.meta },
         principal: init.principal ?? (await EdSigner.generate()),
-        spaces: init.spaces ?? new Map(),
-        delegations: init.delegations ?? new Map(),
-        currentSpace: init.currentSpace,
+        delegations: new Map(),
       },
       options,
     )
@@ -97,8 +88,6 @@ export class AgentData implements AgentDataModel {
     const raw: AgentDataExport = {
       meta: this.meta,
       principal: this.principal.toArchive(),
-      currentSpace: this.currentSpace,
-      spaces: this.spaces,
       delegations: new Map(),
     }
     for (const [key, value] of this.delegations) {
