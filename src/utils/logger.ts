@@ -1,8 +1,6 @@
-
 import { styleText } from 'node:util'
 import { isTTY } from '../constants.js'
 import type { SupportedMethods } from '../types.js'
-
 
 const responseStatus = (status: number) => {
   if (status < 300) return styleText('bgGreen', status.toString())
@@ -30,7 +28,9 @@ export const logger = {
     if (isTTY)
       console.log(
         '\n',
-        method === 'GET' ? styleText('cyan', method) : styleText('green', method),
+        method === 'GET'
+          ? styleText('cyan', method)
+          : styleText('green', method),
         url,
         responseStatus(status),
       )

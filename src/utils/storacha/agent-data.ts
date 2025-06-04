@@ -1,8 +1,7 @@
 import type * as Ucanto from '@ucanto/interface'
 import { Signer as EdSigner } from '@ucanto/principal/ed25519'
-
-import { UCAN } from '@web3-storage/capabilities'
 import type { UCANAttest } from '@web3-storage/capabilities/types'
+import * as UCAN from '@web3-storage/capabilities/ucan'
 import { isExpired } from './delegations.js'
 import type { AgentMeta, DelegationMeta, Driver, SpaceMeta } from './types.js'
 
