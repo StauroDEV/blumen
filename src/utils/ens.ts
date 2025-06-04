@@ -1,5 +1,4 @@
 import { CID } from 'multiformats/cid'
-import * as AbiFunction from 'ox/AbiFunction'
 import type { Address } from 'ox/Address'
 import { toHex } from 'ox/Bytes'
 import { namehash, normalize } from 'ox/Ens'
@@ -49,9 +48,23 @@ export const prepareUpdateEnsArgs = ({
   return { contentHash, node }
 }
 
-export const setContentHash = AbiFunction.from(
-  'function setContenthash(bytes32 node, bytes contenthash)',
-)
+export const setContentHash = {
+  name: 'setContenthash',
+  type: 'function',
+  stateMutability: 'nonpayable',
+  inputs: [
+    {
+      type: 'bytes32',
+      name: 'node',
+    },
+    {
+      type: 'bytes',
+      name: 'contenthash',
+    },
+  ],
+  outputs: [],
+  hash: '0x304e6adeefe2004c6cc29faecbd0f0f604a064063c9bee48cb1e52e2f80d9ad5',
+} as const
 
 export const PUBLIC_RESOLVER_ADDRESS: Record<ChainName, Address> = {
   mainnet: '0x231b0Ee14048e9dCcD1d247744d114a4EB5E8E63',
