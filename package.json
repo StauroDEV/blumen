@@ -36,7 +36,7 @@
   "license": "MIT",
   "devDependencies": {
     "@biomejs/biome": "2.0.0-beta.3",
-    "@ipld/car": "^5.4.0",
+    "@ipld/car": "^5.4.2",
     "@ipld/dag-cbor": "^9.2.2",
     "@ipld/unixfs": "^3.0.0",
     "@stauro/filebase-upload": "^1.0.1",
