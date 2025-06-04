@@ -1,4 +1,3 @@
-
 import { type AbiFunction, decodeResult } from 'ox/AbiFunction'
 import type { Address } from 'ox/Address'
 import { toHex } from 'ox/Bytes'

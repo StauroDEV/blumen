@@ -26,10 +26,7 @@ interface AgentDataModel {
 /**
  * Agent data that is safe to pass to structuredClone() and persisted by stores.
  */
-type AgentDataExport = Pick<
-  AgentDataModel,
-  'meta'
-> & {
+type AgentDataExport = Pick<AgentDataModel, 'meta'> & {
   principal: Ucanto.SignerArchive<Ucanto.DID, Ucanto.SigAlg>
   delegations: Map<
     string,

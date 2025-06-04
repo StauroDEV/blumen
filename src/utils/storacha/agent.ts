@@ -17,7 +17,7 @@ interface CapabilityQuery {
 const HOST = 'https://up.web3.storage'
 const PRINCIPAL = DID.parse('did:web:web3.storage')
 
-export function connection<
+function connection<
   T extends Client.DID = Client.DID,
   S extends Record<string, any> = Record<string, any>,
 >(
@@ -42,7 +42,6 @@ export function connection<
 
 interface AgentOptions<S extends Record<string, any>> {
   url?: URL
-  connection?: Client.ConnectionView<S>
   servicePrincipal?: Client.Principal
 }
 
@@ -52,15 +51,11 @@ export class Agent<S extends Record<string, any> = Record<string, any>> {
   connection: Client.ConnectionView<Record<string, any>>
 
   constructor(data: AgentData, options: AgentOptions<S> = {}) {
-    const channel: (Client.Channel<S> & { url?: URL }) | undefined =
-      options.connection?.channel
-    this.url = options.url ?? channel?.url ?? new URL(HOST)
-    this.connection =
-      options.connection ??
-      connection({
-        principal: options.servicePrincipal,
-        url: this.url,
-      })
+    this.url = options.url ?? new URL(HOST)
+    this.connection = connection({
+      principal: options.servicePrincipal,
+      url: this.url,
+    })
     this.#data = data
   }
 

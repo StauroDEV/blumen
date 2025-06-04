@@ -10,7 +10,7 @@ import { deployMessage, logger } from '../utils/logger.js'
 
 const AsciiBar = mod.default
 
-export type PinActionArgs = Partial<{
+type PinActionArgs = Partial<{
   providers: string
   strict: boolean
   verbose: boolean

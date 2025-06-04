@@ -32,7 +32,7 @@ export type UploadArgs<T = object> = {
 } & AuthArgs &
   T
 
-export type UploadReturnType = {
+type UploadReturnType = {
   cid: string
   providers?: string[]
   status?: PinStatus
