@@ -1,6 +1,8 @@
 import { CID } from 'multiformats/cid'
-import { AbiFunction, Bytes, Ens } from 'ox'
+import * as AbiFunction from 'ox/AbiFunction'
 import type { Address } from 'ox/Address'
+import { toHex } from 'ox/Bytes'
+import { namehash, normalize } from 'ox/Ens'
 import varint from 'varint'
 import type { ChainName } from '../types.js'
 import { referenceToCID } from './swarm.js'
@@ -27,7 +29,7 @@ export const prepareUpdateEnsArgs = ({
   domain: string
   codec?: 'ipfs' | 'swarm'
 }) => {
-  const node = Ens.namehash(Ens.normalize(domain))
+  const node = namehash(normalize(domain))
   const code = codec === 'ipfs' ? IFPS_CODEC : SWARM_CODEC
 
   let bytes: Uint8Array
@@ -42,7 +44,7 @@ export const prepareUpdateEnsArgs = ({
 
   const codeBytes = Uint8Array.from(varint.encode(code))
 
-  const contentHash = Bytes.toHex(concatUint8Arrays(codeBytes, bytes)).slice(2)
+  const contentHash = toHex(concatUint8Arrays(codeBytes, bytes)).slice(2)
 
   return { contentHash, node }
 }

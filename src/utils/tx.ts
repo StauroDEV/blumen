@@ -1,9 +1,11 @@
-import { Secp256k1, TransactionEnvelopeEip1559 } from 'ox'
+
 import { type AbiFunction, decodeResult } from 'ox/AbiFunction'
 import type { Address } from 'ox/Address'
 import { toHex } from 'ox/Bytes'
 import { type Hex, toBigInt } from 'ox/Hex'
 import type { Provider } from 'ox/Provider'
+import * as Secp256k1 from 'ox/Secp256k1'
+import * as TransactionEnvelopeEip1559 from 'ox/TransactionEnvelopeEip1559'
 import { fromRpc } from 'ox/TransactionReceipt'
 import { logger } from './logger.js'
 
