@@ -16,7 +16,5 @@ export const pinStatus = (provider: string, status: PinStatus) => {
       break
   }
 
-  console.log(
-    `${styleText('cyan', provider)}: ${styleText('bold', statusText)}`,
-  )
+  console.log(`${styleText('cyan', provider)}: ${styleText('bold', statusText)}`)
 }

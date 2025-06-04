@@ -1,3 +1,4 @@
+
 import { styleText } from 'node:util'
 import { isTTY } from '../constants.js'
 import { logger } from '../utils/logger.js'
@@ -45,15 +46,11 @@ export const pingAction = async ({
         }
       } else {
         return logger.text(
-          `Gateway status: ${
-            response.status >= 200 && response.status < 400
-              ? isTTY
-                ? styleText(
-                    'bold',
-                    styleText('green', `🟢 Online ${response.status}`),
-                  )
-                : `🟢 Online ${response.status}`
-              : response.status
+          `Gateway status: ${response.status >= 200 && response.status < 400
+            ? isTTY
+              ? styleText('bold', styleText('green', `🟢 Online ${response.status}`))
+              : `🟢 Online ${response.status}`
+            : response.status
           }`,
         )
       }

@@ -97,15 +97,15 @@ export const deployAction = async ({
   const errors: Error[] = []
   const bar = isTTY
     ? new AsciiBar({
-        total:
-          swarmProviders.length !== 0
-            ? swarmProviders.length
-            : ipfsProviders.length,
-        formatString: '#spinner #bar #message',
-        hideCursor: false,
-        enableSpinner: true,
-        width: process.stdout.columns - 30,
-      })
+      total:
+        swarmProviders.length !== 0
+          ? swarmProviders.length
+          : ipfsProviders.length,
+      formatString: '#spinner #bar #message',
+      hideCursor: false,
+      enableSpinner: true,
+      width: process.stdout.columns - 30,
+    })
     : undefined
 
   let swarmCid = ''
@@ -188,10 +188,8 @@ export const deployAction = async ({
     const providersLink = `https://delegated-ipfs.dev/routing/v1/providers/${cid}`
 
     console.log(
-      `\nOpen in a browser:\n${isTTY ? styleText('bold', 'IPFS') : 'IPFS'}:      ${
-        isTTY ? styleText('underline', dwebLink) : dwebLink
-      }\n${isTTY ? styleText('bold', 'Providers') : 'Providers'}: ${
-        isTTY ? styleText('underline', providersLink) : providersLink
+      `\nOpen in a browser:\n${isTTY ? styleText('bold', 'IPFS') : 'IPFS'}:      ${isTTY ? styleText('underline', dwebLink) : dwebLink
+      }\n${isTTY ? styleText('bold', 'Providers') : 'Providers'}: ${isTTY ? styleText('underline', providersLink) : providersLink
       }`,
     )
   }

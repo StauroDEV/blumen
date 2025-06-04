@@ -2,9 +2,9 @@ import { CID } from 'multiformats/cid'
 import type { Address } from 'ox/Address'
 import { toHex } from 'ox/Bytes'
 import { namehash, normalize } from 'ox/Ens'
+import varint from 'varint'
 import type { ChainName } from '../types.js'
 import { referenceToCID } from './swarm.js'
-import * as varint from './varint.js'
 
 const IFPS_CODEC = 0xe3
 const SWARM_CODEC = 0xe4

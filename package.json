@@ -43,6 +43,7 @@
     "@stauro/filebase-upload": "^1.0.1",
     "@types/bun": "^1.2.13",
     "@types/node": "^22.14.1",
+    "@types/varint": "^6.0.3",
     "@ucanto/client": "^9.0.1",
     "@ucanto/core": "^10.3.1",
     "@ucanto/principal": "^9.0.2",
@@ -56,7 +57,8 @@
     "semantic-release": "^24.2.3",
     "spektr": "^0.2.0",
     "tinyglobby": "^0.2.12",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "varint": "^6.0.0"
   },
   "release": {
     "branches": [

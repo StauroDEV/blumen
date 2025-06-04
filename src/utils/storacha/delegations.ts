@@ -1,4 +1,4 @@
-import { allows } from '@ucanto/core/delegation'
+import * as ucanto from '@ucanto/core'
 import type * as Ucanto from '@ucanto/interface'
 import { canDelegateAbility } from '@web3-storage/capabilities/utils'
 import type { ResourceQuery } from './types.js'
@@ -34,9 +34,9 @@ export function canDelegateCapability(
   delegation: Ucanto.Delegation,
   capability: Ucanto.Capability,
 ) {
-  const allowsCapabilities = allows(delegation)
+  const allowsCapabilities = ucanto.Delegation.allows(delegation)
   for (const [uri, abilities] of Object.entries(allowsCapabilities)) {
-    if (matchResource(/** @type {API.Resource} */ (uri), capability.with)) {
+    if (matchResource(/** @type {API.Resource} */(uri), capability.with)) {
       const cans = Object.keys(abilities) as Ucanto.Ability[]
 
       for (const can of cans) {
