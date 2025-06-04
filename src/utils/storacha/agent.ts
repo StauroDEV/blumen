@@ -40,17 +40,17 @@ function connection<
   })
 }
 
-interface AgentOptions<S extends Record<string, any>> {
+interface AgentOptions {
   url?: URL
   servicePrincipal?: Client.Principal
 }
 
-export class Agent<S extends Record<string, any> = Record<string, any>> {
+export class Agent {
   #data: AgentData
   url: URL
   connection: Client.ConnectionView<Record<string, any>>
 
-  constructor(data: AgentData, options: AgentOptions<S> = {}) {
+  constructor(data: AgentData, options: AgentOptions = {}) {
     this.url = options.url ?? new URL(HOST)
     this.connection = connection({
       principal: options.servicePrincipal,

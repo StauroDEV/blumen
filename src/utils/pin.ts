@@ -1,4 +1,4 @@
-import colors from 'picocolors'
+import { styleText } from 'node:util'
 import type { PinStatus } from '../types.js'
 
 export const pinStatus = (provider: string, status: PinStatus) => {
@@ -6,15 +6,15 @@ export const pinStatus = (provider: string, status: PinStatus) => {
 
   switch (status) {
     case 'pinned':
-      statusText = colors.green(status)
+      statusText = styleText('green', status)
       break
     case 'queued':
-      statusText = colors.cyan(status)
+      statusText = styleText('cyan', status)
       break
     default:
-      statusText = colors.gray(status || 'unknown')
+      statusText = styleText('gray', status || 'unknown')
       break
   }
 
-  console.log(`${colors.cyan(provider)}: ${colors.bold(statusText)}`)
+  console.log(`${styleText('cyan', provider)}: ${styleText('bold', statusText)}`)
 }

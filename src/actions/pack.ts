@@ -1,5 +1,5 @@
 import path from 'node:path'
-import colors from 'picocolors'
+import { styleText } from 'node:util'
 import { isTTY } from '../constants.js'
 import { MissingDirectoryError } from '../errors.js'
 import { exists, fileSize, walk } from '../utils/fs.js'
@@ -34,7 +34,7 @@ export const packAction = async ({
   const distName = ['.', 'dist'].includes(dir) ? name : dir
 
   logger.start(
-    `Packing ${isTTY ? colors.cyan(distName) : distName} (${fileSize(size, 2)})`,
+    `Packing ${isTTY ? styleText('cyan', distName) : distName} (${fileSize(size, 2)})`,
   )
 
   if (tar) {
@@ -45,7 +45,7 @@ export const packAction = async ({
     const { rootCID, blob } = await packCAR(files, name, dist)
 
     const cid = rootCID.toString()
-    logger.info(`Root CID: ${isTTY ? colors.white(cid) : cid}`)
+    logger.info(`Root CID: ${isTTY ? styleText('white', cid) : cid}`)
 
     return { name, cid, blob, files }
   }

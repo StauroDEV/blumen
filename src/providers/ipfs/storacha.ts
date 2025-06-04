@@ -1,5 +1,5 @@
+import * as DID from '@ipld/dag-ucan/did'
 import * as client from '@ucanto/client'
-import { DID } from '@ucanto/core'
 import * as CAR from '@ucanto/transport/car'
 import * as HTTP from '@ucanto/transport/http'
 import {
