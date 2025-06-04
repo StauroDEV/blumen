@@ -6,7 +6,7 @@ import type * as UnixFS from '@ipld/unixfs'
 // import { withWidth } from '@ipld/unixfs/file/layout/balanced'
 import type { UnknownLink } from 'multiformats'
 // import * as raw from 'multiformats/codecs/raw'
-import * as varint from './varint.js'
+import * as varint from 'varint'
 
 // const SHARD_THRESHOLD = 1000 // shard directory after > 1,000 items
 // const queuingStrategy = UnixFS.withCapacity()

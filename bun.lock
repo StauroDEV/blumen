@@ -12,6 +12,7 @@
         "@stauro/filebase-upload": "^1.0.1",
         "@types/bun": "^1.2.13",
         "@types/node": "^22.14.1",
+        "@types/varint": "^6.0.3",
         "@ucanto/client": "^9.0.1",
         "@ucanto/core": "^10.3.1",
         "@ucanto/principal": "^9.0.2",
@@ -26,6 +27,7 @@
         "spektr": "^0.2.0",
         "tinyglobby": "^0.2.12",
         "typescript": "^5.8.3",
+        "varint": "^6.0.0",
       },
     },
   },
@@ -171,6 +173,8 @@
     "@types/normalize-package-data": ["@types/normalize-package-data@2.4.4", "", {}, "sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA=="],
 
     "@types/retry": ["@types/retry@0.12.2", "", {}, "sha512-XISRgDJ2Tc5q4TRqvgJtzsRkFYNJzZrhTdtMoGVBttwzzQJkPnS3WWTFc7kuDRoPtPakl+T+OfdEUjYJj7Jbow=="],
+
+    "@types/varint": ["@types/varint@6.0.3", "", { "dependencies": { "@types/node": "*" } }, "sha512-DHukoGWdJ2aYkveZJTB2rN2lp6m7APzVsoJQ7j/qy1fQxyamJTPD5xQzCMoJ2Qtgn0mE3wWeNOpbTyBFvF+dyA=="],
 
     "@ucanto/client": ["@ucanto/client@9.0.1", "", { "dependencies": { "@ucanto/core": "^10.0.0", "@ucanto/interface": "^10.0.0" } }, "sha512-cV8w3AnaZaYCdUmyFFICj8YhFckDoy2DvWgAzGDMkPz0WbUW4lw9Tjm4hEE8x5kiP47wYej/pHKWCcoELiU0qw=="],
 
