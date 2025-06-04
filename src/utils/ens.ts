@@ -2,7 +2,7 @@ import { CID } from 'multiformats/cid'
 import type { Address } from 'ox/Address'
 import { toHex } from 'ox/Bytes'
 import { namehash, normalize } from 'ox/Ens'
-import varint from 'varint'
+import * as varint from 'varint'
 import type { ChainName } from '../types.js'
 import { referenceToCID } from './swarm.js'
 
