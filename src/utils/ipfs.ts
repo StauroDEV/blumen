@@ -2,6 +2,7 @@ import { createWriteStream } from 'node:fs'
 import { open, readFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { Writable } from 'node:stream'
+import type { Block } from '@ipld/car/reader'
 import { CarWriter } from '@ipld/car/writer'
 import { createDirectoryEncoderStream } from '@web3-storage/upload-client/unixfs'
 import { CID } from 'multiformats/cid'
@@ -10,19 +11,19 @@ import { CAREncoderStream } from './car.js'
 
 const tmp = tmpdir()
 
+const placeholderCID = CID.parse('bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi')
+
 export const packCAR = async (files: FileEntry[], name: string, dir = tmp) => {
   const output = `${dir}/${name}.car`
 
-  const placeholderCID = CID.parse(
-    'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi',
-  )
+
   let rootCID = placeholderCID
 
   await createDirectoryEncoderStream(files)
     .pipeThrough(
       new TransformStream({
-        transform(block, controller) {
-          rootCID = block.cid as CID
+        transform(block: Block, controller) {
+          rootCID = block.cid
           controller.enqueue(block)
         },
       }),

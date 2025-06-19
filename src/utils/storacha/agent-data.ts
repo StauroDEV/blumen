@@ -106,10 +106,7 @@ export class AgentData implements AgentDataModel {
     await this.#save(this.export())
   }
 
-  async addDelegation(
-    delegation: Delegation,
-    meta: DelegationMeta = {},
-  ) {
+  async addDelegation(delegation: Delegation, meta: DelegationMeta = {}) {
     this.delegations.set(delegation.cid.toString(), {
       delegation,
       meta: meta,

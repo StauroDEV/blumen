@@ -8,7 +8,7 @@ import * as TransactionEnvelopeEip1559 from 'ox/TransactionEnvelopeEip1559'
 import { fromRpc } from 'ox/TransactionReceipt'
 import { logger } from './logger.js'
 
-export const simulateTransaction = async ({
+export const simulateTransaction = async <Abi extends AbiFunction>({
   provider,
   to,
   data,
@@ -18,7 +18,7 @@ export const simulateTransaction = async ({
   provider: Provider
   to: Address
   data: Hex
-  abi: AbiFunction
+  abi: Abi
   from: Hex
 }): Promise<boolean> => {
   const result = await provider.request({
@@ -114,26 +114,22 @@ export const sendTransaction = async ({
 }
 
 export const waitForTransaction = async (provider: Provider, hash: Hex) => {
-  const pollInterval = 1000
-  const maxAttempts = 12
-
-  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+  for (let attempt = 0; attempt < 10; attempt++) {
     const rawReceipt = await provider.request({
       method: 'eth_getTransactionReceipt',
       params: [hash],
     })
 
     if (rawReceipt) {
-      // Handle Ox-specific status format
-      if (rawReceipt.status === '0x0') {
+      if (rawReceipt.status === '0x0')
         throw new Error(
           `Transaction ${hash} reverted with status: ${rawReceipt.status}`,
         )
-      }
+
       return fromRpc({ ...rawReceipt, chainId: toHex })
     }
 
-    const delay = pollInterval * 2 ** attempt + Math.random() * 100
+    const delay = 200000 ** attempt + Math.random()
     await new Promise((resolve) => setTimeout(resolve, delay))
   }
 

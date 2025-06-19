@@ -103,9 +103,7 @@ function encodeHeader(roots: UnknownLink[]): Uint8Array {
 
 function encodeBlock(block: Block) {
   const varintBytes = varint.encode(block.cid.bytes.length + block.bytes.length)
-  const bytes = new Uint8Array(
-    varintBytes.length + block.cid.bytes.length + block.bytes.length,
-  )
+  const bytes = new Uint8Array(varintBytes.length + block.cid.bytes.length + block.bytes.length)
   bytes.set(varintBytes)
   bytes.set(block.cid.bytes, varintBytes.length)
   bytes.set(block.bytes, varintBytes.length + block.cid.bytes.length)

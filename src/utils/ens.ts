@@ -29,23 +29,26 @@ export const prepareUpdateEnsArgs = ({
   codec?: 'ipfs' | 'swarm'
 }) => {
   const node = namehash(normalize(domain))
-  const code = codec === 'ipfs' ? IFPS_CODEC : SWARM_CODEC
+  let code: number
 
   let bytes: Uint8Array
   switch (codec) {
     case 'ipfs':
+      code = IFPS_CODEC
       bytes = CID.parse(cid).toV1().bytes
       break
     case 'swarm':
+      code = SWARM_CODEC
       bytes = referenceToCID(`0x${cid}`).bytes
       break
   }
 
   const codeBytes = Uint8Array.from(varint.encode(code))
 
-  const contentHash = toHex(concatUint8Arrays(codeBytes, bytes)).slice(2)
-
-  return { contentHash, node }
+  return {
+    contentHash: toHex(concatUint8Arrays(codeBytes, bytes)).slice(2),
+    node,
+  }
 }
 
 export const setContentHash = {

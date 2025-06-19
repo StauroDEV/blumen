@@ -7,7 +7,8 @@ import { AgentData } from './agent-data.js'
 async function parseProof(data: string) {
   const blocks: Array<Signer.Transport.Block> = []
   const reader = await CarReader.fromBytes(Buffer.from(data, 'base64'))
-  for await (const block of reader.blocks()) blocks.push(block as Signer.Transport.Block)
+  for await (const block of reader.blocks())
+    blocks.push(block as Signer.Transport.Block)
 
   return importDAG(blocks)
 }

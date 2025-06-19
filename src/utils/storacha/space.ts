@@ -13,16 +13,8 @@ class SharedSpace {
     this.model = model
   }
 
-  get delegation() {
-    return this.model.delegation
-  }
-
   get meta() {
     return this.model.meta
-  }
-
-  get name() {
-    return this.meta.name ?? ''
   }
 
   did() {
@@ -33,11 +25,9 @@ class SharedSpace {
 export const fromDelegation = (delegation: Delegation) => {
   const result = SpaceDID.read(delegation.capabilities[0].with)
   if (result.error) {
-    throw Object.assign(
-      new Error(
-        `Invalid delegation, expected capabilities[0].with to be DID, ${result.error}`,
-        { cause: result.error },
-      ),
+    throw new Error(
+      `Invalid delegation, expected capabilities[0].with to be DID, ${result.error}`,
+      { cause: result.error },
     )
   }
 

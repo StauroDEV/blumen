@@ -3,7 +3,7 @@ import { type API, DID } from '@ucanto/core'
 import * as CAR from '@ucanto/transport/car'
 import * as HTTP from '@ucanto/transport/http'
 
-import { type AgentData, } from './agent-data.js'
+import type { AgentData } from './agent-data.js'
 import { canDelegateCapability, isExpired, isTooEarly } from './delegations.js'
 import { fromDelegation } from './space.js'
 import type { DelegationMeta, ResourceQuery } from './types.js'
@@ -37,16 +37,9 @@ export class Agent {
     return this.#data.principal
   }
 
-  async addProof(delegation: Client.Delegation) {
-    await this.#data.addDelegation(delegation)
-
-    return {}
-  }
-
   #delegations(caps: CapabilityQuery[]) {
     const _caps = new Set(caps)
-    const values: Array<{ delegation: API.Delegation; meta: DelegationMeta }> =
-      []
+    const values: { delegation: API.Delegation; meta: DelegationMeta }[] = []
     for (const [, value] of this.#data.delegations) {
       if (!isExpired(value.delegation) && !isTooEarly(value.delegation)) {
         // check if we need to filter for caps
@@ -85,7 +78,7 @@ export class Agent {
 
     this.#data.spaces.set(space.did(), { ...space.meta, name: space.name })
 
-    await this.addProof(space.delegation)
+    await this.#data.addDelegation(delegation)
 
     // if we do not have a current space, make this one current
     if (!this.currentSpace()) await this.setCurrentSpace(space.did())

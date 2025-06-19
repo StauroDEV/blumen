@@ -11,8 +11,9 @@ export function isExpired(delegation: Ucanto.Delegation) {
 }
 
 export function isTooEarly(delegation: Ucanto.Delegation) {
-  if (!delegation.notBefore) return false
-  return delegation.notBefore > Math.floor(Date.now() / 1000)
+  return delegation.notBefore
+    ? delegation.notBefore > Math.floor(Date.now() / 1000)
+    : false
 }
 
 const matchResource = (resource: string, query: ResourceQuery) => {
@@ -26,10 +27,11 @@ export function canDelegateCapability(
 ) {
   const allowsCapabilities = ucanto.Delegation.allows(delegation)
   for (const [uri, abilities] of Object.entries(allowsCapabilities)) {
-    if (matchResource(/** @type {API.Resource} */(uri), capability.with)) {
+    if (matchResource(/** @type {API.Resource} */ (uri), capability.with)) {
       const cans = Object.keys(abilities) as Ucanto.Ability[]
 
-      for (const can of cans) if (canDelegateAbility(can, capability.can)) return true
+      for (const can of cans)
+        if (canDelegateAbility(can, capability.can)) return true
     }
   }
   return false
