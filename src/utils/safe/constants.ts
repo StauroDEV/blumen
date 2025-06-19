@@ -51,7 +51,6 @@ export const getTransactionHash = {
       type: 'bytes32',
     },
   ],
-  hash: '0xd8d11f786b243022ceb2ed0c945f49b175419eab6a0c57d843e579bf5e89d9fb',
 } as const
 
 export const getNonce = {
@@ -64,5 +63,4 @@ export const getNonce = {
       type: 'uint256',
     },
   ],
-  hash: '0xaffed0e0ba94adda3772e73093f9f42c54ccf7ebf1e7dabc728520a58f80bdf5',
 } as const

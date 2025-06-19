@@ -1,7 +1,7 @@
 // import { FileLike } from '../types.js'
 
+import type { Block } from '@ipld/car/reader'
 import { encode as cborEncode } from '@ipld/dag-cbor'
-import type * as UnixFS from '@ipld/unixfs'
 // import { withMaxChunkSize } from '@ipld/unixfs/file/chunker/fixed'
 // import { withWidth } from '@ipld/unixfs/file/layout/balanced'
 import type { UnknownLink } from 'multiformats'
@@ -101,7 +101,7 @@ function encodeHeader(roots: UnknownLink[]): Uint8Array {
   return header
 }
 
-function encodeBlock(block: UnixFS.Block) {
+function encodeBlock(block: Block) {
   const varintBytes = varint.encode(block.cid.bytes.length + block.bytes.length)
   const bytes = new Uint8Array(
     varintBytes.length + block.cid.bytes.length + block.bytes.length,
@@ -113,7 +113,7 @@ function encodeBlock(block: UnixFS.Block) {
 }
 
 export class CAREncoderStream extends TransformStream {
-  finalBlock: UnixFS.Block | null
+  finalBlock: Block | null
   constructor(roots: UnknownLink[] = []) {
     super({
       start: (controller) => controller.enqueue(encodeHeader(roots)),

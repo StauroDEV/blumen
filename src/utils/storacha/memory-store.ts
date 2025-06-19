@@ -9,10 +9,6 @@ export class StoreMemory<T extends Record<string, any> = Record<string, any>>
     this.#data = undefined
   }
 
-  async open() {}
-
-  async close() {}
-
   async reset() {
     this.#data = undefined
   }
