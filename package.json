@@ -73,9 +73,11 @@
   "publishConfig": {
     "provenance": true
   },
-  "size-limit": [{
-    "path": "dist/cli.js",
-    "limit": "980KB",
-    "brotli": false
-  }]
+  "size-limit": [
+    {
+      "path": "dist/cli.js",
+      "limit": "980KB",
+      "brotli": false
+    }
+  ]
 }

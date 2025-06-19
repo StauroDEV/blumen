@@ -16,9 +16,7 @@ export function isTooEarly(delegation: Ucanto.Delegation) {
 }
 
 const matchResource = (resource: string, query: ResourceQuery) => {
-  if (typeof query === 'string') {
-    return query === 'ucan:*' || resource === query
-  }
+  if (typeof query === 'string') return query === 'ucan:*' || resource === query
   return query.test(resource)
 }
 

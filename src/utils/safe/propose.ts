@@ -44,7 +44,7 @@ export const proposeTransaction = async ({
         sender: checksum(address),
         signature: senderSignature,
         origin: 'Blumen',
-        value: txData.value ?? 0n,
+        value: 0n,
         baseGas: txData.baseGas ?? 0n,
         gasPrice: txData.gasPrice ?? 0n,
         safeTxGas: txData.safeTxGas ?? 0n,

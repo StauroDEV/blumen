@@ -24,9 +24,9 @@ function getEip3770NetworkPrefixFromChainId(chainId: number): string {
   const network = networkShortNames.find(
     (network) => chainId === network.chainId,
   )
-  if (!network) {
+  if (!network)
     throw new Error('No network prefix supported for the current chainId')
-  }
+
   return network.shortName
 }
 
