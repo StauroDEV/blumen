@@ -20,8 +20,7 @@ export async function setup({
   pk: string
   proof: string
 }) {
-  const principal = Signer.parse(pk)
-  const agentData = await AgentData.create({ principal })
+  const agentData = await AgentData.create({ principal: Signer.parse(pk) })
   const agent = new Agent(agentData)
   try {
     const proof = await parseProof(_proof)

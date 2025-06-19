@@ -17,41 +17,18 @@ interface CapabilityQuery {
 const HOST = new URL('https://up.web3.storage')
 const PRINCIPAL = DID.parse('did:web:web3.storage')
 
-function connection<
-  T extends Client.DID = Client.DID,
-  S extends Record<string, any> = Record<string, any>,
->(
-  options: {
-    principal?: Client.Principal<T>
-    url?: URL
-    channel?: API.Transport.Channel<S>
-  } = {},
-): API.ConnectionView<S> {
-  return Client.connect({
-    id: options.principal ?? PRINCIPAL,
-    codec: CAR.outbound,
-    channel:
-      options.channel ??
-      HTTP.open({
-        url: options.url ?? new URL(HOST),
-        method: 'POST',
-      }),
-  })
-}
-
-interface AgentOptions {
-  url?: URL
-  servicePrincipal?: Client.Principal
-}
-
 export class Agent {
   #data: AgentData
   connection: Client.ConnectionView<Record<string, any>>
 
-  constructor(data: AgentData, options: AgentOptions = {}) {
-    this.connection = connection({
-      principal: options.servicePrincipal,
-      url: HOST,
+  constructor(data: AgentData) {
+    this.connection = Client.connect({
+      id: PRINCIPAL,
+      codec: CAR.outbound,
+      channel: HTTP.open({
+        url: HOST,
+        method: 'POST',
+      }),
     })
     this.#data = data
   }
@@ -101,6 +78,7 @@ export class Agent {
     }
 
     const sessions = getSessionProofs(this.#data)
+
     for (const proof of [...authorizations.values()]) {
       const proofsByIssuer = sessions[proof.asCID.toString()] ?? {}
       const sessionProofs = Object.values(proofsByIssuer).flat()

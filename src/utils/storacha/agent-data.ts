@@ -1,5 +1,5 @@
 import type * as Ucanto from '@ucanto/interface'
-
+import type { Delegation, DID } from '@ucanto/interface'
 import { UCAN } from '@web3-storage/capabilities'
 import type { UCANAttest } from '@web3-storage/capabilities/types'
 import { isExpired } from './delegations.js'
@@ -103,15 +103,14 @@ export class AgentData implements AgentDataModel {
 
   /**
    * @deprecated
-   * @param {import('@ucanto/interface').DID<'key'>} did
    */
-  async setCurrentSpace(did: import('@ucanto/interface').DID<'key'>) {
+  async setCurrentSpace(did: DID<'key'>) {
     this.currentSpace = did
     await this.#save(this.export())
   }
 
   async addDelegation(
-    delegation: import('@ucanto/interface').Delegation,
+    delegation: Delegation,
     meta?: DelegationMeta,
   ) {
     this.delegations.set(delegation.cid.toString(), {
