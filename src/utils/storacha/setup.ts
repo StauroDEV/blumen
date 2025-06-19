@@ -1,4 +1,3 @@
-
 import { CarReader } from '@ipld/car/reader'
 import { importDAG } from '@ucanto/core/delegation'
 import { Signer } from '@ucanto/principal/ed25519'
