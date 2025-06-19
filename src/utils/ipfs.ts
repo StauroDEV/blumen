@@ -11,11 +11,12 @@ import { CAREncoderStream } from './car.js'
 
 const tmp = tmpdir()
 
-const placeholderCID = CID.parse('bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi')
+const placeholderCID = CID.parse(
+  'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi',
+)
 
 export const packCAR = async (files: FileEntry[], name: string, dir = tmp) => {
   const output = `${dir}/${name}.car`
-
 
   let rootCID = placeholderCID
 

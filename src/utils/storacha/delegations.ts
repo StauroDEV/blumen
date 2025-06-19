@@ -27,10 +27,8 @@ export function canDelegateCapability(
 ) {
   const allowsCapabilities = ucanto.Delegation.allows(delegation)
   for (const [uri, abilities] of Object.entries(allowsCapabilities)) {
-    if (matchResource(/** @type {API.Resource} */ (uri), capability.with)) {
-      const cans = Object.keys(abilities) as Ucanto.Ability[]
-
-      for (const can of cans)
+    if (matchResource(uri, capability.with)) {
+      for (const can of Object.keys(abilities) as Ucanto.Ability[])
         if (canDelegateAbility(can, capability.can)) return true
     }
   }
