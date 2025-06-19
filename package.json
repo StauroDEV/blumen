@@ -14,7 +14,7 @@
   "scripts": {
     "build": "bun build src/cli.ts --outdir dist --target node --bundle",
     "postbuild": "chmod +x ./dist/cli.js",
-    "prepublishOnly": "bun run build",
+    "prepublishOnly": "bun run build && bun size-limit",
     "lint": "biome check",
     "types": "tsc --noEmit",
     "test:report": "bun test --coverage --coverage-reporter=lcov"
@@ -40,6 +40,7 @@
     "@ipld/dag-cbor": "^9.2.2",
     "@ipld/dag-ucan": "^3.4.5",
     "@ipld/unixfs": "^3.0.0",
+    "@size-limit/file": "^11.2.0",
     "@stauro/filebase-upload": "^1.0.1",
     "@types/bun": "^1.2.13",
     "@types/node": "^22.14.1",
@@ -55,6 +56,7 @@
     "nanotar": "^0.2.0",
     "ox": "^0.7.1",
     "semantic-release": "^24.2.3",
+    "size-limit": "^11.2.0",
     "spektr": "^0.2.0",
     "tinyglobby": "^0.2.12",
     "typescript": "^5.8.3",
@@ -67,5 +69,10 @@
   },
   "publishConfig": {
     "provenance": true
-  }
+  },
+  "size-limit": [{
+    "path": "dist/cli.js",
+    "limit": "1.01MB",
+    "brotli": false
+  }]
 }

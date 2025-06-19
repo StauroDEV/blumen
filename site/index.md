@@ -15,4 +15,4 @@
 - **Multiple Storage Protocols**: Blumen supports both IPFS and Swarm first-class.
 - **ENS and DNSLink Integration**: Seamlessly integrate with [ENS](https://ens.domains) and [DNSLink](https://dnslink.dev) to update your decentralized website.
 - **Safe Integration**: Add an extra layer of security and decentralization with a [Safe](https://safe.global) multi-sig.
-
+- **Tiny size**: 1.01MB unpacked, single file, easy to audit.
