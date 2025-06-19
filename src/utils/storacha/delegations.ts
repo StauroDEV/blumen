@@ -4,13 +4,10 @@ import { canDelegateAbility } from '@web3-storage/capabilities/utils'
 import type { ResourceQuery } from './types.js'
 
 export function isExpired(delegation: Ucanto.Delegation) {
-  if (
+  return (
     delegation.expiration === undefined ||
     delegation.expiration <= Math.floor(Date.now() / 1000)
-  ) {
-    return true
-  }
-  return false
+  )
 }
 
 export function isTooEarly(delegation: Ucanto.Delegation) {

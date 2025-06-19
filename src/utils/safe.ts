@@ -40,14 +40,14 @@ export const prepareSafeTransactionData = async ({
         to: safeAddressWithoutPrefix,
         data: encodeData(getTransactionHash, [
           to,
-          txData.value ?? 0n,
+          0n,
           txData.data,
           txData.operation,
           txData.safeTxGas ?? 0n,
           txData.baseGas ?? 0n,
           txData.gasPrice ?? 0n,
-          txData.gasToken ?? zeroAddress,
-          txData.refundReceiver ?? zeroAddress,
+          zeroAddress,
+          zeroAddress,
           txData.nonce,
         ]),
       },
@@ -107,20 +107,17 @@ export const generateSafeTransactionSignature = async ({
     },
     message: {
       to: to,
-      value: txData.value ?? 0n,
+      value: 0n,
       data: txData.data ?? '0x',
-      operation: txData.operation ?? 0,
+      operation: txData.operation,
       safeTxGas: txData.safeTxGas ?? 0n,
       baseGas: txData.baseGas ?? 0n,
       gasPrice: txData.gasPrice ?? 0n,
-      gasToken: txData.gasToken ?? zeroAddress,
-      refundReceiver: txData.refundReceiver ?? zeroAddress,
+      gasToken: zeroAddress,
+      refundReceiver: zeroAddress,
       nonce: txData.nonce ?? 0n,
     },
   })
 
-  return sign({
-    payload,
-    privateKey,
-  })
+  return sign({ payload, privateKey })
 }

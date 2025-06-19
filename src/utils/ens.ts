@@ -63,7 +63,6 @@ export const setContentHash = {
     },
   ],
   outputs: [],
-  hash: '0x304e6adeefe2004c6cc29faecbd0f0f604a064063c9bee48cb1e52e2f80d9ad5',
 } as const
 
 export const PUBLIC_RESOLVER_ADDRESS: Record<ChainName, Address> = {

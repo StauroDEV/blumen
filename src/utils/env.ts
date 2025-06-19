@@ -18,9 +18,7 @@ export const tokensToProviderNames = (
   for (const key of keys) {
     const provider = PROVIDERS[key]
     if (provider) providers.push(provider.name)
-    else if (key.includes('_TOKEN')) {
-      throw new UnknownProviderError(key)
-    }
+    else if (key.includes('_TOKEN')) throw new UnknownProviderError(key)
   }
   return providers
 }
