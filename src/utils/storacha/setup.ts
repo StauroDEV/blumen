@@ -3,7 +3,6 @@ import { importDAG } from '@ucanto/core/delegation'
 import { Signer } from '@ucanto/principal/ed25519'
 import { Agent } from './agent.js'
 import { AgentData } from './agent-data.js'
-import { StoreMemory } from './memory-store.js'
 
 async function parseProof(data: string) {
   const blocks: Array<Signer.Transport.Block> = []
@@ -22,10 +21,7 @@ export async function setup({
   proof: string
 }) {
   const principal = Signer.parse(pk)
-  const agentData = await AgentData.create(
-    { principal },
-    { store: new StoreMemory() },
-  )
+  const agentData = await AgentData.create({ principal })
   const agent = new Agent(agentData)
   try {
     const proof = await parseProof(_proof)

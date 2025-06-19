@@ -3,11 +3,8 @@ import type * as Ucanto from '@ucanto/interface'
 import { UCAN } from '@web3-storage/capabilities'
 import type { UCANAttest } from '@web3-storage/capabilities/types'
 import { isExpired } from './delegations.js'
-import type { AgentMeta, DelegationMeta, Driver, SpaceMeta } from './types.js'
-
-interface AgentDataOptions {
-  store?: Driver<AgentDataExport>
-}
+import { StoreMemory } from './memory-store.js'
+import type { AgentMeta, DelegationMeta, SpaceMeta } from './types.js'
 
 /**
  * Data schema used internally by the agent.
@@ -47,32 +44,35 @@ export class AgentData implements AgentDataModel {
   spaces: Map<`did:${string}:${string}`, SpaceMeta> = new Map()
   currentSpace: `did:key:${string}` | undefined
 
-  constructor(data: AgentDataModel, options: AgentDataOptions = {}) {
+  constructor(
+    data: AgentDataModel,
+    { store }: { store?: StoreMemory<AgentDataExport> } = {},
+  ) {
     this.meta = data.meta
     this.principal = data.principal
     this.delegations = data.delegations
-    this.#save = (data) =>
-      options.store ? options.store.save(data) : undefined
+    this.#save = (data) => (store ? store.save(data) : undefined)
   }
 
   /**
    * Create a new AgentData instance from the passed initialization data.
    */
   static async create(
-    init: Pick<AgentDataModel, 'principal'> & Partial<Omit<AgentDataModel, 'principal'>>,
-    options: AgentDataOptions = {},
+    init: Pick<AgentDataModel, 'principal'> &
+      Partial<Omit<AgentDataModel, 'principal'>>,
   ) {
+    const store = new StoreMemory<AgentDataExport>()
     const agentData = new AgentData(
       {
         meta: { name: 'agent', type: 'device', ...init.meta },
         principal: init.principal,
         delegations: new Map(),
       },
-      options,
+      { store },
     )
-    if (options.store) {
-      await options.store.save(agentData.export())
-    }
+
+    await store.save(agentData.export())
+
     return agentData
   }
 

@@ -129,7 +129,8 @@ export class Agent {
   }
 
   async setCurrentSpace(space: `did:key:${string}`) {
-    if (!this.#data.spaces.has(space)) throw new Error(`Agent has no proofs for ${space}.`)
+    if (!this.#data.spaces.has(space))
+      throw new Error(`Agent has no proofs for ${space}.`)
 
     await this.#data.setCurrentSpace(space)
   }

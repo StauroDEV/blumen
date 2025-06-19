@@ -36,10 +36,8 @@ export const fromDelegation = (delegation: Delegation) => {
     throw Object.assign(
       new Error(
         `Invalid delegation, expected capabilities[0].with to be DID, ${result.error}`,
+        { cause: result.error },
       ),
-      {
-        cause: result.error,
-      },
     )
   }
 

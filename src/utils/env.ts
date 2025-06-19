@@ -5,10 +5,7 @@ export const parseTokensFromEnv = () => {
   const tokens = new Map<string, string>()
 
   for (const [key, value] of Object.entries(process.env)) {
-    const prefix = 'BLUMEN_'
-    if (key.startsWith(prefix) && value) {
-      tokens.set(key.slice(7), value)
-    }
+    if (key.startsWith('BLUMEN_') && value) tokens.set(key.slice(7), value)
   }
   return tokens
 }

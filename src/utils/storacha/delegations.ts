@@ -19,13 +19,10 @@ export function isTooEarly(delegation: Ucanto.Delegation) {
 }
 
 const matchResource = (resource: string, query: ResourceQuery) => {
-  if (query === 'ucan:*') {
-    return true
-  } else if (typeof query === 'string') {
-    return resource === query
-  } else {
-    return query.test(resource)
+  if (typeof query === 'string') {
+    return query === 'ucan:*' || resource === query
   }
+  return query.test(resource)
 }
 
 export function canDelegateCapability(
@@ -34,7 +31,7 @@ export function canDelegateCapability(
 ) {
   const allowsCapabilities = ucanto.Delegation.allows(delegation)
   for (const [uri, abilities] of Object.entries(allowsCapabilities)) {
-    if (matchResource(/** @type {API.Resource} */(uri), capability.with)) {
+    if (matchResource(/** @type {API.Resource} */ (uri), capability.with)) {
       const cans = Object.keys(abilities) as Ucanto.Ability[]
 
       for (const can of cans) {
