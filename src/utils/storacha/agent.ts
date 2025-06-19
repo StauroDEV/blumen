@@ -14,7 +14,7 @@ interface CapabilityQuery {
   nb?: unknown
 }
 
-const HOST = 'https://up.web3.storage'
+const HOST = new URL('https://up.web3.storage')
 const PRINCIPAL = DID.parse('did:web:web3.storage')
 
 function connection<
@@ -25,7 +25,6 @@ function connection<
     principal?: Client.Principal<T>
     url?: URL
     channel?: API.Transport.Channel<S>
-    fetch?: typeof fetch
   } = {},
 ): API.ConnectionView<S> {
   return Client.connect({
@@ -47,14 +46,12 @@ interface AgentOptions {
 
 export class Agent {
   #data: AgentData
-  url: URL
   connection: Client.ConnectionView<Record<string, any>>
 
   constructor(data: AgentData, options: AgentOptions = {}) {
-    this.url = options.url ?? new URL(HOST)
     this.connection = connection({
       principal: options.servicePrincipal,
-      url: this.url,
+      url: HOST,
     })
     this.#data = data
   }
@@ -126,21 +123,15 @@ export class Agent {
     await this.addProof(space.delegation)
 
     // if we do not have a current space, make this one current
-    if (!this.currentSpace()) {
-      await this.setCurrentSpace(space.did())
-    }
+    if (!this.currentSpace()) await this.setCurrentSpace(space.did())
 
     return space
   }
 
   async setCurrentSpace(space: `did:key:${string}`) {
-    if (!this.#data.spaces.has(space)) {
-      throw new Error(`Agent has no proofs for ${space}.`)
-    }
+    if (!this.#data.spaces.has(space)) throw new Error(`Agent has no proofs for ${space}.`)
 
     await this.#data.setCurrentSpace(space)
-
-    return space
   }
 
   /**

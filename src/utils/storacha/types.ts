@@ -25,14 +25,6 @@ export interface DelegationMeta {
 
 export interface Driver<T> {
   /**
-   * Open driver
-   */
-  open: () => Promise<void>
-  /**
-   * Clean up and close driver
-   */
-  close: () => Promise<void>
-  /**
    * Persist data to the driver's backend
    */
   save: (data: T) => Promise<void>

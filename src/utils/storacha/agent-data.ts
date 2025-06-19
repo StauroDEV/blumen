@@ -1,5 +1,4 @@
 import type * as Ucanto from '@ucanto/interface'
-import { Signer as EdSigner } from '@ucanto/principal/ed25519'
 
 import { UCAN } from '@web3-storage/capabilities'
 import type { UCANAttest } from '@web3-storage/capabilities/types'
@@ -60,13 +59,13 @@ export class AgentData implements AgentDataModel {
    * Create a new AgentData instance from the passed initialization data.
    */
   static async create(
-    init: Partial<AgentDataModel> = {},
+    init: Pick<AgentDataModel, 'principal'> & Partial<Omit<AgentDataModel, 'principal'>>,
     options: AgentDataOptions = {},
   ) {
     const agentData = new AgentData(
       {
         meta: { name: 'agent', type: 'device', ...init.meta },
-        principal: init.principal ?? (await EdSigner.generate()),
+        principal: init.principal,
         delegations: new Map(),
       },
       options,

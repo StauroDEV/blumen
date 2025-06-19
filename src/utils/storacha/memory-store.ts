@@ -1,17 +1,12 @@
 import type { Driver } from './types.js'
 
 export class StoreMemory<T extends Record<string, any> = Record<string, any>>
-  implements Driver<T>
-{
+  implements Driver<T> {
   #data: T | undefined
 
   constructor() {
     this.#data = undefined
   }
-
-  async open() {}
-
-  async close() {}
 
   async reset() {
     this.#data = undefined

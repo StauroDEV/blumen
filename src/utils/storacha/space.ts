@@ -28,16 +28,6 @@ class SharedSpace {
   did() {
     return this.model.id
   }
-
-  /**
-   * @param {string} name
-   */
-  withName(name: string) {
-    return new SharedSpace({
-      ...this.model,
-      meta: { ...this.meta, name },
-    })
-  }
 }
 
 export const fromDelegation = (delegation: Delegation) => {

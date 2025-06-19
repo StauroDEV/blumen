@@ -75,7 +75,7 @@
   },
   "size-limit": [{
     "path": "dist/cli.js",
-    "limit": "1.01MB",
+    "limit": "980KB",
     "brotli": false
   }]
 }
