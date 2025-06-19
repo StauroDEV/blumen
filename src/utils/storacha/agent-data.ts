@@ -1,8 +1,5 @@
 import type * as Ucanto from '@ucanto/interface'
 import type { Delegation, DID } from '@ucanto/interface'
-import { UCAN } from '@web3-storage/capabilities'
-import type { UCANAttest } from '@web3-storage/capabilities/types'
-import { isExpired } from './delegations.js'
 import { StoreMemory } from './memory-store.js'
 import type { AgentMeta, DelegationMeta, SpaceMeta } from './types.js'
 
@@ -111,47 +108,12 @@ export class AgentData implements AgentDataModel {
 
   async addDelegation(
     delegation: Delegation,
-    meta?: DelegationMeta,
+    meta: DelegationMeta = {},
   ) {
     this.delegations.set(delegation.cid.toString(), {
       delegation,
-      meta: meta ?? {},
+      meta: meta,
     })
     await this.#save(this.export())
   }
-}
-
-const isSessionCapability = (cap: Ucanto.Capability): boolean =>
-  cap.can === UCAN.attest.can
-
-const isSessionProof = (
-  delegation: Ucanto.Delegation,
-): delegation is Ucanto.Delegation<[UCANAttest]> =>
-  delegation.capabilities.some((cap) => isSessionCapability(cap))
-
-type SessionProofIndexedByAuthorizationAndIssuer = Record<
-  string,
-  Record<Ucanto.DID, [Ucanto.Delegation, ...Ucanto.Delegation[]]>
->
-
-export function getSessionProofs(
-  data: AgentData,
-): SessionProofIndexedByAuthorizationAndIssuer {
-  const proofs: SessionProofIndexedByAuthorizationAndIssuer = {}
-  for (const { delegation } of data.delegations.values()) {
-    if (isSessionProof(delegation)) {
-      const cap = delegation.capabilities[0]
-      if (cap && !isExpired(delegation)) {
-        const proof = cap.nb.proof
-        if (proof) {
-          const proofCid = proof.toString()
-          const issuerDid = delegation.issuer.did()
-          proofs[proofCid] = proofs[proofCid] ?? {}
-          proofs[proofCid][issuerDid] = proofs[proofCid][issuerDid] ?? []
-          proofs[proofCid][issuerDid].push(delegation)
-        }
-      }
-    }
-  }
-  return proofs
 }

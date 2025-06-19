@@ -3,7 +3,7 @@ import { type API, DID } from '@ucanto/core'
 import * as CAR from '@ucanto/transport/car'
 import * as HTTP from '@ucanto/transport/http'
 
-import { type AgentData, getSessionProofs } from './agent-data.js'
+import { type AgentData, } from './agent-data.js'
 import { canDelegateCapability, isExpired, isTooEarly } from './delegations.js'
 import { fromDelegation } from './space.js'
 import type { DelegationMeta, ResourceQuery } from './types.js'
@@ -77,15 +77,6 @@ export class Agent {
       }
     }
 
-    const sessions = getSessionProofs(this.#data)
-
-    for (const proof of [...authorizations.values()]) {
-      const proofsByIssuer = sessions[proof.asCID.toString()] ?? {}
-      const sessionProofs = Object.values(proofsByIssuer).flat()
-      for (const sessionProof of sessionProofs) {
-        authorizations.set(sessionProof.cid.toString(), sessionProof)
-      }
-    }
     return [...authorizations.values()]
   }
 

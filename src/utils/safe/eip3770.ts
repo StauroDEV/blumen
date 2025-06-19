@@ -10,18 +10,13 @@ export function parseEip3770Address(
 }
 
 function validateEthereumAddress(address: string): void {
-  const isValidAddress = validate(address)
-  if (!isValidAddress) {
-    throw new Error(`Invalid Ethereum address ${address}`)
-  }
+  if (!validate(address)) throw new Error(`Invalid Ethereum address ${address}`)
 }
 
-function isValidEip3770NetworkPrefix(prefix: string): boolean {
-  return networkShortNames.some(({ shortName }) => shortName === prefix)
-}
+const isValidEip3770NetworkPrefix = (prefix: string): boolean => networks.some(({ shortName }) => shortName === prefix)
 
 function getEip3770NetworkPrefixFromChainId(chainId: number): string {
-  const network = networkShortNames.find(
+  const network = networks.find(
     (network) => chainId === network.chainId,
   )
   if (!network)
@@ -57,9 +52,8 @@ export function getEip3770Address({
 }): Eip3770AddressInterface {
   const { address, prefix } = parseEip3770Address(fullAddress)
   validateEthereumAddress(address)
-  if (prefix) {
-    validateEip3770NetworkPrefix(prefix, chainId)
-  }
+  if (prefix) validateEip3770NetworkPrefix(prefix, chainId)
+
   return { address, prefix }
 }
 
@@ -68,7 +62,7 @@ interface NetworkShortName {
   chainId: number
 }
 
-const networkShortNames: NetworkShortName[] = [
+const networks: NetworkShortName[] = [
   { chainId: 1, shortName: 'eth' },
   { chainId: 11155111, shortName: 'sep' },
 ]
