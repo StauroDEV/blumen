@@ -1,6 +1,6 @@
+import { canDelegateAbility } from '@storacha/capabilities/utils'
 import * as ucanto from '@ucanto/core'
 import type * as Ucanto from '@ucanto/interface'
-import { canDelegateAbility } from '@web3-storage/capabilities/utils'
 import type { ResourceQuery } from './types.js'
 
 export function isExpired(delegation: Ucanto.Delegation) {

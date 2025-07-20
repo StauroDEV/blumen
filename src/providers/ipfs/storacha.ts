@@ -1,5 +1,5 @@
 import * as DID from '@ipld/dag-ucan/did'
-import { uploadCAR } from '@web3-storage/upload-client'
+import { uploadCAR } from '@storacha/upload-client'
 import { DeployError, MissingKeyError } from '../../errors.js'
 import type { UploadFunction } from '../../types.js'
 import { setup } from '../../utils/storacha/setup.js'
