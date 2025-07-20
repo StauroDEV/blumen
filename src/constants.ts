@@ -103,24 +103,20 @@ export const chains = {
   mainnet: {
     id: 1,
     name: 'Ethereum',
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     blockExplorers: {
       default: {
         name: 'Etherscan',
         url: 'https://etherscan.io',
-        apiUrl: 'https://api.etherscan.io/api',
       },
     },
   },
   sepolia: {
     id: 11_155_111,
     name: 'Sepolia',
-    nativeCurrency: { name: 'Sepolia Ether', symbol: 'ETH', decimals: 18 },
     blockExplorers: {
       default: {
         name: 'Etherscan',
         url: 'https://sepolia.etherscan.io',
-        apiUrl: 'https://api-sepolia.etherscan.io/api',
       },
     },
   },

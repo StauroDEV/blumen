@@ -21,7 +21,7 @@ type AuthArgs = {
 }
 
 export type UploadArgs<T = object> = {
-  cid: string
+  cid?: string
   name: string
   car: Blob
   verbose?: boolean

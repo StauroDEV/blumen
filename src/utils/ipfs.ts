@@ -6,6 +6,7 @@ import type { Block } from '@ipld/car/reader'
 import { CarWriter } from '@ipld/car/writer'
 import { createDirectoryEncoderStream } from '@web3-storage/upload-client/unixfs'
 import { CID } from 'multiformats/cid'
+import { InvalidCIDError } from '../errors.js'
 import type { FileEntry } from '../types.js'
 import { CAREncoderStream } from './car.js'
 
@@ -39,4 +40,14 @@ export const packCAR = async (files: FileEntry[], name: string, dir = tmp) => {
   const file = await readFile(output)
   const blob = new Blob([file], { type: 'application/vnd.ipld.car' })
   return { blob, rootCID }
+}
+
+export const assertCID = (cid: string) => {
+  if (cid.length !== 64) {
+    try {
+      CID.parse(cid)
+    } catch {
+      throw new InvalidCIDError(cid)
+    }
+  }
 }

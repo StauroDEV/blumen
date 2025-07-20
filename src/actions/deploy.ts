@@ -118,7 +118,6 @@ export const deployAction = async ({
           car: blob,
           token: apiTokens.get(envVar)!,
           verbose,
-          cid: '',
           name: '',
           first: true,
           beeURL: apiTokens.get('BEE_URL'),

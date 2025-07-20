@@ -14,7 +14,7 @@ Ethereum.
 ## Features
 
 - **Multi-Provider Deployment**: Deploy your web app simultaneously on multiple
-  IPFS providers, including [Storacha](https://storacha.network),
+  IPFS and Swarm providers, including [Storacha](https://storacha.network),
   [Filebase](https://filebase.com) and many others.
 - **Multiple Storage Protocols**: Blumen supports both IPFS and Swarm
   first-class.
@@ -23,4 +23,4 @@ Ethereum.
   decentralized website.
 - **Safe Integration**: Add an extra layer of security and decentralization with
   a [Safe](https://safe.global) multi-sig.
-- **Tiny size**: 970.93KB source code single file, easy to audit.
+- **Tiny size**: 1.2MB source code single file, easy to audit.

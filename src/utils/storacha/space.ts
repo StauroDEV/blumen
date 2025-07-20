@@ -1,5 +1,7 @@
-import type { Delegation } from '@ucanto/client'
-import { SpaceDID } from '@web3-storage/capabilities/utils'
+import type { Capabilities, Fact } from '@ucanto/client'
+import { DID } from '@ucanto/core/schema'
+
+type Delegation = { facts: Fact[]; capabilities: Capabilities }
 
 type SharedSpaceModel = {
   id: `did:key:${string}`
@@ -22,8 +24,8 @@ class SharedSpace {
   }
 }
 
-export const fromDelegation = (delegation: Delegation) => {
-  const result = SpaceDID.read(delegation.capabilities[0].with)
+export const fromDelegation = ({ facts, capabilities }: Delegation) => {
+  const result = DID.match({ method: 'key' }).read(capabilities[0].with)
   if (result.error) {
     throw new Error(
       `Invalid delegation, expected capabilities[0].with to be DID, ${result.error}`,
@@ -31,7 +33,11 @@ export const fromDelegation = (delegation: Delegation) => {
     )
   }
 
-  const meta: { name?: string } = delegation.facts[0]?.space ?? {}
+  const meta: { name?: string } = facts[0]?.space ?? {}
 
-  return new SharedSpace({ id: result.ok, delegation, meta })
+  return new SharedSpace({
+    id: result.ok,
+    delegation: { facts, capabilities },
+    meta,
+  })
 }

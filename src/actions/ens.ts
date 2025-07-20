@@ -1,5 +1,4 @@
 import { styleText } from 'node:util'
-import { CID } from 'multiformats/cid'
 import { encodeData } from 'ox/AbiFunction'
 import { type Address, fromPublicKey } from 'ox/Address'
 import { type Hex, toBigInt } from 'ox/Hex'
@@ -8,11 +7,7 @@ import { fromHttp } from 'ox/RpcTransport'
 import { getPublicKey } from 'ox/Secp256k1'
 import { toHex } from 'ox/Signature'
 import { chains, isTTY } from '../constants.js'
-import {
-  InvalidCIDError,
-  MissingCLIArgsError,
-  MissingKeyError,
-} from '../errors.js'
+import { MissingCLIArgsError, MissingKeyError } from '../errors.js'
 import type { ChainName } from '../types.js'
 import {
   chainToRpcUrl,
@@ -20,6 +15,7 @@ import {
   prepareUpdateEnsArgs,
   setContentHash,
 } from '../utils/ens.js'
+import { assertCID } from '../utils/ipfs.js'
 import { logger } from '../utils/logger.js'
 import { getNonce } from '../utils/safe/constants.js'
 import {
@@ -63,13 +59,7 @@ export const ensAction = async ({
     resolverAddress,
   } = options
 
-  if (cid.length !== 64) {
-    try {
-      CID.parse(cid)
-    } catch {
-      throw new InvalidCIDError(cid)
-    }
-  }
+  assertCID(cid)
   if (!domain) throw new MissingCLIArgsError([domain])
   const chain = chains[chainName]
 
@@ -113,9 +103,8 @@ export const ensAction = async ({
 
   const data = encodeData(setContentHash, [node, `0x${contentHash}`])
 
-  if (options.verbose) {
-    console.log('Transaction encoded data:', data)
-  }
+  if (options.verbose) console.log('Transaction encoded data:', data)
+
   const to = resolverAddress || PUBLIC_RESOLVER_ADDRESS[chainName]
 
   if (to === PUBLIC_RESOLVER_ADDRESS[chainName] && !domain.endsWith('.eth'))

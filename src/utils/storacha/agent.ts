@@ -76,21 +76,17 @@ export class Agent {
   async importSpaceFromDelegation(delegation: Client.Delegation) {
     const space = fromDelegation(delegation)
 
-    this.#data.spaces.set(space.did(), { ...space.meta, name: space.name })
+    this.#data.spaces.set(space.did(), {
+      ...space.meta,
+      name: space.meta.name || '',
+    })
 
     await this.#data.addDelegation(delegation)
 
     // if we do not have a current space, make this one current
-    if (!this.currentSpace()) await this.setCurrentSpace(space.did())
+    if (!this.currentSpace()) await this.#data.setCurrentSpace(space.did())
 
     return space
-  }
-
-  async setCurrentSpace(space: `did:key:${string}`) {
-    if (!this.#data.spaces.has(space))
-      throw new Error(`Agent has no proofs for ${space}.`)
-
-    await this.#data.setCurrentSpace(space)
   }
 
   /**
