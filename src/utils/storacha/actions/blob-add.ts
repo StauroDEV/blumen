@@ -1,149 +1,170 @@
 import * as BlobCapabilities from '@storacha/capabilities/blob'
 import * as HTTPCapabilities from '@storacha/capabilities/http'
 import * as SpaceBlobCapabilities from '@storacha/capabilities/space/blob'
+import type {
+  BlobAccept,
+  BlobAcceptFailure,
+  BlobAcceptSuccess,
+  SpaceBlobAddSuccess,
+} from '@storacha/capabilities/types'
 import * as UCAN from '@storacha/capabilities/ucan'
 import { SpaceDID } from '@storacha/capabilities/utils'
+import * as W3sBlobCapabilities from '@storacha/capabilities/web3.storage/blob'
 import { Delegation, Receipt } from '@ucanto/core'
-import type {
-  Block,
-  Effect,
-  Invocation as IFInvocation,
-  Receipt as IFReceipt,
-  Link,
-  ReceiptModel,
-  UCANLink,
-} from '@ucanto/interface'
+import type * as Interface from '@ucanto/interface'
+import type { Invocation } from '@ucanto/interface'
+import { ed25519 } from '@ucanto/principal'
 import type { MultihashDigest } from 'multiformats'
 import retry, { AbortError } from 'p-retry'
-import { uploadServicePrincipal } from '../../../providers/ipfs/storacha.js'
 import { connection } from '../agent.js'
-import type { BlobAddOk, InvocationConfig } from '../types.js'
+import { REQUEST_RETRIES, uploadServicePrincipal } from '../constants.js'
+import { poll } from '../receipts.js'
+import type * as API from '../types.js'
 
-function input(digest: MultihashDigest, size: number) {
-  return { blob: { digest: digest.bytes, size } }
-}
-
-function isRecord(x: unknown): x is Record<string, unknown> {
-  return typeof x === 'object' && x !== null
-}
-
-function getConcludeReceipt<
-  Ok extends object = object,
-  Err extends Error = Error,
-  Ran extends IFInvocation = IFInvocation,
->(inv: Ran): IFReceipt {
-  const cap0 = inv.capabilities[0] as unknown
-  if (!isRecord(cap0)) throw new Error('invalid conclude capability')
-  const nb = cap0.nb
-  if (!isRecord(nb)) throw new Error('invalid conclude nb')
-  const receipt = nb.receipt as Link | undefined
-  if (!receipt) throw new Error('conclude receipt link missing')
-
-  const blocks = new Map<string, Block>()
-  for (const block of inv.iterateIPLDBlocks()) blocks.set(`${block.cid}`, block)
+function getConcludeReceipt(concludeFx: Invocation): Interface.Receipt {
+  const receiptBlocks = new Map()
+  for (const block of concludeFx.iterateIPLDBlocks()) {
+    receiptBlocks.set(`${block.cid}`, block)
+  }
   return Receipt.view({
-    root: receipt as Link<ReceiptModel<Ok, Err, Ran>>,
-    blocks,
-  }) as IFReceipt
-}
-
-type NextTasks = {
-  allocate: { task: IFInvocation; receipt: IFReceipt }
-  put?: { task: IFInvocation; receipt?: IFReceipt }
-  accept: { task: IFInvocation; receipt: IFReceipt }
+    // @ts-expect-error object of type unknown
+    root: concludeFx.capabilities[0].nb.receipt,
+    blocks: receiptBlocks,
+  })
 }
 
 function parseBlobAddReceiptNext<
-  Ok extends object = object,
-  Err extends Error = Error,
-  Ran extends IFInvocation = IFInvocation,
->(result: IFReceipt<Ok, Err, Ran>): NextTasks {
-  const fork = result.fx.fork as unknown as (IFInvocation | Effect)[]
-  const invocations: IFInvocation[] = fork.filter(
-    (fx): fx is IFInvocation =>
-      isRecord(fx) &&
-      Array.isArray((fx as Record<string, unknown>).capabilities),
+  Ok extends SpaceBlobAddSuccess,
+  Err extends object,
+>(receipt: Interface.Receipt<Ok, Err>) {
+  const forkInvocations = receipt.fx.fork as Invocation[]
+  const allocateTask =
+    forkInvocations.find(
+      (fork) => fork.capabilities[0].can === BlobCapabilities.allocate.can,
+    ) ??
+    forkInvocations.find(
+      (fork) => fork.capabilities[0].can === W3sBlobCapabilities.allocate.can,
+    )
+  const concludefxs = forkInvocations.filter(
+    (fork) => fork.capabilities[0].can === UCAN.conclude.can,
+  )
+  const putTask = forkInvocations.find(
+    (fork) => fork.capabilities[0].can === HTTPCapabilities.put.can,
   )
 
-  const canOf = (fx: IFInvocation) => fx.capabilities[0]?.can
-  const allocateTask = invocations.find(
-    (fx) => canOf(fx) === BlobCapabilities.allocate.can,
-  )
-  const putTask = invocations.find(
-    (fx) => canOf(fx) === HTTPCapabilities.put.can,
-  )
-  const acceptTask = invocations.find(
-    (fx) => canOf(fx) === BlobCapabilities.accept.can,
-  )
-  const concludefxs = invocations.filter(
-    (fx) => canOf(fx) === UCAN.conclude.can,
-  )
+  const acceptTask = (forkInvocations.find(
+    (fork) => fork.capabilities[0].can === BlobCapabilities.accept.can,
+    /* c8 ignore next 4 */ // tested by legacy integration test in w3up-client
+  ) ??
+    forkInvocations.find(
+      (fork) => fork.capabilities[0].can === W3sBlobCapabilities.accept.can,
+    )) as Interface.Invocation<BlobAccept> | undefined
 
-  if (!allocateTask || !acceptTask)
+  if (!allocateTask || !concludefxs.length || !putTask || !acceptTask) {
     throw new Error('mandatory effects not received')
+  }
 
-  const receipts = concludefxs.map(getConcludeReceipt)
-  const match = (task: IFInvocation) =>
-    receipts.find((r) => r.ran.link().equals(task.cid)) as IFReceipt | undefined
+  // Decode receipts available
+  const nextReceipts = concludefxs.map((fx) => getConcludeReceipt(fx))
 
-  const allocateReceipt = match(allocateTask)
-  const putReceipt = putTask ? match(putTask) : undefined
-  const acceptReceipt = match(acceptTask)
+  const allocateReceipt = nextReceipts.find((receipt) =>
+    receipt.ran.link().equals(allocateTask.cid),
+  )
+  const putReceipt = nextReceipts.find((receipt) =>
+    receipt.ran.link().equals(putTask.cid),
+  )
 
-  if (!allocateReceipt || !acceptReceipt)
-    throw new Error('mandatory receipts not received')
+  const acceptReceipt = nextReceipts.find((receipt) =>
+    receipt.ran.link().equals(acceptTask.cid),
+  ) as
+    | Interface.Receipt<BlobAcceptSuccess, BlobAcceptFailure>
+    | undefined
+
+  /* c8 ignore next 3 */
+  if (!allocateReceipt) {
+    throw new Error('mandatory effects not received')
+  }
 
   return {
-    allocate: { task: allocateTask, receipt: allocateReceipt },
-    ...(putTask ? { put: { task: putTask, receipt: putReceipt } } : {}),
-    accept: { task: acceptTask, receipt: acceptReceipt },
+    allocate: {
+      task: allocateTask,
+      receipt: allocateReceipt,
+    },
+    put: {
+      task: putTask,
+      receipt: putReceipt,
+    },
+    accept: {
+      task: acceptTask,
+      receipt: acceptReceipt,
+    },
   }
 }
 
-function readAddress(
-  r: IFReceipt,
-): { url: string; headers: Record<string, string> } | undefined {
-  const ok = (r as unknown as { out?: { ok?: unknown } }).out?.ok
-  if (!isRecord(ok)) return undefined
-  const addr = ok.address
-  if (!isRecord(addr)) return undefined
-  const url = addr.url
-  const headers = (addr.headers as Record<string, unknown>) || {}
-  if (typeof url !== 'string') return undefined
-  const h: Record<string, string> = {}
-  for (const [k, v] of Object.entries(headers))
-    if (typeof v === 'string') h[k] = v
-  return { url, headers: h }
+export function createConcludeInvocation(
+  id: Interface.Signer,
+  serviceDid: Interface.Principal,
+  receipt: Interface.Receipt,
+) {
+  const receiptBlocks = []
+  const receiptCids = []
+  for (const block of receipt.iterateIPLDBlocks()) {
+    receiptBlocks.push(block)
+    receiptCids.push(block.cid)
+  }
+  const concludeAllocatefx = UCAN.conclude.invoke({
+    issuer: id,
+    audience: serviceDid,
+    with: id.toDIDKey(),
+    nb: {
+      receipt: receipt.link(),
+    },
+    expiration: Infinity,
+    facts: [
+      {
+        ...receiptCids,
+      },
+    ],
+  })
+  for (const block of receiptBlocks) {
+    concludeAllocatefx.attach(block)
+  }
+
+  return concludeAllocatefx
 }
 
-function readSiteLink(r: IFReceipt): Link | undefined {
-  const ok = (r as unknown as { out?: { ok?: unknown } }).out?.ok
-  if (!isRecord(ok)) return undefined
-  return ok.site as Link | undefined
-}
-
+/**
+ * Store a blob to the service. The issuer needs the `blob/add`
+ * delegated capability.
+ *
+ * Required delegated capability proofs: `blob/add`
+ */
 export async function add(
-  { issuer, with: resource, proofs, audience }: InvocationConfig,
+  { issuer, with: resource, proofs }: API.InvocationConfig,
   digest: MultihashDigest,
   data: Blob | Uint8Array,
-): Promise<BlobAddOk> {
+) {
+  /* c8 ignore next 2 */
   const bytes =
     data instanceof Uint8Array ? data : new Uint8Array(await data.arrayBuffer())
   const size = bytes.length
-  const conn = connection
 
   const result = await retry(
-    async () =>
-      await SpaceBlobCapabilities.add
+    async () => {
+      return await SpaceBlobCapabilities.add
         .invoke({
           issuer,
-          audience: audience ?? uploadServicePrincipal,
+          audience: uploadServicePrincipal,
           with: SpaceDID.from(resource),
           nb: input(digest, size),
           proofs,
         })
-        .execute(conn),
-    { onFailedAttempt: console.warn, retries: 3 },
+        .execute(connection)
+    },
+    {
+      onFailedAttempt: console.warn,
+      retries: REQUEST_RETRIES,
+    },
   )
 
   if (!result.out.ok) {
@@ -152,40 +173,88 @@ export async function add(
     })
   }
 
-  const next = parseBlobAddReceiptNext(result)
-  const { receipt: allocateReceipt } = next.allocate
+  const nextTasks = parseBlobAddReceiptNext(result)
+
+  const { receipt: allocateReceipt } = nextTasks.allocate
+
   if (!allocateReceipt.out.ok) {
     throw new Error(`failed ${SpaceBlobCapabilities.add.can} invocation`, {
       cause: allocateReceipt.out.error,
     })
   }
 
-  const address = readAddress(allocateReceipt)
+  const { address } = allocateReceipt.out.ok as { address: Request }
   if (address) {
     await retry(
       async () => {
         const res = await fetch(address.url, {
           method: 'PUT',
+          mode: 'cors',
           body: bytes,
           headers: address.headers,
-          // @ts-expect-error - required by recent node versions
+          // @ts-expect-error - this is needed by recent versions of node - see https://github.com/bluesky-social/atproto/pull/470 for more info
           duplex: 'half',
         })
-        if (res.status >= 400 && res.status < 500)
+        // do not retry client errors
+        if (res.status >= 400 && res.status < 500) {
           throw new AbortError(`upload failed: ${res.status}`)
-        if (!res.ok) throw new Error(`upload failed: ${res.status}`)
+        }
+        if (!res.ok) {
+          throw new Error(`upload failed: ${res.status}`)
+        }
         await res.arrayBuffer()
       },
-      { retries: 3 },
+      {
+        retries: REQUEST_RETRIES,
+      },
     )
   }
 
-  const { receipt: acceptReceipt } = next.accept
-  if (!acceptReceipt.out.ok) {
-    throw new Error(`${BlobCapabilities.accept.can} failure`, {
-      cause: acceptReceipt.out.error,
+  // Invoke `conclude` with `http/put` receipt
+  let { receipt: httpPutReceipt } = nextTasks.put
+  if (!httpPutReceipt?.out.ok) {
+    const derivedSigner = ed25519.from(
+      nextTasks.put.task.facts[0].keys as Interface.SignerArchive<
+        Interface.DID,
+        typeof ed25519.signatureCode
+      >,
+    )
+    httpPutReceipt = await Receipt.issue({
+      issuer: derivedSigner,
+      ran: nextTasks.put.task.cid,
+      result: { ok: {} },
     })
+    const httpPutConcludeInvocation = createConcludeInvocation(
+      issuer,
+      uploadServicePrincipal,
+      httpPutReceipt,
+    )
+    const ucanConclude = await httpPutConcludeInvocation.execute(connection)
+    if (!ucanConclude.out.ok) {
+      throw new Error(
+        `failed ${UCAN.conclude.can} for ${HTTPCapabilities.put.can} invocation`,
+        {
+          cause: ucanConclude.out.error,
+        },
+      )
+    }
   }
+
+  // Ensure the blob has been accepted
+  let { receipt: acceptReceipt } = nextTasks.accept
+
+  if (!acceptReceipt || !acceptReceipt.out.ok) {
+    acceptReceipt = (await poll(
+      nextTasks.accept.task.link(),
+    )) as unknown as Interface.Receipt<BlobAcceptSuccess, BlobAcceptFailure>
+    if (acceptReceipt?.out.error) {
+      throw new Error(`${BlobCapabilities.accept.can} failure`, {
+        cause: acceptReceipt.out.error,
+      })
+    }
+  }
+
+  if (!acceptReceipt) throw new Error('No accept receipt found')
 
   const blocks = new Map(
     [...acceptReceipt.iterateIPLDBlocks()].map((block) => [
@@ -193,14 +262,24 @@ export async function add(
       block,
     ]),
   )
-  const siteRoot = readSiteLink(acceptReceipt)
-  if (!siteRoot) throw new Error('missing site link in accept receipt')
 
   const site = Delegation.view({
-    root: siteRoot as UCANLink,
+    root: acceptReceipt.out.ok?.site as Interface.UCANLink,
     blocks,
-  }) as BlobAddOk['site']
+  })
+
   return { site }
 }
 
+/** Returns the ability used by an invocation. */
 export const ability = SpaceBlobCapabilities.add.can
+
+/**
+ * Returns required input to the invocation.
+ */
+export const input = (digest: MultihashDigest, size: number) => ({
+  blob: {
+    digest: digest.bytes,
+    size,
+  },
+})

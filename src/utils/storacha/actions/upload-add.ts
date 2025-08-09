@@ -3,8 +3,8 @@ import * as UploadCapabilities from '@storacha/capabilities/upload'
 import { SpaceDID } from '@storacha/capabilities/utils'
 import type { UnknownLink } from 'multiformats/link'
 import retry from 'p-retry'
-import { uploadServicePrincipal } from '../../../providers/ipfs/storacha.js'
 import { connection } from '../agent.js'
+import { uploadServicePrincipal } from '../constants.js'
 import type { CARLink, InvocationConfig } from '../types.js'
 /**
  * Register an "upload" with the service. The issuer needs the `upload/add`
@@ -13,23 +13,21 @@ import type { CARLink, InvocationConfig } from '../types.js'
  * Required delegated capability proofs: `upload/add`
  */
 export async function add(
-  { issuer, with: resource, proofs, audience }: InvocationConfig,
+  { issuer, with: resource, proofs }: InvocationConfig,
   root: UnknownLink,
   shards: CARLink[],
 ): Promise<UploadAddSuccess> {
-  const conn = connection
   const result = await retry(
     async () => {
       return await UploadCapabilities.add
         .invoke({
           issuer,
-          /* c8 ignore next */
-          audience: audience ?? uploadServicePrincipal,
+          audience: uploadServicePrincipal,
           with: SpaceDID.from(resource),
           nb: { root, shards },
           proofs,
         })
-        .execute(conn)
+        .execute(connection)
     },
     {
       onFailedAttempt: console.warn,

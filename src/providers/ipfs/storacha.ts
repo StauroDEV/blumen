@@ -1,13 +1,14 @@
-import * as DID from '@ipld/dag-ucan/did'
 import { DeployError, MissingKeyError } from '../../errors.js'
 import type { UploadFunction } from '../../types.js'
 import { setup } from '../../utils/storacha/setup.js'
 import { uploadCAR } from '../../utils/storacha/upload-car.js'
 
-const providerName = 'Storacha'
+export {
+  uploadServicePrincipal,
+  uploadServiceURL,
+} from '../../utils/storacha/constants.js'
 
-export const uploadServiceURL = new URL('https://up.storacha.network')
-export const uploadServicePrincipal = DID.parse('did:web:up.storacha.network')
+const providerName = 'Storacha'
 
 export const uploadOnWStoracha: UploadFunction<{ proof: string }> = async ({
   token,
@@ -18,7 +19,9 @@ export const uploadOnWStoracha: UploadFunction<{ proof: string }> = async ({
 
   const agent = await setup({ pk: token, proof })
 
-  const resource = agent.currentSpace()!
+  const resource = agent.currentSpace()
+
+  if (!resource) throw new Error('No space found')
 
   const abilities = ['space/blob/add', 'upload/add'] as const
 
@@ -27,7 +30,6 @@ export const uploadOnWStoracha: UploadFunction<{ proof: string }> = async ({
       {
         issuer: agent.issuer,
         proofs: agent.proofs(abilities.map((can) => ({ can, with: resource }))),
-        audience: uploadServicePrincipal,
         with: resource,
       },
       car,
@@ -35,6 +37,6 @@ export const uploadOnWStoracha: UploadFunction<{ proof: string }> = async ({
 
     return { cid: cid.toString() }
   } catch (e) {
-    throw new DeployError(providerName, (e as Error).message)
+    throw new DeployError(providerName, (e as Error).message, { cause: e })
   }
 }

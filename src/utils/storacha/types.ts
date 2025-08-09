@@ -1,16 +1,50 @@
-import type { AssertLocation, SpaceBlobAdd, SpaceBlobAddFailure, SpaceBlobAddSuccess, SpaceBlobGet, SpaceBlobGetFailure, SpaceBlobGetSuccess, SpaceBlobList, SpaceBlobListFailure, SpaceBlobListSuccess, SpaceBlobRemove, SpaceBlobRemoveFailure, SpaceBlobRemoveSuccess, SpaceBlobReplicate, SpaceBlobReplicateFailure, SpaceBlobReplicateSuccess, SpaceIndexAdd, SpaceIndexAddFailure, SpaceIndexAddSuccess, UCANConclude, UCANConcludeFailure, UCANConcludeSuccess, UploadAdd, UploadAddSuccess, UploadGet, UploadGetFailure, UploadGetSuccess, UploadList, UploadListItem, UploadListSuccess, UploadRemove, UploadRemoveSuccess, UsageReport, UsageReportFailure, UsageReportSuccess } from '@storacha/capabilities/types';
+import type {
+  AssertLocation,
+  SpaceBlobAdd,
+  SpaceBlobAddFailure,
+  SpaceBlobAddSuccess,
+  SpaceBlobGet,
+  SpaceBlobGetFailure,
+  SpaceBlobGetSuccess,
+  SpaceBlobList,
+  SpaceBlobListFailure,
+  SpaceBlobListSuccess,
+  SpaceBlobRemove,
+  SpaceBlobRemoveFailure,
+  SpaceBlobRemoveSuccess,
+  SpaceBlobReplicate,
+  SpaceBlobReplicateFailure,
+  SpaceBlobReplicateSuccess,
+  SpaceIndexAdd,
+  SpaceIndexAddFailure,
+  SpaceIndexAddSuccess,
+  UCANConclude,
+  UCANConcludeFailure,
+  UCANConcludeSuccess,
+  UploadAdd,
+  UploadAddSuccess,
+  UploadGet,
+  UploadGetFailure,
+  UploadGetSuccess,
+  UploadList,
+  UploadListSuccess,
+  UploadRemove,
+  UploadRemoveSuccess,
+  UsageReport,
+  UsageReportFailure,
+  UsageReportSuccess,
+} from '@storacha/capabilities/types'
 import type { StorefrontService } from '@storacha/filecoin-client/storefront'
 import type * as Client from '@ucanto/client'
 import type {
   DID,
-  Failure, 
+  Failure,
   MultihashDigest,
-  Principal,
   Proof,
-  Signer
+  Signer,
 } from '@ucanto/interface'
-import type { CAR } from '@ucanto/transport';
-import type { Version } from 'multiformats';
+import type { CAR } from '@ucanto/transport'
+import type { Version } from 'multiformats'
 
 /**
  * Agent metadata used to describe an agent ("audience")
@@ -70,10 +104,6 @@ export interface InvocationConfig {
    */
   issuer: Signer
   /**
-   * The principal delegated to in the current UCAN.
-   */
-  audience?: Principal
-  /**
    * The resource the invocation applies to.
    */
   with: DID
@@ -87,36 +117,68 @@ export type SliceDigest = MultihashDigest
 
 export interface Service extends StorefrontService {
   ucan: {
-      conclude: Client.ServiceMethod<UCANConclude, UCANConcludeSuccess, UCANConcludeFailure>;
-  };
+    conclude: Client.ServiceMethod<
+      UCANConclude,
+      UCANConcludeSuccess,
+      UCANConcludeFailure
+    >
+  }
   space: {
-      blob: {
-          add: Client.ServiceMethod<SpaceBlobAdd, SpaceBlobAddSuccess, SpaceBlobAddFailure>;
-          remove: Client.ServiceMethod<SpaceBlobRemove, SpaceBlobRemoveSuccess, SpaceBlobRemoveFailure>;
-          list: Client.ServiceMethod<SpaceBlobList, SpaceBlobListSuccess, SpaceBlobListFailure>;
-          get: {
-              0: {
-                  1: Client.ServiceMethod<SpaceBlobGet, SpaceBlobGetSuccess, SpaceBlobGetFailure>;
-              };
-          };
-          replicate: Client.ServiceMethod<SpaceBlobReplicate, SpaceBlobReplicateSuccess, SpaceBlobReplicateFailure>;
-      };
-      index: {
-          add: Client.ServiceMethod<SpaceIndexAdd, SpaceIndexAddSuccess, SpaceIndexAddFailure>;
-      };
-  };
+    blob: {
+      add: Client.ServiceMethod<
+        SpaceBlobAdd,
+        SpaceBlobAddSuccess,
+        SpaceBlobAddFailure
+      >
+      remove: Client.ServiceMethod<
+        SpaceBlobRemove,
+        SpaceBlobRemoveSuccess,
+        SpaceBlobRemoveFailure
+      >
+      list: Client.ServiceMethod<
+        SpaceBlobList,
+        SpaceBlobListSuccess,
+        SpaceBlobListFailure
+      >
+      get: {
+        0: {
+          1: Client.ServiceMethod<
+            SpaceBlobGet,
+            SpaceBlobGetSuccess,
+            SpaceBlobGetFailure
+          >
+        }
+      }
+      replicate: Client.ServiceMethod<
+        SpaceBlobReplicate,
+        SpaceBlobReplicateSuccess,
+        SpaceBlobReplicateFailure
+      >
+    }
+    index: {
+      add: Client.ServiceMethod<
+        SpaceIndexAdd,
+        SpaceIndexAddSuccess,
+        SpaceIndexAddFailure
+      >
+    }
+  }
   upload: {
-      add: Client.ServiceMethod<UploadAdd, UploadAddSuccess, Failure>;
-      get: Client.ServiceMethod<UploadGet, UploadGetSuccess, UploadGetFailure>;
-      remove: Client.ServiceMethod<UploadRemove, UploadRemoveSuccess, Failure>;
-      list: Client.ServiceMethod<UploadList, UploadListSuccess, Failure>;
-  };
+    add: Client.ServiceMethod<UploadAdd, UploadAddSuccess, Failure>
+    get: Client.ServiceMethod<UploadGet, UploadGetSuccess, UploadGetFailure>
+    remove: Client.ServiceMethod<UploadRemove, UploadRemoveSuccess, Failure>
+    list: Client.ServiceMethod<UploadList, UploadListSuccess, Failure>
+  }
   usage: {
-      report: Client.ServiceMethod<UsageReport, UsageReportSuccess, UsageReportFailure>;
-  };
+    report: Client.ServiceMethod<
+      UsageReport,
+      UsageReportSuccess,
+      UsageReportFailure
+    >
+  }
 }
 export interface BlobAddOk {
-  site: Client.Delegation<[AssertLocation]>;
+  site: Client.Delegation<[AssertLocation]>
 }
 
 /**
@@ -125,4 +187,3 @@ export interface BlobAddOk {
 export type AnyLink = Client.Link<unknown, number, number, Version>
 
 export type CARLink = Client.Link<unknown, typeof CAR.codec.code>
-

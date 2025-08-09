@@ -8,11 +8,8 @@ import {
 import type { API } from '@ucanto/core'
 import { outbound as CAR_outbound } from '@ucanto/transport/car'
 import * as HTTP from '@ucanto/transport/http'
-import {
-  uploadServicePrincipal,
-  uploadServiceURL,
-} from '../../providers/ipfs/storacha.js'
 import type { AgentData } from './agent-data.js'
+import { uploadServicePrincipal, uploadServiceURL } from './constants.js'
 import { canDelegateCapability, isExpired, isTooEarly } from './delegations.js'
 import { fromDelegation } from './space.js'
 import type { DelegationMeta, ResourceQuery, Service } from './types.js'

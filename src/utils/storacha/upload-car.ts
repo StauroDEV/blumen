@@ -10,6 +10,7 @@ import * as BlobAdd from './actions/blob-add.js'
 import * as CAR from './actions/car.js'
 import * as Index from './actions/index-add.js'
 import * as Upload from './actions/upload-add.js'
+import { uploadServicePrincipal } from './constants.js'
 import type { InvocationConfig, Position, SliceDigest } from './types.js'
 
 /**
@@ -49,7 +50,7 @@ export const uploadCAR = async (conf: InvocationConfig, car: BlobLike) => {
   const offer = await Storefront.filecoinOffer(
     {
       issuer: conf.issuer,
-      audience: conf.audience,
+      audience: uploadServicePrincipal,
       with: conf.issuer.did(),
       proofs: conf.proofs,
     },
