@@ -1,32 +1,29 @@
-import type { UploadAddSuccess } from '@storacha/capabilities/types'
-import * as UploadCapabilities from '@storacha/capabilities/upload'
+import * as IndexCapabilities from '@storacha/capabilities/space/index'
+import type { CARLink } from '@storacha/capabilities/types'
 import { SpaceDID } from '@storacha/capabilities/utils'
-import type { UnknownLink } from 'multiformats/link'
 import retry from 'p-retry'
 import { uploadServicePrincipal } from '../../../providers/ipfs/storacha.js'
 import { connection } from '../agent.js'
-import type { CARLink, InvocationConfig } from '../types.js'
+import type { InvocationConfig } from '../types.js'
 /**
- * Register an "upload" with the service. The issuer needs the `upload/add`
+ * Register an "index" with the service. The issuer needs the `index/add`
  * delegated capability.
  *
- * Required delegated capability proofs: `upload/add`
+ * Required delegated capability proofs: `index/add`
  */
 export async function add(
   { issuer, with: resource, proofs, audience }: InvocationConfig,
-  root: UnknownLink,
-  shards: CARLink[],
-): Promise<UploadAddSuccess> {
+  index: CARLink,
+) {
   const conn = connection
   const result = await retry(
     async () => {
-      return await UploadCapabilities.add
+      return await IndexCapabilities.add
         .invoke({
           issuer,
-          /* c8 ignore next */
           audience: audience ?? uploadServicePrincipal,
           with: SpaceDID.from(resource),
-          nb: { root, shards },
+          nb: { index },
           proofs,
         })
         .execute(conn)
@@ -37,11 +34,11 @@ export async function add(
     },
   )
   if (!result.out.ok) {
-    throw new Error(`failed ${UploadCapabilities.add.can} invocation`, {
+    throw new Error(`failed ${IndexCapabilities.add.can} invocation`, {
       cause: result.out.error,
     })
   }
   return result.out.ok
 }
 /** Returns the ability used by an invocation. */
-export const ability = UploadCapabilities.add.can
+export const ability = IndexCapabilities.add.can

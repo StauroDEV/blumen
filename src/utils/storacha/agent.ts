@@ -1,4 +1,3 @@
-import type { Service } from '@storacha/upload-client/types'
 import {
   type Ability,
   type Capability,
@@ -16,7 +15,7 @@ import {
 import type { AgentData } from './agent-data.js'
 import { canDelegateCapability, isExpired, isTooEarly } from './delegations.js'
 import { fromDelegation } from './space.js'
-import type { DelegationMeta, ResourceQuery } from './types.js'
+import type { DelegationMeta, ResourceQuery, Service } from './types.js'
 
 interface CapabilityQuery {
   can: Ability
@@ -35,7 +34,7 @@ export const connection: ConnectionView<Service> = connect({
 
 export class Agent {
   #data: AgentData
-  connection: ConnectionView<Record<string, any>>
+  connection: ConnectionView<Service>
 
   constructor(data: AgentData) {
     this.connection = connection

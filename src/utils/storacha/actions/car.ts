@@ -1,0 +1,82 @@
+import { CarBlockIterator } from '@ipld/car'
+import type * as CarDecoder from '@ipld/car/decoder'
+import { CarWriter } from '@ipld/car/writer'
+import * as dagCBOR from '@ipld/dag-cbor'
+import type { CID } from 'multiformats/cid'
+import varint from 'varint'
+import type { BlobLike } from '../../../types.js'
+import type { AnyLink } from '../types.js'
+
+function toIterable<T>(
+  stream: ReadableStream<T> | AsyncIterable<T>,
+): AsyncIterable<T> {
+  return Symbol.asyncIterator in stream
+    ? stream
+    : (async function* () {
+        const reader = (stream as ReadableStream<T>).getReader()
+        try {
+          while (true) {
+            const { done, value } = await reader.read()
+            if (done) return
+            yield value
+          }
+        } finally {
+          reader.releaseLock()
+        }
+      })()
+}
+
+export async function decode(car: BlobLike) {
+  const iterator = await CarBlockIterator.fromIterable(toIterable(car.stream()))
+  const blocks: CarDecoder.Block[] = []
+  for await (const block of iterator) {
+    blocks.push(block)
+  }
+  const roots = (await iterator.getRoots()) as unknown as AnyLink[]
+  return { blocks, roots }
+}
+
+export const code = 0x0202
+/** Byte length of a CBOR encoded CAR header with zero roots. */
+const NO_ROOTS_HEADER_LENGTH = 18
+
+export function headerEncodingLength(root?: AnyLink) {
+  if (!root) return NO_ROOTS_HEADER_LENGTH
+  const headerLength = dagCBOR.encode({ version: 1, roots: [root] }).length
+  const varintLength = varint.encodingLength(headerLength)
+  return varintLength + headerLength
+}
+
+export function blockHeaderEncodingLength(block: CarDecoder.Block) {
+  const payloadLength = block.cid.bytes.length + block.bytes.length
+  const varintLength = varint.encodingLength(payloadLength)
+  return varintLength + block.cid.bytes.length
+}
+
+export function blockEncodingLength(block: CarDecoder.Block) {
+  return blockHeaderEncodingLength(block) + block.bytes.length
+}
+
+export async function encode(
+  blocks: Iterable<CarDecoder.Block> | AsyncIterable<CarDecoder.Block>,
+  root?: AnyLink,
+) {
+  const { writer, out } = CarWriter.create(root as CID)
+  let error: Error | undefined
+  void (async () => {
+    try {
+      for await (const block of blocks) {
+        await writer.put(block)
+      }
+    } catch (err) {
+      error = err as Error
+    } finally {
+      await writer.close()
+    }
+  })()
+  const chunks = []
+  for await (const chunk of out) chunks.push(chunk)
+  if (error != null) throw error
+  const roots = root != null ? [root] : []
+  return Object.assign(new Blob(chunks), { version: 1, roots })
+}
