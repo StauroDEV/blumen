@@ -54,6 +54,7 @@
     "multiformats": "~13.3.7",
     "nanotar": "^0.2.0",
     "ox": "^0.8.7",
+    "p-retry": "^6.2.1",
     "semantic-release": "^24.2.7",
     "size-limit": "^11.2.0",
     "spektr": "^0.2.0",

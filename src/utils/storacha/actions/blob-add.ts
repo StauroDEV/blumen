@@ -21,8 +21,10 @@ import { REQUEST_RETRIES, uploadServicePrincipal } from '../constants.js'
 import { poll } from '../receipts.js'
 import type * as API from '../types.js'
 
-function getConcludeReceipt(concludeFx: Invocation): Interface.Receipt {
-  const receiptBlocks = new Map()
+function getConcludeReceipt<Ok extends object, Err extends object>(
+  concludeFx: Invocation,
+): Interface.Receipt<Ok, Err> {
+  const receiptBlocks = new Map<string, Interface.Transport.Block>()
   for (const block of concludeFx.iterateIPLDBlocks()) {
     receiptBlocks.set(`${block.cid}`, block)
   }
@@ -54,7 +56,6 @@ function parseBlobAddReceiptNext<
 
   const acceptTask = (forkInvocations.find(
     (fork) => fork.capabilities[0].can === BlobCapabilities.accept.can,
-    /* c8 ignore next 4 */ // tested by legacy integration test in w3up-client
   ) ??
     forkInvocations.find(
       (fork) => fork.capabilities[0].can === W3sBlobCapabilities.accept.can,
@@ -76,11 +77,8 @@ function parseBlobAddReceiptNext<
 
   const acceptReceipt = nextReceipts.find((receipt) =>
     receipt.ran.link().equals(acceptTask.cid),
-  ) as
-    | Interface.Receipt<BlobAcceptSuccess, BlobAcceptFailure>
-    | undefined
+  ) as Interface.Receipt<BlobAcceptSuccess, BlobAcceptFailure> | undefined
 
-  /* c8 ignore next 3 */
   if (!allocateReceipt) {
     throw new Error('mandatory effects not received')
   }
@@ -101,13 +99,13 @@ function parseBlobAddReceiptNext<
   }
 }
 
-export function createConcludeInvocation(
+function createConcludeInvocation<ID extends Interface.DID>(
   id: Interface.Signer,
-  serviceDid: Interface.Principal,
+  serviceDid: Interface.Principal<ID>,
   receipt: Interface.Receipt,
 ) {
-  const receiptBlocks = []
-  const receiptCids = []
+  const receiptBlocks: Interface.Transport.Block[] = []
+  const receiptCids: Interface.Link<unknown, number, number, 1>[] = []
   for (const block of receipt.iterateIPLDBlocks()) {
     receiptBlocks.push(block)
     receiptCids.push(block.cid)
