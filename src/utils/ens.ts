@@ -13,7 +13,7 @@ const concatUint8Arrays = (
   array1: Uint8Array,
   array2: Uint8Array,
 ): Uint8Array => {
-  let result = new Uint8Array(array1.length + array2.length)
+  const result = new Uint8Array(array1.length + array2.length)
   result.set(array1, 0)
   result.set(array2, array1.length)
   return result

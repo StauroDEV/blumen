@@ -36,7 +36,7 @@ async function parseProof(proof: string) {
 
   const decoder = createDecoder(reader)
 
-  let entries: [string, Signer.Transport.Block][] = []
+  const entries: [string, Signer.Transport.Block][] = []
   for await (const block of decoder.blocks())
     entries.push([block.cid.toString(), block as Signer.Transport.Block])
 

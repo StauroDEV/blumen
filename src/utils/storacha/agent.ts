@@ -1,35 +1,44 @@
-import * as Client from '@ucanto/client'
-import { type API, DID } from '@ucanto/core'
-import * as CAR from '@ucanto/transport/car'
+import type { Service } from '@storacha/upload-client/types'
+import {
+  type Ability,
+  type Capability,
+  type ConnectionView,
+  connect,
+  type Delegation,
+} from '@ucanto/client'
+import type { API } from '@ucanto/core'
+import { outbound as CAR_outbound } from '@ucanto/transport/car'
 import * as HTTP from '@ucanto/transport/http'
-
+import {
+  uploadServicePrincipal,
+  uploadServiceURL,
+} from '../../providers/ipfs/storacha.js'
 import type { AgentData } from './agent-data.js'
 import { canDelegateCapability, isExpired, isTooEarly } from './delegations.js'
 import { fromDelegation } from './space.js'
 import type { DelegationMeta, ResourceQuery } from './types.js'
 
 interface CapabilityQuery {
-  can: Client.Ability
+  can: Ability
   with: ResourceQuery
   nb?: unknown
 }
 
-const HOST = new URL('https://up.web3.storage')
-const PRINCIPAL = DID.parse('did:web:web3.storage')
+export const connection: ConnectionView<Service> = connect({
+  id: uploadServicePrincipal,
+  codec: CAR_outbound,
+  channel: HTTP.open({
+    url: uploadServiceURL,
+    method: 'POST',
+  }),
+})
 
 export class Agent {
   #data: AgentData
-  connection: Client.ConnectionView<Record<string, any>>
+  connection: ConnectionView<Record<string, any>>
 
   constructor(data: AgentData) {
-    this.connection = Client.connect({
-      id: PRINCIPAL,
-      codec: CAR.outbound,
-      channel: HTTP.open({
-        url: HOST,
-        method: 'POST',
-      }),
-    })
+    this.connection = connection
     this.#data = data
   }
 
@@ -45,9 +54,7 @@ export class Agent {
         // check if we need to filter for caps
         if (Array.isArray(caps) && caps.length > 0) {
           for (const cap of _caps) {
-            if (
-              canDelegateCapability(value.delegation, cap as Client.Capability)
-            ) {
+            if (canDelegateCapability(value.delegation, cap as Capability)) {
               values.push(value)
             }
           }
@@ -73,7 +80,7 @@ export class Agent {
     return [...authorizations.values()]
   }
 
-  async importSpaceFromDelegation(delegation: Client.Delegation) {
+  async importSpaceFromDelegation(delegation: Delegation) {
     const space = fromDelegation(delegation)
 
     this.#data.spaces.set(space.did(), {

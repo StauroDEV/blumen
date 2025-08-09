@@ -4,11 +4,11 @@ import { tmpdir } from 'node:os'
 import { Writable } from 'node:stream'
 import type { Block } from '@ipld/car/reader'
 import { CarWriter } from '@ipld/car/writer'
-import { createDirectoryEncoderStream } from '@storacha/upload-client/unixfs'
 import { CID } from 'multiformats/cid'
 import { InvalidCIDError } from '../errors.js'
 import type { FileEntry } from '../types.js'
 import { CAREncoderStream } from './car.js'
+import { createDirectoryEncoderStream } from './storacha/directory-encoder.js'
 
 const tmp = tmpdir()
 
