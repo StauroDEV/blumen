@@ -1,10 +1,10 @@
 import { UploadNotSupportedError } from '../../errors.js'
-import type { StatusFunction, UploadFunction } from '../../types.js'
+import type { PinFunction, StatusFunction } from '../../types.js'
 // import { uploadOnS3 } from './s3.js'
 import { specPin, specStatus } from './spec.js'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const uploadOn4everland: UploadFunction<{
+export const uploadOn4everland: PinFunction<{
   bucketName?: string
 }> = async ({ first, bucketName, ...args }) => {
   if (first) {

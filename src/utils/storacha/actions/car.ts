@@ -55,7 +55,7 @@ export async function encode(
       await writer.close()
     }
   })()
-  const chunks: Uint8Array[] = []
+  const chunks: BlobPart[] = []
   for await (const chunk of out) chunks.push(chunk)
   if (error != null) throw error
   const roots = root != null ? [root] : []

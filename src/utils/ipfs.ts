@@ -34,7 +34,7 @@ export const packCAR = async (files: FileEntry[], name: string, dir = tmp) => {
     .pipeTo(Writable.toWeb(createWriteStream(output)))
 
   const fd = await open(output, 'r+')
-  await CarWriter.updateRootsInFile(fd, [rootCID!])
+  await CarWriter.updateRootsInFile(fd, [rootCID])
   await fd.close()
 
   const file = await readFile(output)

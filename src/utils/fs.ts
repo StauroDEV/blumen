@@ -21,7 +21,8 @@ export const walk = async (dir: string, verbose = false) => {
     files.push({
       name,
       size,
-      stream: () => Readable.toWeb(createReadStream(path)) as ReadableStream,
+      stream: () =>
+        Readable.toWeb(createReadStream(path)) as unknown as ReadableStream,
     })
   }
 

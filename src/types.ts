@@ -32,12 +32,24 @@ export type UploadArgs<T = object> = {
 } & AuthArgs &
   T
 
+export type PinArgs<T = object> = {
+  cid: string
+  name: string
+  verbose?: boolean
+  first?: boolean
+} & AuthArgs &
+  T
+
 type UploadReturnType = {
   cid: string
   providers?: string[]
   status?: PinStatus
   rID?: string
 }
+
+export type PinFunction<T = object> = (
+  args: PinArgs<T>,
+) => Promise<UploadReturnType>
 
 export type UploadFunction<T = object> = (
   args: UploadArgs<T>,
