@@ -69,9 +69,6 @@
       "main"
     ]
   },
-  "publishConfig": {
-    "provenance": true
-  },
   "size-limit": [
     {
       "path": "dist/cli.js",
