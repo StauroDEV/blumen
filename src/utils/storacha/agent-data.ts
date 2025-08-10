@@ -1,5 +1,5 @@
 import type * as Ucanto from '@ucanto/interface'
-import type { Delegation, DID } from '@ucanto/interface'
+import type { Delegation } from '@ucanto/interface'
 import { StoreMemory } from './memory-store.js'
 import type { AgentMeta, DelegationMeta, SpaceMeta } from './types.js'
 
@@ -39,7 +39,6 @@ export class AgentData implements AgentDataModel {
   >
   meta: AgentMeta
   spaces: Map<`did:${string}:${string}`, SpaceMeta> = new Map()
-  currentSpace: `did:key:${string}` | undefined
 
   constructor(
     data: AgentDataModel,
@@ -77,7 +76,6 @@ export class AgentData implements AgentDataModel {
    * Export data in a format safe to pass to `structuredClone()`.
    */
   export() {
-    /** @type {AgentDataExport} */
     const raw: AgentDataExport = {
       meta: this.meta,
       principal: this.principal.toArchive(),
@@ -96,14 +94,6 @@ export class AgentData implements AgentDataModel {
       })
     }
     return raw
-  }
-
-  /**
-   * @deprecated
-   */
-  async setCurrentSpace(did: DID<'key'>) {
-    this.currentSpace = did
-    await this.#save(this.export())
   }
 
   async addDelegation(delegation: Delegation, meta: DelegationMeta = {}) {

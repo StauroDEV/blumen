@@ -17,11 +17,9 @@ export const uploadOnWStoracha: UploadFunction<{ proof: string }> = async ({
 }) => {
   if (!proof) throw new MissingKeyError(`STORACHA_PROOF`)
 
-  const agent = await setup({ pk: token, proof })
+  const { agent, space } = await setup({ pk: token, proof })
 
-  const resource = agent.currentSpace()
-
-  if (!resource) throw new Error('No space found')
+  if (!space) throw new Error('No space found')
 
   const abilities = ['space/blob/add', 'upload/add'] as const
 
@@ -29,8 +27,10 @@ export const uploadOnWStoracha: UploadFunction<{ proof: string }> = async ({
     const cid = await uploadCAR(
       {
         issuer: agent.issuer,
-        proofs: agent.proofs(abilities.map((can) => ({ can, with: resource }))),
-        with: resource,
+        proofs: agent.proofs(
+          abilities.map((can) => ({ can, with: space.did() })),
+        ),
+        with: space.did(),
       },
       car,
     )

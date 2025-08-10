@@ -51,9 +51,9 @@ export async function setup({ pk, proof }: { pk: string; proof: string }) {
   const agentData = await AgentData.create({ principal: Signer.parse(pk) })
   const agent = new Agent(agentData)
   try {
-    await agent.importSpaceFromDelegation(await parseProof(proof))
+    const space = await agent.importSpaceFromDelegation(await parseProof(proof))
 
-    return agent
+    return { agent, space }
   } catch {
     throw new Error('Failed to parse UCAN proof')
   }

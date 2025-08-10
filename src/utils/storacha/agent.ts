@@ -86,16 +86,6 @@ export class Agent {
 
     await this.#data.addDelegation(delegation)
 
-    // if we do not have a current space, make this one current
-    if (!this.currentSpace()) await this.#data.setCurrentSpace(space.did())
-
     return space
-  }
-
-  /**
-   * Get current space DID
-   */
-  currentSpace() {
-    return this.#data.currentSpace
   }
 }
