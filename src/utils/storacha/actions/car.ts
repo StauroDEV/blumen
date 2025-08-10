@@ -7,27 +7,8 @@ import varint from 'varint'
 import type { BlobLike } from '../../../types.js'
 import type { AnyLink } from '../types.js'
 
-function toIterable<T>(
-  stream: ReadableStream<T> | AsyncIterable<T>,
-): AsyncIterable<T> {
-  return Symbol.asyncIterator in stream
-    ? stream
-    : (async function* () {
-        const reader = (stream as ReadableStream<T>).getReader()
-        try {
-          while (true) {
-            const { done, value } = await reader.read()
-            if (done) return
-            yield value
-          }
-        } finally {
-          reader.releaseLock()
-        }
-      })()
-}
-
 export async function decode(car: BlobLike) {
-  const iterator = await CarBlockIterator.fromIterable(toIterable(car.stream()))
+  const iterator = await CarBlockIterator.fromIterable(car.stream())
   const blocks: CarDecoder.Block[] = []
   for await (const block of iterator) {
     blocks.push(block)
@@ -74,7 +55,7 @@ export async function encode(
       await writer.close()
     }
   })()
-  const chunks = []
+  const chunks: Uint8Array[] = []
   for await (const chunk of out) chunks.push(chunk)
   if (error != null) throw error
   const roots = root != null ? [root] : []
