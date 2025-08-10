@@ -3,7 +3,7 @@ import { isDelegation, Receipt } from '@ucanto/core'
 import type { Capability, UCANLink } from '@ucanto/interface'
 import { CAR } from '@ucanto/transport'
 import type { UnknownLink } from 'multiformats'
-import retry, { AbortError } from 'p-retry'
+import { retry } from '../retry.js'
 import { REQUEST_RETRIES, receiptsEndpoint } from './constants.js'
 
 class ReceiptNotFound extends Error {
@@ -42,10 +42,9 @@ export async function poll<C extends Capability>(taskCid: UCANLink<[C]>) {
         if (res.error.name === 'ReceiptNotFound') {
           throw res.error
         } else {
-          throw new AbortError(
-            new Error(`failed to fetch receipt for task: ${taskCid}`, {
-              cause: res.error,
-            }),
+          throw new DOMException(
+            `failed to fetch receipt for task: ${taskCid}`,
+            'AbortError'
           )
         }
       }

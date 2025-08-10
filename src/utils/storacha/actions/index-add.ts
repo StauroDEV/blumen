@@ -1,7 +1,7 @@
 import * as IndexCapabilities from '@storacha/capabilities/space/index'
 import type { CARLink } from '@storacha/capabilities/types'
 import { SpaceDID } from '@storacha/capabilities/utils'
-import retry from 'p-retry'
+import { retry } from '../../retry.js'
 import { connection } from '../agent.js'
 import { uploadServicePrincipal } from '../constants.js'
 import type { InvocationConfig } from '../types.js'
