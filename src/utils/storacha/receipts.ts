@@ -44,7 +44,7 @@ export async function poll<C extends Capability>(taskCid: UCANLink<[C]>) {
         } else {
           throw new DOMException(
             `failed to fetch receipt for task: ${taskCid}`,
-            'AbortError'
+            'AbortError',
           )
         }
       }

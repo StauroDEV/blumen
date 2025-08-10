@@ -7,30 +7,30 @@
 export async function retry<T>(
   fn: () => Promise<T>,
   options: {
-    retries?: number;
-    onFailedAttempt?: (error: Error, attempt: number) => void;
-  } = {}
+    retries?: number
+    onFailedAttempt?: (error: Error, attempt: number) => void
+  } = {},
 ): Promise<T> {
-  const { retries = 3, onFailedAttempt } = options;
-  
+  const { retries = 3, onFailedAttempt } = options
+
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      return await fn();
+      return await fn()
     } catch (error) {
       if (attempt === retries) {
-        throw error;
+        throw error
       }
 
       if (error instanceof Error && error.name === 'AbortError') {
-        throw error;
+        throw error
       }
 
       // Call onFailedAttempt callback if provided
       if (onFailedAttempt && error instanceof Error) {
-        onFailedAttempt(error, attempt);
+        onFailedAttempt(error, attempt)
       }
     }
   }
 
-  throw new Error('Unexpected retry loop end');
+  throw new Error('Unexpected retry loop end')
 }
