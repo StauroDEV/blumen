@@ -34,10 +34,6 @@ export function blockHeaderEncodingLength(block: CarDecoder.Block) {
   return varintLength + block.cid.bytes.length
 }
 
-export function blockEncodingLength(block: CarDecoder.Block) {
-  return blockHeaderEncodingLength(block) + block.bytes.length
-}
-
 export async function encode(
   blocks: Iterable<CarDecoder.Block> | AsyncIterable<CarDecoder.Block>,
   root?: AnyLink,

@@ -78,10 +78,6 @@ export interface Driver<T> {
    * Loads data from the driver's backend
    */
   load: () => Promise<T | undefined>
-  /**
-   * Clean all the data in the driver's backend
-   */
-  reset: () => Promise<void>
 }
 
 /**

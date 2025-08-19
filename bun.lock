@@ -3,9 +3,6 @@
   "workspaces": {
     "": {
       "name": "blumen",
-      "dependencies": {
-        "base64url": "^3.0.1",
-      },
       "devDependencies": {
         "@biomejs/biome": "^2.1.4",
         "@ipld/car": "^5.4.2",
@@ -279,8 +276,6 @@
     "ascii-bar": ["ascii-bar@1.0.3", "", {}, "sha512-03/Or+57cC3kGc7oOS4ASt/HPmApUfEs+pGd+W2Z878Y2CpZ76xKiNxTxwdLFlFXFBnJNFM1c6kO8fuYwwzYlg=="],
 
     "aws4": ["aws4@1.13.2", "", {}, "sha512-lHe62zvbTB5eEABUVi/AwVh0ZKY9rMMDhmm+eeyuuUQbQ3+J+fONVQOZyj+DdrvD4BY33uYniyRJ4UJIaSKAfw=="],
-
-    "base64url": ["base64url@3.0.1", "", {}, "sha512-ir1UPr3dkwexU7FdV8qBBbNDRUhMmIekYMFZfi+C/sLNnRESKPl23nB9b2pltqfOQNnGzsDdId90AEtG5tCx4A=="],
 
     "before-after-hook": ["before-after-hook@4.0.0", "", {}, "sha512-q6tR3RPqIB1pMiTRMFcZwuG5T8vwp+vUvEG0vuI6B+Rikh5BfPp2fQ82c925FOs+b0lcFQ8CFrL+KbilfZFhOQ=="],
 

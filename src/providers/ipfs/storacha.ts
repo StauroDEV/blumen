@@ -1,4 +1,4 @@
-import { DeployError, MissingKeyError, PinningNotSupportedError } from '../../errors.js'
+import { DeployError, MissingKeyError } from '../../errors.js'
 import type { UploadFunction } from '../../types.js'
 import { setup } from '../../utils/storacha/setup.js'
 import { uploadCAR } from '../../utils/storacha/upload-car.js'
@@ -21,7 +21,7 @@ export const uploadOnStoracha: UploadFunction<{ proof: string }> = async ({
 
   if (!space) throw new Error('No space found')
 
-  const abilities = ['space/blob/add', 'upload/add'] as const
+  const abilities = ['space/blob/add', 'space/index/add', 'upload/add'] as const
 
   try {
     const cid = await uploadCAR(
