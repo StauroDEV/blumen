@@ -12,7 +12,7 @@ Status][gh-actions-img]][github-actions] ![npm](https://img.shields.io/npm/dt/bl
 
 **Blumen** is a CLI to deploy apps on the decentralized web with IPFS, Swarm and Ethereum.
 
-> Blumen is in an alpha stage and has been neither audited nor tested yet. Use with caution!
+> Blumen has not undergone any security audits and is not thoroughly tested yet. Use with caution!
 
 ## Features
 
