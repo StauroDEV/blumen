@@ -1,4 +1,4 @@
-import { DeployError } from '../../errors.js'
+import { DeployError, PinningNotSupportedError } from '../../errors.js'
 import type { UploadFunction } from '../../types.js'
 import { logger } from '../../utils/logger.js'
 import { referenceToCID } from '../../utils/swarm.js'
@@ -9,9 +9,11 @@ export const uploadOnSwarmy: UploadFunction = async ({
   token,
   car,
   verbose,
+  first,
 }) => {
+  if (!first) throw new PinningNotSupportedError(providerName)
   const body = new FormData()
-  body.append('file', new Blob([car], { type: 'application/x-tar' }))
+  body.append('file', car)
   const res = await fetch('https://api.swarmy.cloud/api/files?website=true', {
     body,
     headers: {

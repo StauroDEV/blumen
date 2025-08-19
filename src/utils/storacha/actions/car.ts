@@ -56,7 +56,7 @@ export async function encode(
     }
   })()
   const chunks: BlobPart[] = []
-  for await (const chunk of out) chunks.push(chunk)
+  for await (const chunk of out) chunks.push(chunk as BlobPart)
   if (error != null) throw error
   const roots = root != null ? [root] : []
   return Object.assign(new Blob(chunks), { version: 1, roots })

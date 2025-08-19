@@ -39,7 +39,7 @@ export const packAction = async ({
 
   if (tar) {
     const tar = await packTAR(files)
-    const blob = new Blob([tar])
+    const blob = new Blob([tar as BlobPart])
     return { blob }
   } else {
     const { rootCID, blob } = await packCAR(files, name, dist)

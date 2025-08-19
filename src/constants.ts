@@ -11,7 +11,7 @@ import { pinOnLighthouse } from './providers/ipfs/lighthouse.js'
 import { pinOnPinata, statusOnPinata } from './providers/ipfs/pinata.js'
 import { pinOnQuicknode } from './providers/ipfs/quicknode.js'
 import { specPin, specStatus } from './providers/ipfs/spec.js'
-import { uploadOnWStoracha } from './providers/ipfs/storacha.js'
+import { uploadOnStoracha } from './providers/ipfs/storacha.js'
 import { uploadOnBee } from './providers/swarm/bee.js'
 import { uploadOnSwarmy } from './providers/swarm/swarmy.js'
 import type {
@@ -32,7 +32,7 @@ export const PROVIDERS: Record<
 > = {
   STORACHA_TOKEN: {
     name: 'Storacha',
-    upload: uploadOnWStoracha,
+    upload: uploadOnStoracha,
     supported: 'upload',
     protocol: 'ipfs',
   },

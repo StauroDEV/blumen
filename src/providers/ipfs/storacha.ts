@@ -1,4 +1,4 @@
-import { DeployError, MissingKeyError } from '../../errors.js'
+import { DeployError, MissingKeyError, PinningNotSupportedError } from '../../errors.js'
 import type { UploadFunction } from '../../types.js'
 import { setup } from '../../utils/storacha/setup.js'
 import { uploadCAR } from '../../utils/storacha/upload-car.js'
@@ -10,7 +10,7 @@ export {
 
 const providerName = 'Storacha'
 
-export const uploadOnWStoracha: UploadFunction<{ proof: string }> = async ({
+export const uploadOnStoracha: UploadFunction<{ proof: string }> = async ({
   token,
   car,
   proof,

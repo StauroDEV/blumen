@@ -21,16 +21,14 @@ type AuthArgs = {
 }
 
 export type UploadArgs<T = object> = {
-  cid?: string
   name: string
-  car: Blob
   verbose?: boolean
-  /**
-   * Where the provider goes first or it's subsequent
-   */
-  first: boolean
-} & AuthArgs &
-  T
+  car: Blob
+} & (
+    | { cid?: never; first: true }
+    | { cid: string; first: false }
+  ) & AuthArgs & T
+
 
 export type PinArgs<T = object> = {
   cid: string
@@ -47,11 +45,11 @@ type UploadReturnType = {
   rID?: string
 }
 
-export type PinFunction<T = object> = (
+export type PinFunction<T = Record<string, unknown>> = (
   args: PinArgs<T>,
 ) => Promise<UploadReturnType>
 
-export type UploadFunction<T = object> = (
+export type UploadFunction<T = Record<string, unknown>> = (
   args: UploadArgs<T>,
 ) => Promise<UploadReturnType>
 

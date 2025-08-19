@@ -150,7 +150,7 @@ export async function add(
         const res = await fetch(address.url, {
           method: 'PUT',
           mode: 'cors',
-          body: bytes,
+          body: bytes as BodyInit,
           headers: address.headers,
           // @ts-expect-error - this is needed by recent versions of node - see https://github.com/bluesky-social/atproto/pull/470 for more info
           duplex: 'half',

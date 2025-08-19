@@ -44,7 +44,7 @@
     "@stauro/filebase-upload": "^1.0.1",
     "@storacha/blob-index": "^1.2.0",
     "@storacha/filecoin-client": "^1.0.11",
-    "@types/bun": "^1.2.19",
+    "@types/bun": "^1.2.20",
     "@types/varint": "^6.0.3",
     "@ucanto/client": "^9.0.1",
     "@ucanto/core": "^10.4.0",
@@ -74,5 +74,8 @@
       "limit": "912KB",
       "brotli": false
     }
-  ]
+  ],
+  "dependencies": {
+    "base64url": "^3.0.1"
+  }
 }

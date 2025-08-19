@@ -37,7 +37,7 @@ export const packCAR = async (files: FileEntry[], name: string, dir = tmp) => {
   await CarWriter.updateRootsInFile(fd, [rootCID])
   await fd.close()
 
-  const file = await readFile(output)
+  const file = await readFile(output) as BufferSource
   const blob = new Blob([file], { type: 'application/vnd.ipld.car' })
   return { blob, rootCID }
 }

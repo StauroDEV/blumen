@@ -1,4 +1,4 @@
-import { DeployError } from '../../errors.js'
+import { DeployError, PinningNotSupportedError } from '../../errors.js'
 import type { UploadFunction } from '../../types.js'
 import { logger } from '../../utils/logger.js'
 import { referenceToCID } from '../../utils/swarm.js'
@@ -10,7 +10,9 @@ export const uploadOnBee: UploadFunction<{ beeURL: string }> = async ({
   car,
   verbose,
   beeURL,
+  first,
 }) => {
+  if (!first) throw new PinningNotSupportedError(providerName)
   const res = await fetch(`${beeURL}/bzz`, {
     body: car,
     headers: {
