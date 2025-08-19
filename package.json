@@ -7,7 +7,7 @@
     "url": "https://github.com/StauroDEV/blumen.git"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.1.4",
+    "@biomejs/biome": "^2.2.0",
     "@ipld/car": "^5.4.2",
     "@ipld/dag-cbor": "^9.2.4",
     "@ipld/dag-ucan": "^3.4.5",
