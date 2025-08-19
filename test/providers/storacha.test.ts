@@ -29,7 +29,7 @@ describe('Storacha provider', () => {
 
         expect(cid).toEqual(car.rootCID.toString())
       },
-      { timeout: Infinity },
+      { timeout: 30_000 },
     )
   })
 })
