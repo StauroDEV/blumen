@@ -24,7 +24,7 @@ jobs:
           node-version: "lts/*"
           cache: "pnpm"
       - name: Install Blumen
-        run: pnpm i -g blumen@0.16.1
+        run: pnpm i -g blumen@latest
       - name: Build website
         run: pnpm i && pnpm build
       - name: Deploy

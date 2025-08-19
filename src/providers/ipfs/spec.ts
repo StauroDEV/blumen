@@ -1,8 +1,8 @@
 import { DeployError, UploadNotSupportedError } from '../../errors.js'
-import type { StatusFunction, UploadFunction } from '../../types.js'
+import type { PinFunction, StatusFunction } from '../../types.js'
 import { logger } from '../../utils/logger.js'
 
-type SpecPinFunction = UploadFunction<{ baseURL: string; providerName: string }>
+type SpecPinFunction = PinFunction<{ baseURL: string; providerName: string }>
 
 export const specPin: SpecPinFunction = async ({
   baseURL,

@@ -36,8 +36,12 @@ export class GatewayError extends Error {
 export class DeployError extends Error {
   name = 'DeployError'
   providerName: string
-  constructor(providerName: string, originalMessage: string) {
-    super(`Failed to deploy on ${providerName}: ${originalMessage}`)
+  constructor(
+    providerName: string,
+    originalMessage: string,
+    { cause }: { cause?: unknown } = {},
+  ) {
+    super(`Failed to deploy on ${providerName}: ${originalMessage}`, { cause })
     this.providerName = providerName
   }
 }

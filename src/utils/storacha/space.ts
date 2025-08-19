@@ -1,5 +1,7 @@
-import type { Delegation } from '@ucanto/client'
-import { SpaceDID } from '@web3-storage/capabilities/utils'
+import type { Capabilities, Fact } from '@ucanto/client'
+import { DID } from '@ucanto/core/schema'
+
+type Delegation = { facts: Fact[]; capabilities: Capabilities }
 
 type SharedSpaceModel = {
   id: `did:key:${string}`
@@ -13,47 +15,29 @@ class SharedSpace {
     this.model = model
   }
 
-  get delegation() {
-    return this.model.delegation
-  }
-
   get meta() {
     return this.model.meta
-  }
-
-  get name() {
-    return this.meta.name ?? ''
   }
 
   did() {
     return this.model.id
   }
-
-  /**
-   * @param {string} name
-   */
-  withName(name: string) {
-    return new SharedSpace({
-      ...this.model,
-      meta: { ...this.meta, name },
-    })
-  }
 }
 
-export const fromDelegation = (delegation: Delegation) => {
-  const result = SpaceDID.read(delegation.capabilities[0].with)
+export const fromDelegation = ({ facts, capabilities }: Delegation) => {
+  const result = DID.match({ method: 'key' }).read(capabilities[0].with)
   if (result.error) {
-    throw Object.assign(
-      new Error(
-        `Invalid delegation, expected capabilities[0].with to be DID, ${result.error}`,
-      ),
-      {
-        cause: result.error,
-      },
+    throw new Error(
+      `Invalid delegation, expected capabilities[0].with to be DID, ${result.error}`,
+      { cause: result.error },
     )
   }
 
-  const meta: { name?: string } = delegation.facts[0]?.space ?? {}
+  const meta: { name?: string } = facts[0]?.space ?? {}
 
-  return new SharedSpace({ id: result.ok, delegation, meta })
+  return new SharedSpace({
+    id: result.ok,
+    delegation: { facts, capabilities },
+    meta,
+  })
 }

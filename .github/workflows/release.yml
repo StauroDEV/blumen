@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: read # for checkout
+  id-token: write # OIDC publishing
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}

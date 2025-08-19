@@ -13,7 +13,7 @@ const concatUint8Arrays = (
   array1: Uint8Array,
   array2: Uint8Array,
 ): Uint8Array => {
-  let result = new Uint8Array(array1.length + array2.length)
+  const result = new Uint8Array(array1.length + array2.length)
   result.set(array1, 0)
   result.set(array2, array1.length)
   return result
@@ -29,23 +29,26 @@ export const prepareUpdateEnsArgs = ({
   codec?: 'ipfs' | 'swarm'
 }) => {
   const node = namehash(normalize(domain))
-  const code = codec === 'ipfs' ? IFPS_CODEC : SWARM_CODEC
+  let code: number
 
   let bytes: Uint8Array
   switch (codec) {
     case 'ipfs':
+      code = IFPS_CODEC
       bytes = CID.parse(cid).toV1().bytes
       break
     case 'swarm':
+      code = SWARM_CODEC
       bytes = referenceToCID(`0x${cid}`).bytes
       break
   }
 
   const codeBytes = Uint8Array.from(varint.encode(code))
 
-  const contentHash = toHex(concatUint8Arrays(codeBytes, bytes)).slice(2)
-
-  return { contentHash, node }
+  return {
+    contentHash: toHex(concatUint8Arrays(codeBytes, bytes)).slice(2),
+    node,
+  }
 }
 
 export const setContentHash = {
@@ -63,7 +66,6 @@ export const setContentHash = {
     },
   ],
   outputs: [],
-  hash: '0x304e6adeefe2004c6cc29faecbd0f0f604a064063c9bee48cb1e52e2f80d9ad5',
 } as const
 
 export const PUBLIC_RESOLVER_ADDRESS: Record<ChainName, Address> = {

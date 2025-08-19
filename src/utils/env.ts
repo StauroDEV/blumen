@@ -5,10 +5,7 @@ export const parseTokensFromEnv = () => {
   const tokens = new Map<string, string>()
 
   for (const [key, value] of Object.entries(process.env)) {
-    const prefix = 'BLUMEN_'
-    if (key.startsWith(prefix) && value) {
-      tokens.set(key.slice(7), value)
-    }
+    if (key.startsWith('BLUMEN_') && value) tokens.set(key.slice(7), value)
   }
   return tokens
 }
@@ -21,9 +18,7 @@ export const tokensToProviderNames = (
   for (const key of keys) {
     const provider = PROVIDERS[key]
     if (provider) providers.push(provider.name)
-    else if (key.includes('_TOKEN')) {
-      throw new UnknownProviderError(key)
-    }
+    else if (key.includes('_TOKEN')) throw new UnknownProviderError(key)
   }
   return providers
 }

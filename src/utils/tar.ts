@@ -30,9 +30,7 @@ export const packTAR = async (
 ): Promise<Uint8Array> => {
   const entries: TarFileItem[] = []
 
-  for (const file of files) {
-    const { name, stream } = file
-
+  for (const { name, stream } of files) {
     entries.push({
       name,
       data: await readableStreamToUint8Array(stream()),

@@ -1,61 +1,40 @@
-import * as Client from '@ucanto/client'
-import { type API, DID } from '@ucanto/core'
-import * as CAR from '@ucanto/transport/car'
+import {
+  type Ability,
+  type Capability,
+  type ConnectionView,
+  connect,
+  type Delegation,
+} from '@ucanto/client'
+import type { API } from '@ucanto/core'
+import { outbound as CAR_outbound } from '@ucanto/transport/car'
 import * as HTTP from '@ucanto/transport/http'
-
-import { type AgentData, getSessionProofs } from './agent-data.js'
+import type { AgentData } from './agent-data.js'
+import { uploadServicePrincipal, uploadServiceURL } from './constants.js'
 import { canDelegateCapability, isExpired, isTooEarly } from './delegations.js'
 import { fromDelegation } from './space.js'
-import type { DelegationMeta, ResourceQuery } from './types.js'
+import type { DelegationMeta, ResourceQuery, Service } from './types.js'
 
 interface CapabilityQuery {
-  can: Client.Ability
+  can: Ability
   with: ResourceQuery
   nb?: unknown
 }
 
-const HOST = 'https://up.web3.storage'
-const PRINCIPAL = DID.parse('did:web:web3.storage')
-
-function connection<
-  T extends Client.DID = Client.DID,
-  S extends Record<string, any> = Record<string, any>,
->(
-  options: {
-    principal?: Client.Principal<T>
-    url?: URL
-    channel?: API.Transport.Channel<S>
-    fetch?: typeof fetch
-  } = {},
-): API.ConnectionView<S> {
-  return Client.connect({
-    id: options.principal ?? PRINCIPAL,
-    codec: CAR.outbound,
-    channel:
-      options.channel ??
-      HTTP.open({
-        url: options.url ?? new URL(HOST),
-        method: 'POST',
-      }),
-  })
-}
-
-interface AgentOptions {
-  url?: URL
-  servicePrincipal?: Client.Principal
-}
+export const connection: ConnectionView<Service> = connect({
+  id: uploadServicePrincipal,
+  codec: CAR_outbound,
+  channel: HTTP.open({
+    url: uploadServiceURL,
+    method: 'POST',
+  }),
+})
 
 export class Agent {
   #data: AgentData
-  url: URL
-  connection: Client.ConnectionView<Record<string, any>>
+  connection: ConnectionView<Service>
 
-  constructor(data: AgentData, options: AgentOptions = {}) {
-    this.url = options.url ?? new URL(HOST)
-    this.connection = connection({
-      principal: options.servicePrincipal,
-      url: this.url,
-    })
+  constructor(data: AgentData) {
+    this.connection = connection
     this.#data = data
   }
 
@@ -63,28 +42,15 @@ export class Agent {
     return this.#data.principal
   }
 
-  async addProof(delegation: Client.Delegation) {
-    await this.#data.addDelegation(delegation)
-
-    return {}
-  }
-
   #delegations(caps: CapabilityQuery[]) {
     const _caps = new Set(caps)
-    const values: Array<{ delegation: API.Delegation; meta: DelegationMeta }> =
-      []
+    const values: { delegation: API.Delegation; meta: DelegationMeta }[] = []
     for (const [, value] of this.#data.delegations) {
-      // check expiration
-      if (
-        !isExpired(value.delegation) && // check if delegation can be used
-        !isTooEarly(value.delegation)
-      ) {
+      if (!isExpired(value.delegation) && !isTooEarly(value.delegation)) {
         // check if we need to filter for caps
         if (Array.isArray(caps) && caps.length > 0) {
           for (const cap of _caps) {
-            if (
-              canDelegateCapability(value.delegation, cap as Client.Capability)
-            ) {
+            if (canDelegateCapability(value.delegation, cap as Capability)) {
               values.push(value)
             }
           }
@@ -107,46 +73,19 @@ export class Agent {
       }
     }
 
-    const sessions = getSessionProofs(this.#data)
-    for (const proof of [...authorizations.values()]) {
-      const proofsByIssuer = sessions[proof.asCID.toString()] ?? {}
-      const sessionProofs = Object.values(proofsByIssuer).flat()
-      for (const sessionProof of sessionProofs) {
-        authorizations.set(sessionProof.cid.toString(), sessionProof)
-      }
-    }
     return [...authorizations.values()]
   }
 
-  async importSpaceFromDelegation(delegation: Client.Delegation) {
+  async importSpaceFromDelegation(delegation: Delegation) {
     const space = fromDelegation(delegation)
 
-    this.#data.spaces.set(space.did(), { ...space.meta, name: space.name })
+    this.#data.spaces.set(space.did(), {
+      ...space.meta,
+      name: space.meta.name || '',
+    })
 
-    await this.addProof(space.delegation)
-
-    // if we do not have a current space, make this one current
-    if (!this.currentSpace()) {
-      await this.setCurrentSpace(space.did())
-    }
+    await this.#data.addDelegation(delegation)
 
     return space
-  }
-
-  async setCurrentSpace(space: `did:key:${string}`) {
-    if (!this.#data.spaces.has(space)) {
-      throw new Error(`Agent has no proofs for ${space}.`)
-    }
-
-    await this.#data.setCurrentSpace(space)
-
-    return space
-  }
-
-  /**
-   * Get current space DID
-   */
-  currentSpace() {
-    return this.#data.currentSpace
   }
 }

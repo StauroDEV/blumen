@@ -8,6 +8,7 @@ export const pinOnQuicknode: UploadFunction = async ({
   first,
   token,
   verbose,
+  name = '',
   ...args
 }) => {
   if (first) throw new UploadNotSupportedError(providerName)
@@ -20,14 +21,14 @@ export const pinOnQuicknode: UploadFunction = async ({
     },
     body: JSON.stringify({
       cid: args.cid,
-      name: args.name,
+      name,
     }),
   })
 
   if (verbose) logger.request('POST', res.url, res.status)
 
   const json = await res.json()
-  if (!res.ok) throw new DeployError(providerName, json.error.message)
+  if (!res.ok) throw new DeployError(providerName, json.message)
 
   return { status: json.status, cid: json.pin.cid }
 }

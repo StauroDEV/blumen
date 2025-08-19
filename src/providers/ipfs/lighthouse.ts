@@ -1,10 +1,10 @@
 import { DeployError, UploadNotSupportedError } from '../../errors.js'
-import type { UploadFunction } from '../../types.js'
+import type { PinFunction } from '../../types.js'
 import { logger } from '../../utils/logger.js'
 
 const providerName = 'Lighthouse'
 
-export const pinOnLighthouse: UploadFunction = async ({
+export const pinOnLighthouse: PinFunction = async ({
   first,
   token,
   verbose,

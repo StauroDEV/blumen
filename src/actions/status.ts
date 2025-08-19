@@ -1,11 +1,10 @@
-import { CID } from 'multiformats/cid'
 import { PROVIDERS } from '../constants.js'
+import { NoProvidersError, UnknownProviderError } from '../errors.js'
 import {
-  InvalidCIDError,
-  NoProvidersError,
-  UnknownProviderError,
-} from '../errors.js'
-import { findEnvVarProviderName, parseTokensFromEnv } from '../index.js'
+  assertCID,
+  findEnvVarProviderName,
+  parseTokensFromEnv,
+} from '../index.js'
 import { pinStatus } from '../utils/pin.js'
 
 export const statusAction = async ({
@@ -16,12 +15,7 @@ export const statusAction = async ({
   options?: Partial<{ providers: string; verbose: boolean }>
 }) => {
   const { providers: providersOptionList, verbose } = options
-  // Validate CID
-  try {
-    CID.parse(cid)
-  } catch {
-    throw new InvalidCIDError(cid)
-  }
+  assertCID(cid)
 
   const env = parseTokensFromEnv()
   const tokens: string[] = []

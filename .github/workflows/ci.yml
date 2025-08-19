@@ -24,4 +24,12 @@ jobs:
       - name: lint
         run: bun run lint
       - name: test
-        run: bun test
+        run: bun test --coverage --coverage-reporter=lcov --coverage-dir=coverage
+        env:
+          BLUMEN_LIGHTHOUSE_TOKEN: ${{ secrets.BLUMEN_LIGHTHOUSE_TOKEN }}
+          BLUMEN_STORACHA_PROOF: ${{ secrets.BLUMEN_STORACHA_PROOF }}
+          BLUMEN_STORACHA_TOKEN: ${{ secrets.BLUMEN_STORACHA_TOKEN }}
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          file: coverage/lcov.info

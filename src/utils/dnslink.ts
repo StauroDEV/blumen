@@ -2,29 +2,6 @@ import { CLOUDFLARE_API_URL } from '../constants.js'
 import { DnsLinkError, MissingDnsLinkError } from '../errors.js'
 import { logger } from './logger.js'
 
-// export const createDnsLink = async (
-//   { cid, zoneId, apiKey }:
-//   { cid: string, zoneId: string, apiKey: string },
-// ) => {
-//   const res = await fetch(`${CLOUDFLARE_API_URL}/zones/${zoneId}/web3/hostnames`, {
-//     method: 'POST',
-//     headers: {
-//       'Authorization': `Bearer ${apiKey}`,
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({
-//       dnslink: `/ipfs/${cid}`,
-//       description: `Powered by Blumen`,
-//       target: 'ipfs',
-//     }),
-//   })
-//   const json = await res.json()
-
-//   if (!res.ok) throw new DnsLinkError(json.errors[0].message)
-
-//   return json
-// }
-
 export const updateDnsLink = async ({
   cid,
   zoneId,

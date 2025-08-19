@@ -1,14 +1,7 @@
 import type * as Ucanto from '@ucanto/interface'
-import { Signer as EdSigner } from '@ucanto/principal/ed25519'
-
-import { UCAN } from '@web3-storage/capabilities'
-import type { UCANAttest } from '@web3-storage/capabilities/types'
-import { isExpired } from './delegations.js'
-import type { AgentMeta, DelegationMeta, Driver, SpaceMeta } from './types.js'
-
-interface AgentDataOptions {
-  store?: Driver<AgentDataExport>
-}
+import type { Delegation } from '@ucanto/interface'
+import { StoreMemory } from './memory-store.js'
+import type { AgentMeta, DelegationMeta, SpaceMeta } from './types.js'
 
 /**
  * Data schema used internally by the agent.
@@ -46,34 +39,36 @@ export class AgentData implements AgentDataModel {
   >
   meta: AgentMeta
   spaces: Map<`did:${string}:${string}`, SpaceMeta> = new Map()
-  currentSpace: `did:key:${string}` | undefined
 
-  constructor(data: AgentDataModel, options: AgentDataOptions = {}) {
+  constructor(
+    data: AgentDataModel,
+    { store }: { store?: StoreMemory<AgentDataExport> } = {},
+  ) {
     this.meta = data.meta
     this.principal = data.principal
     this.delegations = data.delegations
-    this.#save = (data) =>
-      options.store ? options.store.save(data) : undefined
+    this.#save = (data) => (store ? store.save(data) : undefined)
   }
 
   /**
    * Create a new AgentData instance from the passed initialization data.
    */
   static async create(
-    init: Partial<AgentDataModel> = {},
-    options: AgentDataOptions = {},
+    init: Pick<AgentDataModel, 'principal'> &
+      Partial<Omit<AgentDataModel, 'principal'>>,
   ) {
+    const store = new StoreMemory<AgentDataExport>()
     const agentData = new AgentData(
       {
         meta: { name: 'agent', type: 'device', ...init.meta },
-        principal: init.principal ?? (await EdSigner.generate()),
+        principal: init.principal,
         delegations: new Map(),
       },
-      options,
+      { store },
     )
-    if (options.store) {
-      await options.store.save(agentData.export())
-    }
+
+    await store.save(agentData.export())
+
     return agentData
   }
 
@@ -81,7 +76,6 @@ export class AgentData implements AgentDataModel {
    * Export data in a format safe to pass to `structuredClone()`.
    */
   export() {
-    /** @type {AgentDataExport} */
     const raw: AgentDataExport = {
       meta: this.meta,
       principal: this.principal.toArchive(),
@@ -102,58 +96,11 @@ export class AgentData implements AgentDataModel {
     return raw
   }
 
-  /**
-   * @deprecated
-   * @param {import('@ucanto/interface').DID<'key'>} did
-   */
-  async setCurrentSpace(did: import('@ucanto/interface').DID<'key'>) {
-    this.currentSpace = did
-    await this.#save(this.export())
-  }
-
-  async addDelegation(
-    delegation: import('@ucanto/interface').Delegation,
-    meta?: DelegationMeta,
-  ) {
+  async addDelegation(delegation: Delegation, meta: DelegationMeta = {}) {
     this.delegations.set(delegation.cid.toString(), {
       delegation,
-      meta: meta ?? {},
+      meta: meta,
     })
     await this.#save(this.export())
   }
-}
-
-const isSessionCapability = (cap: Ucanto.Capability): boolean =>
-  cap.can === UCAN.attest.can
-
-const isSessionProof = (
-  delegation: Ucanto.Delegation,
-): delegation is Ucanto.Delegation<[UCANAttest]> =>
-  delegation.capabilities.some((cap) => isSessionCapability(cap))
-
-type SessionProofIndexedByAuthorizationAndIssuer = Record<
-  string,
-  Record<Ucanto.DID, [Ucanto.Delegation, ...Ucanto.Delegation[]]>
->
-
-export function getSessionProofs(
-  data: AgentData,
-): SessionProofIndexedByAuthorizationAndIssuer {
-  const proofs: SessionProofIndexedByAuthorizationAndIssuer = {}
-  for (const { delegation } of data.delegations.values()) {
-    if (isSessionProof(delegation)) {
-      const cap = delegation.capabilities[0]
-      if (cap && !isExpired(delegation)) {
-        const proof = cap.nb.proof
-        if (proof) {
-          const proofCid = proof.toString()
-          const issuerDid = delegation.issuer.did()
-          proofs[proofCid] = proofs[proofCid] ?? {}
-          proofs[proofCid][issuerDid] = proofs[proofCid][issuerDid] ?? []
-          proofs[proofCid][issuerDid].push(delegation)
-        }
-      }
-    }
-  }
-  return proofs
 }

@@ -13,7 +13,7 @@ export const uploadOnFilebase: UploadFunction<{ bucketName: string }> = async ({
   token,
   bucketName,
   verbose,
-  ...args
+  cid,
 }) => {
   if (first) {
     if (!bucketName) throw new MissingKeyError(`FILEBASE_BUCKET_NAME`)
@@ -26,13 +26,12 @@ export const uploadOnFilebase: UploadFunction<{ bucketName: string }> = async ({
       name,
       car,
       token,
-      ...args,
     })
 
     return { cid: res.headers.get('x-amz-meta-cid')!, status: 'queued' }
   }
 
-  return specPin({ providerName, baseURL, first, car, name, token, ...args })
+  return specPin({ providerName, baseURL, first, name, token, cid, verbose })
 }
 
 export const statusOnFilebase: StatusFunction = async ({ cid, auth }) =>
