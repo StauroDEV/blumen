@@ -9,5 +9,6 @@
     "source.organizeImports.biome": "explicit",
     "quickfix.biome": "explicit"
   },
-  "deno.enable": false
+  "deno.enable": false,
+  "coverage-gutters.coverageReportFileName": "coverage/lcov.info"
 }
