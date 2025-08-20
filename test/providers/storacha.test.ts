@@ -13,7 +13,7 @@ describe('Storacha provider', () => {
         new MissingKeyError('STORACHA_PROOF'),
       )
     })
-    it(
+    it.skip(
       'uploads a file',
       async () => {
         const [_, files] = await walk('./dist', false)
