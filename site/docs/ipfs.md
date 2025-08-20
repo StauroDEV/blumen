@@ -60,39 +60,28 @@ bun i -g @web3-storage/w3cli
 Then you need to login to your Storacha account:
 
 ```
-w3 login <your@mail.com>
+storacha login
 ```
 
 Once log in is successful, you need to select your space. Grab the DID (the `did:key:...` string) from Storacha web console and run the following command:
 
 ```sh
-w3 space use did:key:...
+storacha space use did:key:...
 ```
 
 When both the account and the space are set up, you need to generate a unique private key. Later we'll need it to generate a proof (that gives us permit to upload files on Storacha).
 
-::: code-group
 
-```bash [npm]
-npx ucan-key ed
+```bash
+storacha key create
 ```
-
-```bash [pnpm]
-pnpx ucan-key ed
-```
-
-```bash [bun]
-bunx ucan-key ed
-```
-
-:::
 
 Save this private key (which starts with `Mg..`) to an environment variable (`BLUMEN_STORACHA_TOKEN`).
 
 You also need to create a delegation for the generated DID:
 
 ```sh
-w3 delegation create <did_from_ucan-key_command_above> --can 'store/add' --can 'upload/add' --can 'space/blob/add' --can 'space/index/add' | base64
+storacha delegation create <did_command_above> --can 'store/add' --can 'upload/add' --can 'space/blob/add' --can 'space/index/add' --base64 > proof.txt
 ```
 
 Save the command output in a `BLUMEN_STORACHA_PROOF` environment variable or save it to a file (that should not be uploaded!) and then read from it like this:
