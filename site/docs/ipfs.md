@@ -44,15 +44,15 @@ First you have to install w3up cli:
 ::: code-group
 
 ```bash [npm]
-npm i -g @web3-storage/w3cli
+npm i -g @storacha/cli
 ```
 
 ```bash [pnpm]
-pnpm i -g @web3-storage/w3cli
+pnpm i -g @storacha/cli
 ```
 
 ```bash [bun]
-bun i -g @web3-storage/w3cli
+bun i -g @storacha/cli
 ```
 
 :::
