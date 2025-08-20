@@ -27,7 +27,6 @@ jobs:
       # ✅ Ensure npm CLI has OIDC support
       - uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
           registry-url: 'https://registry.npmjs.org'
 
       # ✅ Install Bun in parallel for fast install/build
