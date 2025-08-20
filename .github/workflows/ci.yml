@@ -22,7 +22,7 @@ jobs:
       - name: build
         run: bun run build
       - name: lint
-        run: bun run lint
+        run: bun check
       - name: test
         run: bun test:report
         env:
