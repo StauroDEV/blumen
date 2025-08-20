@@ -171,11 +171,15 @@ export const deployAction = async ({
       errors.length === swarmProviders.length)
   ) {
     logger.error('Deploy failed')
-    errors.forEach((e) => logger.error(e))
+    errors.forEach((e) => {
+      logger.error(e)
+    })
     return
   } else if (errors.length) {
     logger.warn('There were some problems with deploying')
-    errors.forEach((e) => logger.error(e))
+    errors.forEach((e) => {
+      logger.error(e)
+    })
   } else logger.success('Deployed across all providers')
 
   if (swarmCid) {

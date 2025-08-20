@@ -144,7 +144,7 @@ cli.command<[string, string]>(
       options: Object.fromEntries(
         Object.entries(options).map(([k, v]) => [
           k,
-          Number.parseInt(v as string),
+          Number.parseInt(v as string, 10),
         ]),
       ),
     }),

@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.2.13
+          bun-version: 1.2.20
       - name: Install Blumen
         run: bun i -g blumen@0.16.1
       - name: Build website

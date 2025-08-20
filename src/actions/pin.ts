@@ -84,10 +84,14 @@ export const pinAction = async ({
 
   if (errors.length === providers.length) {
     logger.error('Pinning failed')
-    errors.forEach((e) => logger.error(e))
+    errors.forEach((e) => {
+      logger.error(e)
+    })
     return
   } else if (errors.length) {
     logger.warn('There were some problems with pinning')
-    errors.forEach((e) => logger.error(e))
+    errors.forEach((e) => {
+      logger.error(e)
+    })
   } else logger.success('Pinned across all providers')
 }

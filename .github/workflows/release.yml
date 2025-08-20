@@ -5,33 +5,44 @@ on:
       - main
 
 permissions:
-  contents: read # for checkout
-  id-token: write # OIDC publishing
+  contents: read   # for checkout
+  id-token: write  # required for npm OIDC
 
 concurrency:
-    group: ${{ github.workflow }}-${{ github.ref }}
-    cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
     permissions:
-      contents: write # to be able to publish a GitHub release
-      issues: write # to be able to comment on released issues
-      pull-requests: write # to be able to comment on released pull requests
-      id-token: write # to enable use of OIDC for npm provenance
+      contents: write       # to publish GitHub release
+      issues: write         # to comment on released issues
+      pull-requests: write  # to comment on released PRs
+      id-token: write       # required for npm OIDC
     steps:
       - uses: actions/checkout@v4
+
+      # ✅ Ensure npm CLI has OIDC support
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          registry-url: 'https://registry.npmjs.org'
+
+      # ✅ Install Bun in parallel for fast install/build
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.2.13
-      - name: install deps
-        run: bun i
-      - name: Build
+          bun-version: 1.2.20
+
+      - name: Install deps (Bun)
+        run: bun install
+
+      - name: Build (Bun)
         run: bun run build
+
+      # ✅ Ensure semantic-release uses npm CLI for OIDC publish
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: bun run semantic-release
+        run: npx semantic-release --debug
