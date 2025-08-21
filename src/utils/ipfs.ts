@@ -28,7 +28,9 @@ export const packCAR = async (
   let rootCID = placeholderCID
   let headerWritten = false
 
-  for await (const entry of importer(files, blockstore, { wrapWithDirectory: false })) {
+  for await (const entry of importer(files, blockstore, {
+    wrapWithDirectory: false,
+  })) {
     rootCID = entry.cid
 
     if (!headerWritten) {
@@ -49,7 +51,9 @@ export const packCAR = async (
 
   // return blob
   const file = await readFile(output)
-  const blob = new Blob([file as BlobPart], { type: 'application/vnd.ipld.car' })
+  const blob = new Blob([file as BlobPart], {
+    type: 'application/vnd.ipld.car',
+  })
 
   return { blob, rootCID }
 }
