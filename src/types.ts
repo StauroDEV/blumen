@@ -1,19 +1,8 @@
-export interface BlobLike {
-  /**
-   * Returns a ReadableStream which yields the Blob data.
-   */
-  stream: () => ReadableStream
-}
+import type { FileCandidate } from 'ipfs-unixfs-importer'
 
-export interface FileLike extends BlobLike {
-  /**
-   * Name of the file. May include path information.
-   */
-  name: string
-}
-
-export interface FileEntry extends FileLike {
+export interface FileEntry extends FileCandidate {
   size: number
+  path: string
 }
 
 type AuthArgs = {

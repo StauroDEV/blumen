@@ -1,7 +1,6 @@
 import { constants, createReadStream } from 'node:fs'
 import { access, stat } from 'node:fs/promises'
 import { relative } from 'node:path'
-import { Readable } from 'node:stream'
 import { glob } from 'tinyglobby'
 import type { FileEntry } from '../types.js'
 import { logger } from './logger.js'
@@ -19,10 +18,9 @@ export const walk = async (dir: string, verbose = false) => {
     if (verbose) logger.text(`${name} (${fileSize(size, 2)})`)
     total += size
     files.push({
-      name,
+      path: name,
+      content: createReadStream(path),
       size,
-      stream: () =>
-        Readable.toWeb(createReadStream(path)) as unknown as ReadableStream,
     })
   }
 

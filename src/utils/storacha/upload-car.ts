@@ -5,7 +5,6 @@ import * as Piece from '@web3-storage/data-segment/piece'
 import * as raw from 'multiformats/codecs/raw'
 import { sha256 } from 'multiformats/hashes/sha2'
 import * as Link from 'multiformats/link'
-import type { BlobLike } from '../../types.js'
 import * as BlobAdd from './actions/blob-add.js'
 import * as CAR from './actions/car.js'
 import * as Index from './actions/index-add.js'
@@ -17,7 +16,7 @@ import type { InvocationConfig, Position, SliceDigest } from './types.js'
  * Minimal upload of a CAR as a single shard (no sharding, no dedupe, no progress callbacks).
  * Mirrors the non-streaming small-CAR path from @storacha/upload-client.
  */
-export const uploadCAR = async (conf: InvocationConfig, car: BlobLike) => {
+export const uploadCAR = async (conf: InvocationConfig, car: Blob) => {
   const { blocks, roots } = await CAR.decode(car)
   const root = roots[0]
 

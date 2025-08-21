@@ -1,14 +1,12 @@
 import { createWriteStream } from 'node:fs'
 import { open, readFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { Writable } from 'node:stream'
-import type { Block } from '@ipld/car/reader'
 import { CarWriter } from '@ipld/car/writer'
+import { MemoryBlockstore } from 'blockstore-core/memory'
+import { type FileCandidate, importer } from 'ipfs-unixfs-importer'
 import { CID } from 'multiformats/cid'
 import { InvalidCIDError } from '../errors.js'
-import type { FileEntry } from '../types.js'
-import { CAREncoderStream } from './car.js'
-import { createDirectoryEncoderStream } from './storacha/directory-encoder.js'
+import { encodeCARBlock, encodeCARHeader } from './car.js'
 
 const tmp = tmpdir()
 
@@ -16,29 +14,43 @@ const placeholderCID = CID.parse(
   'bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi',
 )
 
-export const packCAR = async (files: FileEntry[], name: string, dir = tmp) => {
+const blockstore = new MemoryBlockstore()
+
+export const packCAR = async (
+  files: FileCandidate[],
+  name: string,
+  dir = tmp,
+) => {
   const output = `${dir}/${name}.car`
 
-  let rootCID = placeholderCID
+  const writeStream = createWriteStream(output)
 
-  await createDirectoryEncoderStream(files)
-    .pipeThrough(
-      new TransformStream({
-        transform(block: Block, controller) {
-          rootCID = block.cid
-          controller.enqueue(block)
-        },
-      }),
-    )
-    .pipeThrough(new CAREncoderStream([placeholderCID]))
-    .pipeTo(Writable.toWeb(createWriteStream(output)))
+  let rootCID = placeholderCID
+  let headerWritten = false
+
+  for await (const entry of importer(files, blockstore, { wrapWithDirectory: false })) {
+    rootCID = entry.cid
+
+    if (!headerWritten) {
+      const headerBytes = encodeCARHeader([entry.cid])
+      writeStream.write(Buffer.from(headerBytes))
+      headerWritten = true
+      continue
+    }
+    const bytes = await blockstore.get(entry.cid)
+    const blockBytes = encodeCARBlock({ cid: entry.cid, bytes })
+    writeStream.write(Buffer.from(blockBytes))
+  }
+  writeStream.close()
 
   const fd = await open(output, 'r+')
   await CarWriter.updateRootsInFile(fd, [rootCID])
   await fd.close()
 
-  const file = (await readFile(output)) as BufferSource
-  const blob = new Blob([file], { type: 'application/vnd.ipld.car' })
+  // return blob
+  const file = await readFile(output)
+  const blob = new Blob([file as BlobPart], { type: 'application/vnd.ipld.car' })
+
   return { blob, rootCID }
 }
 
