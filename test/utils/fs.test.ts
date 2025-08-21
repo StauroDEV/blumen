@@ -15,15 +15,15 @@ describe('fs utils', () => {
         files.map(({ path, size }) => ({ path, size })),
         [
           {
-            path: 'test/fixtures/walk/a.txt',
+            path: 'a.txt',
             size: 11,
           },
           {
-            path: 'test/fixtures/walk/b.txt',
+            path: 'b.txt',
             size: 15,
           },
           {
-            path: 'test/fixtures/walk/c.txt',
+            path: 'c.txt',
             size: 3,
           },
         ],
