@@ -1,6 +1,5 @@
-import type { Block } from '@ipld/unixfs'
 import { isDelegation, Receipt } from '@ucanto/core'
-import type { Capability, UCANLink } from '@ucanto/interface'
+import type { Block, Capability, UCANLink } from '@ucanto/interface'
 import { CAR } from '@ucanto/transport'
 import type { UnknownLink } from 'multiformats'
 import { retry } from '../retry.js'

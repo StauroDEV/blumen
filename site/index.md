@@ -23,4 +23,4 @@ Ethereum.
   decentralized website.
 - **Safe Integration**: Add an extra layer of security and decentralization with
   a [Safe](https://safe.global) multi-sig.
-- **Tiny size**: 913KB source code single file, easy to audit.
+- **Tiny size**: 855.3KB source code single file, easy to audit.

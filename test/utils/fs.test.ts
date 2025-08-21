@@ -10,20 +10,20 @@ describe('fs utils', () => {
         path.resolve(import.meta.dirname, '../fixtures/walk'),
       )
       assert.strictEqual(size, 29)
-      files.sort((a, b) => a.name.localeCompare(b.name)) // to prevent ordering issue
+      files.sort((a, b) => a.path.localeCompare(b.path)) // to prevent ordering issue
       assert.deepStrictEqual(
-        files.map(({ name, size }) => ({ name, size })),
+        files.map(({ path, size }) => ({ path, size })),
         [
           {
-            name: 'a.txt',
+            path: 'a.txt',
             size: 11,
           },
           {
-            name: 'b.txt',
+            path: 'b.txt',
             size: 15,
           },
           {
-            name: 'c.txt',
+            path: 'c.txt',
             size: 3,
           },
         ],

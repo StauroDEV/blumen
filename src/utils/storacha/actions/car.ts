@@ -4,10 +4,9 @@ import { CarWriter } from '@ipld/car/writer'
 import * as dagCBOR from '@ipld/dag-cbor'
 import type { CID } from 'multiformats/cid'
 import varint from 'varint'
-import type { BlobLike } from '../../../types.js'
 import type { AnyLink } from '../types.js'
 
-export async function decode(car: BlobLike) {
+export async function decode(car: Blob) {
   const iterator = await CarBlockIterator.fromIterable(car.stream())
   const blocks: CarDecoder.Block[] = []
   for await (const block of iterator) {
