@@ -29,7 +29,7 @@ export const packCAR = async (
   let headerWritten = false
 
   for await (const entry of importer(files, blockstore, {
-    wrapWithDirectory: false,
+    wrapWithDirectory: true,
   })) {
     rootCID = entry.cid
 
