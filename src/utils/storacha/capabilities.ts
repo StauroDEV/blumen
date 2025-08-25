@@ -5,7 +5,10 @@ function parseAbility(ability: API.Ability) {
   return { namespace, segments }
 }
 
-export function canDelegateAbility(parent: API.Ability, child: API.Ability) {
+export function canDelegateAbility(
+  parent: API.Ability,
+  child: API.Ability,
+): boolean {
   const parsedParent = parseAbility(parent)
   const parsedChild = parseAbility(child)
   // Parent is wildcard

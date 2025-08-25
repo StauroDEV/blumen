@@ -27,7 +27,10 @@ export const prepareUpdateEnsArgs = ({
   cid: string
   domain: string
   codec?: 'ipfs' | 'swarm'
-}) => {
+}): {
+  contentHash: string
+  node: `0x${string}`
+} => {
   const node = namehash(normalize(domain))
   let code: number
 

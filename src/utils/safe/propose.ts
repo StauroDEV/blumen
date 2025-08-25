@@ -21,7 +21,7 @@ export const proposeTransaction = async ({
   safeTxHash: Hex
   senderSignature: Hex
   chainId: number
-}) => {
+}): Promise<void> => {
   // In order to serialize BigInt
   Object.defineProperty(BigInt.prototype, 'toJSON', {
     get() {

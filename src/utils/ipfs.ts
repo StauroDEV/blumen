@@ -20,7 +20,7 @@ export const packCAR = async (
   files: FileCandidate[],
   name: string,
   dir = tmp,
-) => {
+): Promise<{ blob: Blob; rootCID: CID }> => {
   const output = `${dir}/${name}.car`
 
   const writeStream = createWriteStream(output)
@@ -35,13 +35,13 @@ export const packCAR = async (
 
     if (!headerWritten) {
       const headerBytes = encodeCARHeader([entry.cid])
-      writeStream.write(Buffer.from(headerBytes))
+      writeStream.write(headerBytes)
       headerWritten = true
       continue
     }
     const bytes = await blockstore.get(entry.cid)
     const blockBytes = encodeCARBlock({ cid: entry.cid, bytes })
-    writeStream.write(Buffer.from(blockBytes))
+    writeStream.write(blockBytes)
   }
   writeStream.close()
 

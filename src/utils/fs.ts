@@ -5,7 +5,10 @@ import { glob } from 'tinyglobby'
 import type { FileEntry } from '../types.js'
 import { logger } from './logger.js'
 
-export const walk = async (dir: string, verbose = false) => {
+export const walk = async (
+  dir: string,
+  verbose = false,
+): Promise<[number, FileEntry[]]> => {
   let total = 0
   const files: FileEntry[] = []
   for (const path of await glob(dir, {
@@ -27,7 +30,7 @@ export const walk = async (dir: string, verbose = false) => {
   return [total, files] as const
 }
 
-export const exists = async (file: string) => {
+export const exists = async (file: string): Promise<boolean> => {
   try {
     await access(file, constants.F_OK)
     return true
@@ -36,12 +39,11 @@ export const exists = async (file: string) => {
   }
 }
 
+const units = ['KB', 'MB', 'GB', 'TB', 'PB']
+const thresh = 1000
 export function fileSize(bytes: number, digits = 1): string {
-  const thresh = 1000
-
   if (Math.abs(bytes) < thresh) return `${bytes}B`
 
-  const units = ['KB', 'MB', 'GB', 'TB', 'PB']
   let u = -1
   const r = 10 ** digits
 

@@ -5,6 +5,7 @@ import type { Address } from 'ox/Address'
 import type { Hex } from 'ox/Hex'
 import type { Provider } from 'ox/Provider'
 import { sign } from 'ox/Secp256k1'
+import type { Signature } from 'ox/Signature'
 import { getSignPayload } from 'ox/TypedData'
 import type { ChainName } from '../types.js'
 import { getTransactionHash } from './safe/constants.js'
@@ -26,7 +27,7 @@ export const prepareSafeTransactionData = async ({
   safeAddress: EIP3770Address | Address
   provider: Provider
   chainId: number
-}) => {
+}): Promise<{ safeTxHash: Hex }> => {
   const { address: safeAddressWithoutPrefix } = getEip3770Address({
     fullAddress: safeAddress,
     chainId,
@@ -68,7 +69,7 @@ export const generateSafeTransactionSignature = async ({
   safeAddress: EIP3770Address | Address
   chainId: number
   privateKey: Hex
-}) => {
+}): Promise<Signature> => {
   const { address: safeAddressWithoutPrefix } = getEip3770Address({
     fullAddress: safeAddress,
     chainId,

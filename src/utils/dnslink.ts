@@ -14,7 +14,10 @@ export const updateDnsLink = async ({
   apiKey: string
   name: string
   verbose: boolean
-}) => {
+}): Promise<{
+  errors: { message: string; code: number }[]
+  result: { name: string; dnslink: string }
+}> => {
   const res = await fetch(
     `${CLOUDFLARE_API_URL}/zones/${zoneId}/web3/hostnames`,
     {

@@ -9,7 +9,7 @@ type SharedSpaceModel = {
   meta: { name?: string }
 }
 
-class SharedSpace {
+export class SharedSpace {
   model: SharedSpaceModel
   constructor(model: SharedSpaceModel) {
     this.model = model
@@ -24,7 +24,10 @@ class SharedSpace {
   }
 }
 
-export const fromDelegation = ({ facts, capabilities }: Delegation) => {
+export const fromDelegation = ({
+  facts,
+  capabilities,
+}: Delegation): SharedSpace => {
   const result = DID.match({ method: 'key' }).read(capabilities[0].with)
   if (result.error) {
     throw new Error(
