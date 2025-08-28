@@ -89,7 +89,11 @@ export class AgentData implements AgentDataModel {
         })),
       })
     }
-    return { delegations, principal: this.principal.toArchive(), meta: this.meta }
+    return {
+      delegations,
+      principal: this.principal.toArchive(),
+      meta: this.meta,
+    }
   }
 
   addDelegation(delegation: Delegation, meta: DelegationMeta = {}): void {
