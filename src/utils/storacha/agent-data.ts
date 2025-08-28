@@ -1,6 +1,6 @@
 import type * as Ucanto from '@ucanto/interface'
 import type { Delegation } from '@ucanto/interface'
-import { StoreMemory } from './memory-store.js'
+import type { StoreMemory } from './memory-store.js'
 import type { AgentMeta, DelegationMeta, SpaceMeta } from './types.js'
 
 /**
@@ -19,7 +19,7 @@ interface AgentDataModel {
 /**
  * Agent data that is safe to pass to structuredClone() and persisted by stores.
  */
-type AgentDataExport = Pick<AgentDataModel, 'meta'> & {
+export type AgentDataExport = Pick<AgentDataModel, 'meta'> & {
   principal: Ucanto.SignerArchive<Ucanto.DID, Ucanto.SigAlg>
   delegations: Map<
     string,
@@ -48,28 +48,6 @@ export class AgentData implements AgentDataModel {
     this.principal = data.principal
     this.delegations = data.delegations
     this.#save = (data) => (store ? store.save(data) : undefined)
-  }
-
-  /**
-   * Create a new AgentData instance from the passed initialization data.
-   */
-  static async create(
-    init: Pick<AgentDataModel, 'principal'> &
-      Partial<Omit<AgentDataModel, 'principal'>>,
-  ) {
-    const store = new StoreMemory<AgentDataExport>()
-    const agentData = new AgentData(
-      {
-        meta: { name: 'agent', type: 'device', ...init.meta },
-        principal: init.principal,
-        delegations: new Map(),
-      },
-      { store },
-    )
-
-    await store.save(agentData.export())
-
-    return agentData
   }
 
   /**
