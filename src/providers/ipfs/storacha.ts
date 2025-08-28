@@ -23,13 +23,14 @@ export const uploadOnStoracha: UploadFunction<{ proof: string }> = async ({
 
   const abilities = ['space/blob/add', 'space/index/add', 'upload/add'] as const
 
+  const proofs = agent.proofs(
+    new Set(abilities.map((can) => ({ can, with: space.did() }))),
+  )
   try {
     const cid = await uploadCAR(
       {
         issuer: agent.issuer,
-        proofs: agent.proofs(
-          abilities.map((can) => ({ can, with: space.did() })),
-        ),
+        proofs,
         with: space.did(),
       },
       car,

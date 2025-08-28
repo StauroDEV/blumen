@@ -31,7 +31,7 @@ type AgentDataExport = Pick<AgentDataModel, 'meta'> & {
 }
 
 export class AgentData implements AgentDataModel {
-  #save: (data: AgentDataExport) => Promise<void> | void
+  #save: (data: AgentDataExport) => void
   principal: Ucanto.Signer<`did:key:${string}`, Ucanto.SigAlg>
   delegations: Map<
     string,
@@ -75,14 +75,10 @@ export class AgentData implements AgentDataModel {
   /**
    * Export data in a format safe to pass to `structuredClone()`.
    */
-  export() {
-    const raw: AgentDataExport = {
-      meta: this.meta,
-      principal: this.principal.toArchive(),
-      delegations: new Map(),
-    }
+  export(): AgentDataExport {
+    const delegations: AgentDataExport['delegations'] = new Map()
     for (const [key, value] of this.delegations) {
-      raw.delegations.set(key, {
+      delegations.set(key, {
         meta: value.meta,
         delegation: [...value.delegation.export()].map((b) => ({
           cid: b.cid.toString(),
@@ -93,14 +89,14 @@ export class AgentData implements AgentDataModel {
         })),
       })
     }
-    return raw
+    return { delegations, principal: this.principal.toArchive(), meta: this.meta }
   }
 
-  async addDelegation(delegation: Delegation, meta: DelegationMeta = {}) {
+  addDelegation(delegation: Delegation, meta: DelegationMeta = {}): void {
     this.delegations.set(delegation.cid.toString(), {
       delegation,
       meta: meta,
     })
-    await this.#save(this.export())
+    this.#save(this.export())
   }
 }
