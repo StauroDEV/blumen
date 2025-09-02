@@ -24,7 +24,7 @@ Ethereum.
 
 ## Feature comparison
 
-## Protocol support
+### Protocol support
 
 | Tool | IPFS | Swarm | ENS | DNSLink |
 | --- | --- | --- | --- | --- |
@@ -33,7 +33,7 @@ Ethereum.
 | [ipfs-deploy-action](https://github.com/ipshipyard/ipfs-deploy-action) | ✅ | ❌ | ❌ | ✅ |
 | Orbiter | ✅ | ❌ | ✅ | ❌ |
 
-## Other features
+### Other features
 
 | Tool | Multiple providers | Multi-sig flow | No sign up |
 | --- | --- | --- | --- |
