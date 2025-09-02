@@ -9,7 +9,7 @@ Blumen supports uploading on the [Swarm](https://ethswarm.org) decentralized net
 
 Blumen supports uploading on the [Swarm](https://ethswarm.org) decentralized network via [Swarmy](https://swarmy.cloud), a storage provider. A website is not possible to upload both on Swarm and IPFS, so when opting in for Swarmy, other providers will be ignored.
 
-## Setup
+### Setup
 
 To use Swarmy, you need to create an account on [Swarmy](https://swarmy.cloud). Afterwards, you should request a storage quota on the "Billing" page.
 
@@ -19,7 +19,7 @@ After receiving your storage quota, generate an API key from the "API Keys" sect
 
 ![](/swarm-key.png)
 
-## Running the deployment
+### Running the deployment
 
 Once you have your API key, put it in the environment variables:
 
@@ -45,15 +45,15 @@ blumen deploy --ens blumen.stauro.eth --safe eth:0x...
 ```sh
 curl -sX POST http://localhost:1633/stamps/<amount>/<depth>
 # {
-#   "batchID": "8fcec40c65841e0c3c56679315a29a6495d32b9ed506f2757e03cdd778552c6b", <-- you need this
-#   "txHash": "0x51c77ac171efd930eca8f3a77e3fcd5aca0a7353b84d5562f8e9c13f5907b675"
+#   "batchID": "8fc...8552c6b", <-- you need this
+#   "txHash": "0x51c77...907b675"
 # }
 ```
 
 Add the batch ID to the environment variables:
 
 ```sh
-BLUMEN_BEE_TOKEN=8fcec40c65841e0c3c56679315a29a6495d32b9ed506f2757e03cdd778552c6b
+BLUMEN_BEE_TOKEN=8fc...2c6b
 ```
 
 Then run the the deployment command:

@@ -1,7 +1,8 @@
-import { defineConfig } from 'vitepress'
+
+import { withMermaid } from "vitepress-plugin-mermaid";
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+export default withMermaid({
   title: 'Blumen',
   description:
     'a CLI to deploy apps on the decentralized web using IPFS and Ethereum.',
@@ -29,6 +30,10 @@ export default defineConfig({
         link: '/',
         items: [
           {
+            text: 'How it works',
+            link: '/docs/how-it-works',
+          },
+          {
             text: 'Installation',
             link: '/docs/install',
           },
@@ -36,6 +41,11 @@ export default defineConfig({
             text: 'Getting Started',
             link: '/docs/get-started',
           },
+        ],
+      },
+      {
+        text: 'Guides',
+        items: [
           {
             text: 'IPFS',
             link: '/docs/ipfs',
@@ -56,11 +66,10 @@ export default defineConfig({
             text: 'CI/CD',
             link: '/docs/ci-cd',
           },
-
-        ],
+        ]
       },
       {
-        text: 'CLI',
+        text: 'CLI Reference',
         items: [
           {
             text: 'Deploy',

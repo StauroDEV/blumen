@@ -6,21 +6,38 @@
 **Blumen** is a CLI to deploy apps on the decentralized web with IPFS, Swarm and
 Ethereum.
 
-<video src="/blumen.webm" height="1254" width="960" controls />
-
-> Blumen is in an alpha stage and has been neither audited nor tested yet. Use
-> with caution!
-
 ## Features
 
-- **Multi-Provider Deployment**: Deploy your web app simultaneously on multiple
-  IPFS and Swarm providers, including [Storacha](https://storacha.network),
+- **Multi-Provider Deployment**: Deploy your web app simultaneously on almost all available IPFS and Swarm providers, including [Storacha](https://storacha.network),
   [Filebase](https://filebase.com) and many others.
-- **Multiple Storage Protocols**: Blumen supports both IPFS and Swarm
-  first-class.
-- **ENS and DNSLink Integration**: Seamlessly integrate with
-  [ENS](https://ens.domains) and [DNSLink](https://dnslink.dev) to update your
-  decentralized website.
-- **Safe Integration**: Add an extra layer of security and decentralization with
-  a [Safe](https://safe.global) multi-sig.
-- **Tiny size**: 855.3KB source code single file, easy to audit.
+- **Multiple Storage Protocols**: Complete IPFS and Swarm integration.
+- **ENS and DNSLink Integration**: Automatically update your [ENS](https://ens.domains) or [DNSLink](https://dnslink.dev) domain name.
+- **Secured by Safe**: Extra layer of security with a [Safe](https://safe.global) multi-sig.
+- **Tiny size**: ~850KB source code single file
+- **Minimal dependencies**: Trimmed down to the essential modules
+
+## Used by
+
+- [Lido Finance](https://bafybeiecvujvs74xvxgpwctmbfkcucazyaudmwuiw4wfv6ys7uio7o376u.ipfs.inbrowser.link)
+- [v1rtl personal website](https://v1rtl.eth.limo)
+- [StorageBeat](https://storagebeat.eth.limo)
+
+## Feature comparison
+
+## Protocol support
+
+| Tool | IPFS | Swarm | ENS | DNSLink |
+| --- | --- | --- | --- | --- |
+| Blumen | ✅ | ✅ | ✅ | ✅ |
+| 4EVERLAND | ✅ | ❌ | ✅ | ❌ |
+| [ipfs-deploy-action](https://github.com/ipshipyard/ipfs-deploy-action) | ✅ | ❌ | ❌ | ✅ |
+| Orbiter | ✅ | ❌ | ✅ | ❌ |
+
+## Other features
+
+| Tool | Multiple providers | Multi-sig flow | No sign up |
+| --- | --- | --- | --- |
+| Blumen | ✅ | ✅ | ✅ |
+| 4EVERLAND | ❌ | ❌ | ✅ |
+| [ipfs-deploy-action](https://github.com/ipshipyard/ipfs-deploy-action) | ✅ | ❌ | ✅ |
+| Orbiter | ❌ | ❌ | ✅ |
