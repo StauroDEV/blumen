@@ -2,9 +2,11 @@
 
 ## Environment setup
 
-Grab API keys from the services you use and define them in your environment (e.g. `.env` or GitHub secrets).
+Obtain API keys from your preferred storage providers by following the official [IPFS](/docs/ipfs) or [Swarm](/docs/swarm) guides. If you plan to set up a multi-sig wallet flow, refer to the [How It Works](/docs/how-it-works) and [Deploying with Safe](/docs/safe) guides for detailed instructions.
 
-> All env variables used by Blumen must be prefixed with `BLUMEN_`
+> All env variables used by Blumen are prefixed with `BLUMEN_`
+
+Define the keys in your environment in the following format:
 
 ```txt
 BLUMEN_STORACHA_TOKEN=...
@@ -12,7 +14,7 @@ BLUMEN_STORACHA_TOKEN=...
 
 ## Deployment
 
-Run `blumen deploy`, it will pick up the providers from environment and deploy on them.
+Run `blumen deploy`, it will pick up the providers from environment and deploy to them.
 
 ```sh
 blumen deploy
@@ -28,4 +30,4 @@ blumen deploy
 # Providers: https://delegated-ipfs.dev/routing/v1/providers/bafybeieao2nmw5njfino26llsokqdbc56pdfq7kudhoc5rrsvp4jk7tlk4
 ```
 
-Blumen will upload on the first provider and pin on all others. If pinning is not supported by the provider, it will reupload the file.
+Blumen will upload to the first provider and pin on all others. If pinning is not supported by the provider, it will reupload the content.
