@@ -2,7 +2,7 @@ import { DeployError, UploadNotSupportedError } from '../../errors.js'
 import type { PinFunction, StatusFunction } from '../../types.js'
 import { logger } from '../../utils/logger.js'
 
-type SpecPinFunction = PinFunction<{ baseURL: string; providerName: string }>
+type SpecPinFunction = PinFunction<{ baseURL: string; providerName: string; method?: string }>
 
 export const specPin: SpecPinFunction = async ({
   baseURL,
@@ -12,10 +12,11 @@ export const specPin: SpecPinFunction = async ({
   token,
   first,
   verbose,
+  method = '/pins',
 }) => {
   if (first) throw new UploadNotSupportedError(providerName)
 
-  const res = await fetch(new URL(`${baseURL}/pins`), {
+  const res = await fetch(new URL(`${baseURL}${method}`), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -33,7 +34,7 @@ export const specPin: SpecPinFunction = async ({
 
   if (!res.ok) throw new DeployError(providerName, json.error.details)
 
-  return { status: json.status, cid: json.pin.cid }
+  return { status: json.status, cid: json?.pin?.cid ?? json.Pins[0] }
 }
 
 export const specStatus: StatusFunction<{ baseURL: string }> = async ({
@@ -53,7 +54,7 @@ export const specStatus: StatusFunction<{ baseURL: string }> = async ({
   const json = await res.json()
 
   if (res.status === 404 || json.count === 0) return { pin: 'not pinned' }
-  else if (!res.ok) throw new Error(json.error.details)
+  else if (!res.ok) throw new Error(json.error?.details ?? json)
 
   return {
     pin: json.results[0].status,

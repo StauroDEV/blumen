@@ -4,7 +4,7 @@ import { uploadOnS3 } from './s3.js'
 import { specPin, specStatus } from './spec.js'
 
 const providerName = 'Filebase'
-const baseURL = 'https://api.filebase.io/v1/ipfs'
+const baseURL = 'https://rpc.filebase.io/api/v0'
 
 export const uploadOnFilebase: UploadFunction<{ bucketName: string }> = async ({
   first,
@@ -31,7 +31,7 @@ export const uploadOnFilebase: UploadFunction<{ bucketName: string }> = async ({
     return { cid: res.headers.get('x-amz-meta-cid')!, status: 'queued' }
   }
 
-  return specPin({ providerName, baseURL, first, name, token, cid, verbose })
+  return specPin({ providerName, baseURL, first, name, token, cid, verbose, method: `/pin/add?arg=${cid}` })
 }
 
 export const statusOnFilebase: StatusFunction = async ({ cid, auth }) =>

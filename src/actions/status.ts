@@ -47,6 +47,7 @@ export const statusAction = async ({
             token: env.get(token),
           },
           verbose,
+          baseURL: env.get('SPEC_URL'),
         })
         pinStatus(provider.name, pin)
       }
