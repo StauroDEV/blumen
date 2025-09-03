@@ -150,6 +150,6 @@ Go to "API Key", enter "Blumen" in the input box and click "Generate".
 - URL: https://blockfrost.io
 - API Docs: https://blockfrost.dev
 - API token env variables: `BLUMEN_BLOCKFROST_TOKEN`
-- Supported methods: Pin
+- Supported methods: Pin, Status
 
 Create a new project. It will automatically create a token. Save the token to the `BLUMEN_BLOCKFROST_TOKEN` environment variable.
