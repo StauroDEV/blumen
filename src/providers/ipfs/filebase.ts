@@ -1,10 +1,12 @@
-import { MissingKeyError } from '../../errors.js'
+import { DeployError, MissingKeyError } from '../../errors.js'
 import type { StatusFunction, UploadFunction } from '../../types.js'
+import { logger } from '../../utils/logger.js'
 import { uploadOnS3 } from './s3.js'
-import { specPin, specStatus } from './spec.js'
+import { specStatus } from './spec.js'
 
 const providerName = 'Filebase'
 const baseURL = 'https://rpc.filebase.io/api/v0'
+
 
 export const uploadOnFilebase: UploadFunction<{ bucketName: string }> = async ({
   first,
@@ -31,7 +33,25 @@ export const uploadOnFilebase: UploadFunction<{ bucketName: string }> = async ({
     return { cid: res.headers.get('x-amz-meta-cid')!, status: 'queued' }
   }
 
-  return specPin({ providerName, baseURL, first, name, token, cid, verbose, method: `/pin/add?arg=${cid}` })
+  const res = await fetch(new URL(`/pin/add?arg=${cid}`, baseURL), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      cid,
+      name,
+    }),
+  })
+
+  if (verbose) logger.request('POST', res.url, res.status)
+
+  const json = await res.json()
+
+  if (!res.ok) throw new DeployError(providerName, json.error.details)
+
+  return { status: json.status, cid: json?.ipfs_hash ?? json.Pins[0] }
 }
 
 export const statusOnFilebase: StatusFunction = async ({ cid, auth }) =>

@@ -144,3 +144,12 @@ Go to the dashboard and open the ["API Keys" page](https://dashboard.quicknode.c
 - Supported methods: Pin
 
 Go to "API Key", enter "Blumen" in the input box and click "Generate".
+
+## Blockfrost
+
+- URL: https://blockfrost.io
+- API Docs: https://blockfrost.dev
+- API token env variables: `BLUMEN_BLOCKFROST_TOKEN`
+- Supported methods: Pin
+
+Create a new project. It will automatically create a token. Save the token to the `BLUMEN_BLOCKFROST_TOKEN` environment variable.

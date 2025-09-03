@@ -3,6 +3,7 @@ import {
   statusOn4everland,
   uploadOn4everland,
 } from './providers/ipfs/4everland.js'
+import { pinOnBlockfrost } from './providers/ipfs/blockfrost.js'
 import {
   statusOnFilebase,
   uploadOnFilebase,
@@ -92,6 +93,12 @@ export const PROVIDERS: Record<
     upload: uploadOnBee,
     supported: 'upload',
     protocol: 'swarm',
+  },
+  BLOCKFROST_TOKEN: {
+    name: 'Blockfrost',
+    upload: pinOnBlockfrost,
+    supported: 'pin',
+    protocol: 'ipfs',
   },
 }
 
