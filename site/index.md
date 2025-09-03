@@ -19,8 +19,9 @@ Ethereum.
 ## Used by
 
 - [Lido Finance](https://bafybeiecvujvs74xvxgpwctmbfkcucazyaudmwuiw4wfv6ys7uio7o376u.ipfs.inbrowser.link)
-- [v1rtl personal website](https://v1rtl.eth.limo)
+- [WalletBeat](https://beta.walletbeat.eth.limo)
 - [StorageBeat](https://storagebeat.eth.limo)
+- [v1rtl personal website](https://v1rtl.eth.limo)
 
 ## Feature comparison
 
