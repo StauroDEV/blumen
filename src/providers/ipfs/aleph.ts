@@ -7,7 +7,7 @@ import { DeployError } from '../../errors.js'
 import type { PinFunction } from '../../types.js'
 import { logger } from '../../utils/logger.js'
 
-const ALEPH_API = 'https://api2.aleph.im'
+const baseURL = 'https://api2.aleph.im'
 const te = new TextEncoder()
 
 const providerName = 'Aleph'
@@ -20,15 +20,12 @@ export const pinToAleph: PinFunction<{ token: Hex; chain: Chain }> = async ({
   chain,
   verbose,
 }) => {
-  const now = Date.now() / 1000
-  const address = fromPublicKey(getPublicKey({ privateKey: token }))
-
   const message = {
     chain,
-    sender: address,
+    sender: fromPublicKey(getPublicKey({ privateKey: token })),
     type: 'STORE',
     channel: 'POWERED-BY-BLUMEN',
-    time: now,
+    time: Date.now() / 1000,
     item_type: 'ipfs',
     item_hash: cid,
     item_content: null,
@@ -44,7 +41,7 @@ export const pinToAleph: PinFunction<{ token: Hex; chain: Chain }> = async ({
 
   message.signature = Signature.toHex(sig)
 
-  const res = await fetch(`${ALEPH_API}/api/v0/messages`, {
+  const res = await fetch(`${baseURL}/api/v0/messages`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ message }),
