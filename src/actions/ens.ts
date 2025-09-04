@@ -92,8 +92,7 @@ export const ensAction = async ({
     return
   }
 
-  const publicKey = getPublicKey({ privateKey: pk })
-  const address = fromPublicKey(publicKey)
+  const address = fromPublicKey(getPublicKey({ privateKey: pk }))
 
   logger.info(`Validating transaction for wallet ${address}`)
 

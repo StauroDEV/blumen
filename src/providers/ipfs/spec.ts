@@ -33,7 +33,7 @@ export const specPin: SpecPinFunction = async ({
 
   if (!res.ok) throw new DeployError(providerName, json.error.details)
 
-  return { status: json.status, cid: json.pin.cid }
+  return { status: json.status, cid: json?.pin?.cid ?? json.Pins[0] }
 }
 
 export const specStatus: StatusFunction<{ baseURL: string }> = async ({
@@ -53,7 +53,7 @@ export const specStatus: StatusFunction<{ baseURL: string }> = async ({
   const json = await res.json()
 
   if (res.status === 404 || json.count === 0) return { pin: 'not pinned' }
-  else if (!res.ok) throw new Error(json.error.details)
+  else if (!res.ok) throw new Error(json.error?.details ?? json)
 
   return {
     pin: json.results[0].status,

@@ -15,12 +15,19 @@ BLUMEN_SPEC_TOKEN=<access_token>
 BLUMEN_SPEC_URL=https://pinning-service.example.com
 ```
 
+A few services provide a pinning service API:
+
+- [Filebase](https://filebase.com) (requires a paid plan)
+- [Fula Network](https://api.cloud.fx.land) (free up until 20GB)
+
 ## Filebase
 
 - URL: https://filebase.com
 - API Docs: https://docs.filebase.com/api-documentation/ipfs-pinning-service-api
 - API token env variables: `BLUMEN_FILEBASE_TOKEN` for pinning (if not the first provider), additionally `BLUMEN_FILEBASE_BUCKET_NAME` for upload + pin.
 - Supported methods: Upload, Pin, Status
+
+### Upload
 
 `BLUMEN_FILEBASE_TOKEN` for upload + pin is obtained by encoding access key and access secret to base64. Access key and access secret could be found in the Filebase console.
 
@@ -31,6 +38,12 @@ The easiest way to generate an S3 API token is using the `base64` command:
 ```sh
 echo "$accessKey:$accessSecret" | base64
 ```
+
+### Pin
+
+Filebase provides an RPC API which can be used for pinning.
+
+Request a new token in the "IPFS RPC API Keys" section in "Access Keys" page of the Filebase console. Save the token to the `BLUMEN_FILEBASE_TOKEN` environment variable.
 
 ## Storacha
 
@@ -131,3 +144,21 @@ Go to the dashboard and open the ["API Keys" page](https://dashboard.quicknode.c
 - Supported methods: Pin
 
 Go to "API Key", enter "Blumen" in the input box and click "Generate".
+
+## Blockfrost
+
+- URL: https://blockfrost.io
+- API Docs: https://blockfrost.dev
+- API token env variables: `BLUMEN_BLOCKFROST_TOKEN`
+- Supported methods: Pin, Status
+
+Create a new project. It will automatically create a token. Save the token to the `BLUMEN_BLOCKFROST_TOKEN` environment variable.
+
+## Aleph
+
+- URL: https://aleph.im
+- API Docs: https://docs.aleph.im
+- API token env variables: `BLUMEN_ALEPH_TOKEN`, `BLUMEN_ALEPH_CHAIN`
+- Supported methods: Pin
+
+`BLUMEN_ALEPH_TOKEN` is the private key of the account. Buy [$ALEPH](https://aleph.cloud/aleph-token) token for an account, around the same amount as the size of the website distribution. By default, mainnet will be used, but you can specify the chain with `BLUMEN_ALEPH_CHAIN`. Supported chain are Ethereum (`ETH`), Avalanche (`AVAX`) and Base (`BASE`).
