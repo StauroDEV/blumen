@@ -74,6 +74,7 @@ export const pinAction = async ({
         first: false,
         verbose,
         baseURL: apiTokens.get('SPEC_URL'),
+        chain: apiTokens.get('ALEPH_CHAIN') || 'ETH',
       })
     } catch (e) {
       if (strict) throw e

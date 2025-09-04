@@ -12,6 +12,7 @@
   "deno.enable": false,
   "coverage-gutters.coverageReportFileName": "coverage/lcov.info",
   "[typescript]": {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "biomejs.biome"
   }
 }

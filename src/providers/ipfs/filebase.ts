@@ -7,7 +7,6 @@ import { specStatus } from './spec.js'
 const providerName = 'Filebase'
 const baseURL = 'https://rpc.filebase.io/api/v0'
 
-
 export const uploadOnFilebase: UploadFunction<{ bucketName: string }> = async ({
   first,
   car,

@@ -153,3 +153,12 @@ Go to "API Key", enter "Blumen" in the input box and click "Generate".
 - Supported methods: Pin, Status
 
 Create a new project. It will automatically create a token. Save the token to the `BLUMEN_BLOCKFROST_TOKEN` environment variable.
+
+## Aleph
+
+- URL: https://aleph.im
+- API Docs: https://docs.aleph.im
+- API token env variables: `BLUMEN_ALEPH_TOKEN`, `BLUMEN_ALEPH_CHAIN`
+- Supported methods: Pin
+
+`BLUMEN_ALEPH_TOKEN` is the private key of the account. Buy [$ALEPH](https://aleph.cloud/aleph-token) token for an account, around the same amount as the size of the website distribution. By default, mainnet will be used, but you can specify the chain with `BLUMEN_ALEPH_CHAIN`. Supported chain are Ethereum (`ETH`), Avalanche (`AVAX`) and Base (`BASE`).
