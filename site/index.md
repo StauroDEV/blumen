@@ -36,9 +36,9 @@ Ethereum.
 
 ### Other features
 
-| Tool | Multiple providers | Multi-sig flow | No sign up |
+| Tool | Multiple providers | Multi-sig flow | Self custodial |
 | --- | --- | --- | --- |
 | Blumen | ✅ | ✅ | ✅ |
-| 4EVERLAND | ❌ | ❌ | ✅ |
+| 4EVERLAND | ❌ | ❌ | ❌ |
 | [ipfs-deploy-action](https://github.com/ipshipyard/ipfs-deploy-action) | ✅ | ❌ | ✅ |
-| Orbiter | ❌ | ❌ | ✅ |
+| Orbiter | ❌ | ❌ | ❌ |
