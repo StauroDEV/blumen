@@ -37,7 +37,6 @@ export const packCAR = async (
       const headerBytes = encodeCARHeader([entry.cid])
       writeStream.write(headerBytes)
       headerWritten = true
-      continue
     }
     const bytes = await blockstore.get(entry.cid)
     const blockBytes = encodeCARBlock({ cid: entry.cid, bytes })
