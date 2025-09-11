@@ -42,14 +42,13 @@ export class Agent {
     return this.#data.principal
   }
 
-  #delegations(caps: CapabilityQuery[]) {
-    const _caps = new Set(caps)
+  #delegations(caps: Set<CapabilityQuery>) {
     const values: { delegation: API.Delegation; meta: DelegationMeta }[] = []
     for (const [, value] of this.#data.delegations) {
       if (!isExpired(value.delegation) && !isTooEarly(value.delegation)) {
         // check if we need to filter for caps
-        if (Array.isArray(caps) && caps.length > 0) {
-          for (const cap of _caps) {
+        if (caps.size > 0) {
+          for (const cap of caps) {
             if (canDelegateCapability(value.delegation, cap as Capability)) {
               values.push(value)
             }
@@ -62,7 +61,7 @@ export class Agent {
     return values
   }
 
-  proofs(caps: CapabilityQuery[]) {
+  proofs(caps: Set<CapabilityQuery>) {
     const authorizations: Map<
       string,
       API.Delegation<API.Capabilities>
@@ -84,7 +83,7 @@ export class Agent {
       name: space.meta.name || '',
     })
 
-    await this.#data.addDelegation(delegation)
+    this.#data.addDelegation(delegation)
 
     return space
   }
