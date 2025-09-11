@@ -15,6 +15,7 @@ import {
 import { pinOnLighthouse } from './providers/ipfs/lighthouse.js'
 import { pinOnPinata, statusOnPinata } from './providers/ipfs/pinata.js'
 import { pinOnQuicknode } from './providers/ipfs/quicknode.js'
+import { uploadToSimplePage } from './providers/ipfs/simplepage.js'
 import { specPin, specStatus } from './providers/ipfs/spec.js'
 import { uploadOnStoracha } from './providers/ipfs/storacha.js'
 import { uploadOnBee } from './providers/swarm/bee.js'
@@ -109,6 +110,12 @@ export const PROVIDERS: Record<
     name: 'Aleph',
     upload: pinToAleph,
     supported: 'pin',
+    protocol: 'ipfs',
+  },
+  SIMPLEPAGE_TOKEN: {
+    name: 'SimplePage',
+    upload: uploadToSimplePage,
+    supported: 'upload',
     protocol: 'ipfs',
   },
 }
