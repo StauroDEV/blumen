@@ -5,7 +5,7 @@ Blumen supports a wide range of different IPFS providers. If you would like to i
 ## Spec-compliant Pinning Service
 
 - API Docs: https://ipfs.github.io/pinning-services-api-spec
-- API token env variables: `BLUMEN_SPEC_TOKEN`, `BLUMEN_SPEC_URL`
+- API env variables: `BLUMEN_SPEC_TOKEN`, `BLUMEN_SPEC_URL`
 - Supported methods: Pin
 
 Obtain an opaque access token from the service. Populate your environment as such:
@@ -24,7 +24,7 @@ A few services provide a pinning service API:
 
 - URL: https://filebase.com
 - API Docs: https://docs.filebase.com/api-documentation/ipfs-pinning-service-api
-- API token env variables: `BLUMEN_FILEBASE_TOKEN` for pinning (if not the first provider), additionally `BLUMEN_FILEBASE_BUCKET_NAME` for upload + pin.
+- API env variables: `BLUMEN_FILEBASE_TOKEN` for pinning (if not the first provider), additionally `BLUMEN_FILEBASE_BUCKET_NAME` for upload + pin.
 - Supported methods: Upload, Pin, Status
 
 ### Upload
@@ -49,7 +49,7 @@ Request a new token in the "IPFS RPC API Keys" section in "Access Keys" page of 
 
 - URL: https://storacha.network
 - API Docs: https://docs.storacha.network/how-to/upload
-- API token env variables: `STORACHA_TOKEN`, `STORACHA_PROOF`
+- API env variables: `STORACHA_TOKEN`, `STORACHA_PROOF`
 - Supported methods: Upload
 
 First you have to install w3up cli:
@@ -107,7 +107,7 @@ BLUMEN_STORACHA_PROOF=`cat proof.txt`
 
 - URL: https://pinata.cloud
 - API Docs: https://docs.pinata.cloud/files/uploading-files
-- API token env variables: `BLUMEN_PINATA_TOKEN`
+- API env variables: `BLUMEN_PINATA_TOKEN`
 - Supported methods: Pin, Status
 
 Go to the dashboard page, then "API Keys" under "Developer" section. Click "New Key". An API key creation dialog should apppear. Select the checkboxes related to pinning. Click "Generate API Key".
@@ -120,7 +120,7 @@ Save the JWT token to the `BLUMEN_PINATA_TOKEN` environment variable.
 
 - URL: https://www.4everland.org/
 - API Docs: https://docs.4everland.org/
-- API token env variables: `BLUMEN_4EVERLAND_TOKEN`
+- API env variables: `BLUMEN_4EVERLAND_TOKEN`
 - Supported methods: Pin, Status
 
 Open 4EVERLAND dashboard. Navigate to Storage > 4Ever Pin. Click "Access token". Copy the token and save it to the `BLUMEN_4EVERLAND_TOKEN` environment variable.
@@ -129,7 +129,7 @@ Open 4EVERLAND dashboard. Navigate to Storage > 4Ever Pin. Click "Access token".
 
 - URL: https://quicknode.com
 - API Docs: https://www.quicknode.com/docs/ipfs/Pinning/create-pinnedObject-by-CID
-- API token env variables: `BLUMEN_QUICKNODE_TOKEN`
+- API env variables: `BLUMEN_QUICKNODE_TOKEN`
 - Supported methods: Pin
 
 Go to the dashboard and open the ["API Keys" page](https://dashboard.quicknode.com/api-keys). Click "Add API Key". In the "Applications" modal choose only "IPFS_REST". 
@@ -140,7 +140,7 @@ Go to the dashboard and open the ["API Keys" page](https://dashboard.quicknode.c
 
 - URL: https://lighthouse.storage
 - API Docs: https://docs.lighthouse.storage/api-docs/lighthouse-api
-- API token env variables: `BLUMEN_LIGHTHOUSE_TOKEN`
+- API env variables: `BLUMEN_LIGHTHOUSE_TOKEN`
 - Supported methods: Pin
 
 Go to "API Key", enter "Blumen" in the input box and click "Generate".
@@ -149,7 +149,7 @@ Go to "API Key", enter "Blumen" in the input box and click "Generate".
 
 - URL: https://blockfrost.io
 - API Docs: https://blockfrost.dev
-- API token env variables: `BLUMEN_BLOCKFROST_TOKEN`
+- API env variables: `BLUMEN_BLOCKFROST_TOKEN`
 - Supported methods: Pin, Status
 
 Create a new project. It will automatically create a token. Save the token to the `BLUMEN_BLOCKFROST_TOKEN` environment variable.
@@ -158,7 +158,16 @@ Create a new project. It will automatically create a token. Save the token to th
 
 - URL: https://aleph.im
 - API Docs: https://docs.aleph.im
-- API token env variables: `BLUMEN_ALEPH_TOKEN`, `BLUMEN_ALEPH_CHAIN`
+- API env variables: `BLUMEN_ALEPH_TOKEN`, `BLUMEN_ALEPH_CHAIN`
 - Supported methods: Pin
 
 `BLUMEN_ALEPH_TOKEN` is the private key of the account. Buy [$ALEPH](https://aleph.cloud/aleph-token) token for an account, around the same amount as the size of the website distribution. By default, mainnet will be used, but you can specify the chain with `BLUMEN_ALEPH_CHAIN`. Supported chain are Ethereum (`ETH`), Avalanche (`AVAX`) and Base (`BASE`).
+
+## SimplePage
+
+- URL: https://simplepage.eth.limo
+- API Docs: https://simplepage.eth.limo/architecture
+- API env variables: `BLUMEN_SIMPLEPAGE_TOKEN`
+- Supported methods: Upload
+
+`BLUMEN_SIMPLEPAGE_TOKEN` is an ENS name used for a page. SimplePage requires an onchain [subscription](https://simplepage.eth.limo/user-guide/#subscription-management) ($1/month).
