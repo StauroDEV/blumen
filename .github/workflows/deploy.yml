@@ -17,8 +17,8 @@ jobs:
         run: bun i -g blumen@1.0.0
       - name: Build website
         run: cd site && bun i && bun run build
-      - name: Deploy
-        run: cd site && blumen deploy .vitepress/dist --strict --dnslink blumen.stauro.dev
+      - name: Deploy the site
+        run: cd site && blumen deploy .vitepress/dist --strict --dnslink blumen.stauro.dev --ens ${{ vars.BLUMEN_ENS }} --safe ${{ vars.BLUMEN_SAFE }}
         env:
           BLUMEN_CF_KEY: ${{ secrets.BLUMEN_CF_KEY }}
           BLUMEN_CF_ZONE_ID: ${{ secrets.BLUMEN_CF_ZONE_ID }}
@@ -27,3 +27,4 @@ jobs:
           BLUMEN_STORACHA_TOKEN: ${{ secrets.BLUMEN_STORACHA_TOKEN }}
           BLUMEN_LIGHTHOUSE_TOKEN: ${{ secrets.BLUMEN_LIGHTHOUSE_TOKEN }}
           BLUMEN_4EVERLAND_TOKEN: ${{ secrets.BLUMEN_4EVERLAND_TOKEN }}
+          BLUMEN_PK: ${{ secrets.BLUMEN_PK }}
