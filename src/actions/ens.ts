@@ -215,5 +215,4 @@ export const ensAction = async ({
       `Open in a browser: ${isTTY ? styleText('underline', browserLink) : browserLink}`,
     )
   }
-  return process.exit()
 }
