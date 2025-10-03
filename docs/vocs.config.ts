@@ -6,49 +6,42 @@ export default defineConfig({
   description: 'Deploy apps on the decentralized web without compromises',
   socials: [{ icon: 'github', link: 'https://github.com/StauroDEV/blumen' }],
   sponsors: [
-    // {
-    //   name: 'Collaborator',
-    //   height: 80,
-    //   items: [
-    //     [
-    //       {
-    //         name: 'Lido',
-    //         link: 'https://lido.fi',
-    //         image: '/lido.svg',
-    //       },
-    //     ],
-    //   ],
-    // },
+    {
+      name: 'In collaboration with',
+      height: 80,
+      items: [
+        [
+          {
+            name: 'Lido',
+            link: 'https://bafybeiecvujvs74xvxgpwctmbfkcucazyaudmwuiw4wfv6ys7uio7o376u.ipfs.dweb.link',
+            image: '/lido.svg',
+          },
+        ],
+      ],
+    },
     {
       name: 'Used by',
       height: 80,
       items: [
-                [
-          {
-            name: 'Lido',
-            link: 'https://lido.fi',
-            image: '/lido.svg',
-          },
-        ],
         [
           {
             name: 'WalletBeat',
             link: 'https://beta.walletbeat.eth.limo',
             image: '/WalletBeat.svg',
           },
+        ],
+        [
           {
             name: 'StorageBeat',
             link: 'https://storagebeat.eth.link',
             image: '/StorageBeat.svg',
           },
-        ],
-        [
           {
             name: 'v1rtl.site',
             link: 'https://v1rtl.eth.link',
             image: '/v1rtl-site.webp',
-          }
-        ]
+          },
+        ],
       ],
     },
   ],
@@ -65,10 +58,6 @@ export default defineConfig({
           text: 'Installation',
           link: '/docs/install',
         },
-        {
-          text: 'Getting Started',
-          link: '/docs/get-started',
-        },
       ],
     },
     {
@@ -81,10 +70,6 @@ export default defineConfig({
         {
           text: 'Swarm',
           link: '/docs/swarm',
-        },
-        {
-          text: 'Deploying with Safe',
-          link: '/docs/safe',
         },
         {
           text: 'DNSLink',

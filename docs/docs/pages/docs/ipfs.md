@@ -52,55 +52,82 @@ Request a new token in the "IPFS RPC API Keys" section in "Access Keys" page of 
 - API env variables: `STORACHA_TOKEN`, `STORACHA_PROOF`
 - Supported methods: Upload
 
-First you have to install w3up cli:
+Generating a key for Storacha requires a CLI tool.
 
-::: code-group
+Install it with:
 
-```bash [npm]
-npm i -g @storacha/cli
-```
+:::code-group
 
-```bash [pnpm]
+```sh [pnpm]
 pnpm i -g @storacha/cli
 ```
 
-```bash [bun]
+```sh [npm]
+npm i -g @storacha/cli
+```
+
+```sh [bun]
 bun i -g @storacha/cli
 ```
 
 :::
 
-Then you need to login to your Storacha account:
+Next, login to your Storacha account:
 
-```
+```bash [Terminal]
 storacha login
+# ? How do you want to login? Via GitHub
+# ? Open the GitHub login URL in your default browser? yes
 ```
 
-Once log in is successful, you need to select your space. Grab the DID (the `did:key:...` string) from Storacha web console and run the following command:
+Storacha uses spaces (similar to buckets). You would need to create one, if you don't have one already:
 
-```sh
-storacha space use did:key:...
+```bash [Terminal]
+storacha space create
+# ? What would you like to call this space? blumen-docs
+# 🔑 You need to save the following secret recovery key somewhere safe! For example write it down on
+# a piece of paper and put it inside your favorite book.
+
+# •••• •••••• ••••• ••••• •••••• •••••••• ••••••• ••••••• •••• •••••• •••••• •••• •••••• •••••••
+# ••••• •••• ••••••• ••••• •••• ••••• •••••• ••••••• ••••• ••••
+
+# 🔐 Secret recovery key is correct!
+# 🏗️ To serve this space we need to set a billing account
+# ✨ Billing account is set
+# ⛓️ To manage space across devices we need to authorize an account
+# ✨ Account is authorized
+# 🐔 Space created: did:key:z6Mkw...qAk
 ```
 
-When both the account and the space are set up, you need to generate a unique private key. Later we'll need it to generate a proof (that gives us permit to upload files on Storacha).
+Save the recovery key in a safe place.
 
+Once you have a space, you need to select it:
 
-```bash
+```bash [Terminal]
+storacha space use <space DID>
+```
+
+When both the account and the space are set up, you need to generate a unique private key. It is required to create a delegation proof to be able ot upload files to the space.
+
+```bash [Terminal]
 storacha key create
 ```
 
-Save this private key (which starts with `Mg..`) to an environment variable (`BLUMEN_STORACHA_TOKEN`).
+Save this private key (which starts with `Mg..`) to an environment variable (`BLUMEN_STORACHA_TOKEN`) in `.env` file.
 
-You also need to create a delegation for the generated DID:
+With the key generated, it is now possible to create a delegation proof:
 
-```sh
-storacha delegation create <did_command_above> --can 'store/add' --can 'upload/add' --can 'space/blob/add' --can 'space/index/add' --base64 > proof.txt
+```bash [Terminal]
+storacha delegation create <did_command_above> --can 'store/add' --can 'upload/add' --can 'space/blob/add' --can 'space/index/add' --base64
 ```
 
-Save the command output in a `BLUMEN_STORACHA_PROOF` environment variable or save it to a file (that should not be uploaded!) and then read from it like this:
+Save the command output in a `BLUMEN_STORACHA_PROOF` environment variable.
 
-```sh
-BLUMEN_STORACHA_PROOF=`cat proof.txt`
+In the end your `.env` file should look like this:
+
+```sh [.env]
+BLUMEN_STORACHA_TOKEN=Mg123456789ogR1enjgn123bi1KqzYz123456v123iLJkeiLIO4=
+BLUMEN_STORACHA_PROOF=mAYIEAJM...uIXm2rXyL...Zxe4Bh6g2RQZwjDUcw3qrvMNXzu2pg/rdd...IGXkvTsk9jnMGkBKPo...A7rC1u/tWHthsGVm8F6...pYJQABcRIgFFoH6R...8ukdZvYKuk2pthEmuyCVkAmPlC/kT3MM
 ```
 
 ## Pinata
