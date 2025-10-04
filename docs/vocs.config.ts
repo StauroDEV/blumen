@@ -3,7 +3,11 @@ import { defineConfig } from 'vocs'
 
 export default defineConfig({
   title: 'Blumen',
-  description: 'Deploy apps on the decentralized web without compromises',
+  logoUrl: {
+    dark: '/logo-dark.svg',
+    light: '/logo-text.svg',
+  },
+  description: 'Self-custodial decentralized deployments',
   socials: [{ icon: 'github', link: 'https://github.com/StauroDEV/blumen' }],
   sponsors: [
     {
@@ -48,8 +52,11 @@ export default defineConfig({
   sidebar: [
     {
       text: 'Introduction',
-      link: '/',
       items: [
+        {
+          text: 'Get Started',
+          link: '/docs',
+        },
         {
           text: 'How it works',
           link: '/docs/how-it-works',
@@ -57,6 +64,10 @@ export default defineConfig({
         {
           text: 'Installation',
           link: '/docs/install',
+        },
+        {
+          text: 'Why Blumen?',
+          link: '/docs/why',
         },
       ],
     },
