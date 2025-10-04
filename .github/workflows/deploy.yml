@@ -18,7 +18,7 @@ jobs:
       - name: Weird Playwright thing
         run: cd docs && bun i && bun playwright install 
       - name: Build website
-        run: bun run build
+        run: cd docs && bun run build
       - name: Deploy the site
         run: cd docs/docs && blumen deploy --strict --dnslink blumen.stauro.dev --ens ${{ vars.BLUMEN_ENS }} --safe ${{ vars.BLUMEN_SAFE }}
         env:
