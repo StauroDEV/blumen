@@ -18,7 +18,7 @@ jobs:
       - name: Install deps
         run: cd docs && bun i
       - name: Playwright
-        run: cd docs && bun playwright install --with-deps chromium
+        run: cd docs && bun playwright install chromium
       - name: Build website
         run: cd docs && bun run build
       - name: Deploy the site
