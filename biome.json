@@ -8,11 +8,12 @@
   "files": {
     "ignoreUnknown": false,
     "includes": [
+      "docs/**/*.md",
+      "docs/**/*.ts",
+      "docs/**/*.mdx",
       "src/**/*.ts",
       "test/**/*.ts",
       "scripts/*.ts",
-      "site/index.md",
-      "site/docs/**/*.md",
       "biome.json"
     ]
   },

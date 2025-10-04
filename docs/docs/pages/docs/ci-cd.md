@@ -1,8 +1,10 @@
 # CI/CD
 
-Blumen can be integrated with CI/CD pipelines to deploy your dapps automatically.
+Blumen can be integrated with CI/CD pipelines to deploy dApps automatically.
 
-## GitHub Actions
+## Providers
+
+### GitHub Actions
 
 Blumen uses this GitHub Action to deploy it's own website.
 
@@ -11,33 +13,28 @@ name: Deploy with Blumen
 on:
   push:
     branches: main
-  workflow_dispatch: {}
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: install pnpm
-        uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "lts/*"
-          cache: "pnpm"
+      - uses: oven-sh/setup-bun@v2
       - name: Install Blumen
-        run: pnpm i -g blumen@latest
+        run: bun i -g blumen@1.2.1
       - name: Build website
-        run: pnpm i && pnpm build
-      - name: Deploy
-        run: blumen deploy
-        env: # your provider API tokens go here
-          BLUMEN_CF_KEY: ${{ secrets.BLUMEN_CF_KEY }}
-          BLUMEN_CF_ZONE_ID: ${{ secrets.BLUMEN_CF_ZONE_ID }}
+        run: bun i && bun run build
+      - name: Deploy the site
+        run: blumen deploy .vitepress/dist --strict --ens ${{ vars.BLUMEN_ENS }} --safe ${{ vars.BLUMEN_SAFE }}
+        env:
           BLUMEN_PINATA_TOKEN: ${{ secrets.BLUMEN_PINATA_TOKEN }}
           BLUMEN_STORACHA_PROOF: ${{ secrets.BLUMEN_STORACHA_PROOF }}
           BLUMEN_STORACHA_TOKEN: ${{ secrets.BLUMEN_STORACHA_TOKEN }}
+          BLUMEN_LIGHTHOUSE_TOKEN: ${{ secrets.BLUMEN_LIGHTHOUSE_TOKEN }}
+          BLUMEN_4EVERLAND_TOKEN: ${{ secrets.BLUMEN_4EVERLAND_TOKEN }}
+          BLUMEN_PK: ${{ secrets.BLUMEN_PK }}
 ```
 
-## GitLab CI
+### GitLab CI
 
 Before executing the pipeline, you need to set up the following environment variables:
 
@@ -54,9 +51,9 @@ deploy:
   stage: deploy
   image: node:22
   script:
-    - pnpm i -g blumen@0.16.1
+    - pnpm i -g blumen@1.2.1
     - pnpm i && pnpm build
-    - blumen deploy
+    - blumen deploy --strict
   only:
     - main
 ```
