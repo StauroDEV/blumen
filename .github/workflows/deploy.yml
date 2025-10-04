@@ -16,7 +16,7 @@ jobs:
       - name: Install Blumen
         run: bun i -g blumen@1.2.1
       - name: Build website
-        run: cd docs && bun run build
+        run: cd docs && bun i && bun run build
       - name: Deploy the site
         run: cd docs/docs && blumen deploy --strict --dnslink blumen.stauro.dev --ens ${{ vars.BLUMEN_ENS }} --safe ${{ vars.BLUMEN_SAFE }}
         env:
