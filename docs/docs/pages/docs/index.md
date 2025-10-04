@@ -266,3 +266,7 @@ jobs:
 ```
 
 The "[CI/CD](/docs/ci-cd)" page describes integrations with other CI/CD providers, such as GitLab Actions.
+
+## Demo
+
+![](/demo.mp4)
