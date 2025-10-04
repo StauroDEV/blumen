@@ -1,5 +1,3 @@
-import rehypeMermaid from 'rehype-mermaid'
-import RehypeVideo from 'rehype-video'
 import { defineConfig } from 'vocs'
 
 export default defineConfig({
@@ -127,7 +125,4 @@ export default defineConfig({
       ],
     },
   ],
-  markdown: {
-    rehypePlugins: [rehypeMermaid, RehypeVideo],
-  },
 })

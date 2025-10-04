@@ -15,8 +15,6 @@ jobs:
           bun-version: 1.2.20
       - name: Install Blumen
         run: bun i -g blumen@1.2.1
-      - name: Weird Playwright thing
-        run: cd docs && bun i && bun playwright install 
       - name: Build website
         run: cd docs && bun run build
       - name: Deploy the site
