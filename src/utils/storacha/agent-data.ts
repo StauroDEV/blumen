@@ -1,6 +1,6 @@
 import type * as Ucanto from '@ucanto/interface'
 import type { Delegation } from '@ucanto/interface'
-import { StoreMemory } from './memory-store.js'
+import type { StoreMemory } from './memory-store.js'
 import type { AgentMeta, DelegationMeta, SpaceMeta } from './types.js'
 
 /**
@@ -19,7 +19,7 @@ interface AgentDataModel {
 /**
  * Agent data that is safe to pass to structuredClone() and persisted by stores.
  */
-type AgentDataExport = Pick<AgentDataModel, 'meta'> & {
+export type AgentDataExport = Pick<AgentDataModel, 'meta'> & {
   principal: Ucanto.SignerArchive<Ucanto.DID, Ucanto.SigAlg>
   delegations: Map<
     string,
@@ -31,7 +31,7 @@ type AgentDataExport = Pick<AgentDataModel, 'meta'> & {
 }
 
 export class AgentData implements AgentDataModel {
-  #save: (data: AgentDataExport) => Promise<void> | void
+  #save: (data: AgentDataExport) => void
   principal: Ucanto.Signer<`did:key:${string}`, Ucanto.SigAlg>
   delegations: Map<
     string,
@@ -51,38 +51,12 @@ export class AgentData implements AgentDataModel {
   }
 
   /**
-   * Create a new AgentData instance from the passed initialization data.
-   */
-  static async create(
-    init: Pick<AgentDataModel, 'principal'> &
-      Partial<Omit<AgentDataModel, 'principal'>>,
-  ) {
-    const store = new StoreMemory<AgentDataExport>()
-    const agentData = new AgentData(
-      {
-        meta: { name: 'agent', type: 'device', ...init.meta },
-        principal: init.principal,
-        delegations: new Map(),
-      },
-      { store },
-    )
-
-    await store.save(agentData.export())
-
-    return agentData
-  }
-
-  /**
    * Export data in a format safe to pass to `structuredClone()`.
    */
-  export() {
-    const raw: AgentDataExport = {
-      meta: this.meta,
-      principal: this.principal.toArchive(),
-      delegations: new Map(),
-    }
+  export(): AgentDataExport {
+    const delegations: AgentDataExport['delegations'] = new Map()
     for (const [key, value] of this.delegations) {
-      raw.delegations.set(key, {
+      delegations.set(key, {
         meta: value.meta,
         delegation: [...value.delegation.export()].map((b) => ({
           cid: b.cid.toString(),
@@ -93,14 +67,18 @@ export class AgentData implements AgentDataModel {
         })),
       })
     }
-    return raw
+    return {
+      delegations,
+      principal: this.principal.toArchive(),
+      meta: this.meta,
+    }
   }
 
-  async addDelegation(delegation: Delegation, meta: DelegationMeta = {}) {
+  addDelegation(delegation: Delegation, meta: DelegationMeta = {}): void {
     this.delegations.set(delegation.cid.toString(), {
       delegation,
       meta: meta,
     })
-    await this.#save(this.export())
+    this.#save(this.export())
   }
 }

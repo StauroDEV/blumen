@@ -26,7 +26,7 @@
         "ipfs-unixfs-importer": "^15.4.0",
         "multiformats": "^13.4.0",
         "nanotar": "^0.2.0",
-        "ox": "^0.8.7",
+        "ox": "^0.9.1",
         "size-limit": "^11.2.0",
         "spektr": "^0.2.0",
         "tinyglobby": "^0.2.14",
@@ -288,7 +288,7 @@
 
     "one-webcrypto": ["one-webcrypto@1.0.3", "", {}, "sha512-fu9ywBVBPx0gS9K0etIROTiCkvI5S1TDjFsYFb3rC1ewFxeOqsbzq7aIMBHsYfrTHBcGXJaONXXjTl8B01cW1Q=="],
 
-    "ox": ["ox@0.8.8", "", { "dependencies": { "@adraffy/ens-normalize": "^1.11.0", "@noble/ciphers": "^1.3.0", "@noble/curves": "^1.9.1", "@noble/hashes": "^1.8.0", "@scure/bip32": "^1.7.0", "@scure/bip39": "^1.6.0", "abitype": "^1.0.8", "eventemitter3": "5.0.1" }, "peerDependencies": { "typescript": ">=5.4.0" }, "optionalPeers": ["typescript"] }, "sha512-YHEHSJbkiDHi95Mr1S4QcVQX7n4e3KwT03p8q/lxAMs5iiwrSv2NS2UdVRtOyDJyD1jv7CoZUERGGeVIRWhArg=="],
+    "ox": ["ox@0.9.1", "", { "dependencies": { "@adraffy/ens-normalize": "^1.11.0", "@noble/ciphers": "^1.3.0", "@noble/curves": "^1.9.1", "@noble/hashes": "^1.8.0", "@scure/bip32": "^1.7.0", "@scure/bip39": "^1.6.0", "abitype": "^1.0.8", "eventemitter3": "5.0.1" }, "peerDependencies": { "typescript": ">=5.4.0" }, "optionalPeers": ["typescript"] }, "sha512-NVI0cajROntJWtFnxZQ1aXDVy+c6DLEXJ3wwON48CgbPhmMJrpRTfVbuppR+47RmXm3lZ/uMaKiFSkLdAO1now=="],
 
     "p-defer": ["p-defer@4.0.1", "", {}, "sha512-Mr5KC5efvAK5VUptYEIopP1bakB85k2IWXaRC0rsh1uwn1L6M0LVml8OIQ4Gudg4oyZakf7FmeRLkMMtZW1i5A=="],
 
