@@ -47,3 +47,6 @@ site/.vitepress/cache
 dist
 proof*.txt
 .DS_Store
+
+.vitepress/dist
+cache
