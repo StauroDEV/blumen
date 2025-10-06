@@ -38,4 +38,14 @@ curl -o blumen.js https://cdn.jsdelivr.net/npm/blumen/dist/cli.js
 curl -o blumen.js https://unpkg.com/blumen/dist/cli.js
 ```
 
+```bash [nobsdelivr]
+curl -o https://nobsdelivr.private.coffee/npm/blumen/dist/cli.js
+```
+
 :::
+
+Then run as
+
+```sh
+node ./blumen.js deploy
+```

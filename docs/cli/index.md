@@ -1,6 +1,6 @@
 # `blumen deploy`
 
-Deploys content on IPFS to specified providers and outputs a web-friendly gateway link, along with other useful information. If a directory is not specified, uses `dist` by default.
+Deploys content on IPFS to specified providers and outputs a gateway URL, along with other useful information. If a directory is not specified, uses `dist` by default. `.env` is never uploaded.
 
 ```sh
 blumen deploy [dir]
