@@ -17,4 +17,3 @@ features:
   - title: Minimal dependencies
     details: Hardened supply chain security.
 ---
-

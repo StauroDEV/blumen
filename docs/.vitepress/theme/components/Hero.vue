@@ -34,7 +34,7 @@
     text-align: center;
     margin: 0 auto;
     padding: 2rem 0;
-    max-width: 640px;
+    max-width: var(--vp-layout-max-width);
 }
 .container {
     display: flex;
@@ -93,6 +93,10 @@
     width: 11px;
     height: 11px;
     --icon: url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' %3E%3Cpath d='M0 0h24v24H0V0z' fill='none' /%3E%3Cpath d='M9 5v2h6.59L4 18.59 5.41 20 17 8.41V15h2V5H9z' /%3E%3C/svg%3E");
+}
+
+.my-hero > div:nth-child(1) > img:nth-child(3) {
+    width: 50%;
 }
 
 html.dark .my-hero .logo {
