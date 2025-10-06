@@ -1,4 +1,4 @@
-import { defineConfig } from "vitepress";
+import { withMermaid } from 'vitepress-plugin-mermaid'
 
 const radicleIcon = `
 
@@ -189,103 +189,107 @@ const radicleIcon = `
   </g>
 
 
-</svg>`;
+</svg>`
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
-  title: "Blumen",
-  description: "Supercharged dweb deployments",
+export default withMermaid({
+  title: 'Blumen',
+  description: 'Supercharged dweb deployments',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: "Home", link: "/" },
-      { text: "Docs", link: "/docs" },
-      { text: "CLI Reference", link: "/cli" },
+      { text: 'Home', link: '/' },
+      { text: 'Docs', link: '/docs' },
+      { text: 'CLI Reference', link: '/cli' },
     ],
     sidebar: [
       {
-        text: "Introduction",
+        text: 'Introduction',
         items: [
           {
-            text: "Get Started",
-            link: "/docs",
+            text: 'Get Started',
+            link: '/docs',
           },
           {
-            text: "Installation",
-            link: "/docs/install",
+            text: 'Installation',
+            link: '/docs/install',
           },
           {
-            text: "Why Blumen?",
-            link: "/docs/why",
+            text: 'Why Blumen?',
+            link: '/docs/why',
           },
           {
-            text: "How it works",
-            link: "/docs/how-it-works",
+            text: 'How it works',
+            link: '/docs/how-it-works',
           },
         ],
       },
       {
-        text: "Guides",
+        text: 'Guides',
         items: [
           {
-            text: "IPFS",
-            link: "/docs/ipfs",
+            text: 'IPFS',
+            link: '/docs/ipfs',
           },
           {
-            text: "Swarm",
-            link: "/docs/swarm",
+            text: 'Swarm',
+            link: '/docs/swarm',
           },
           {
-            text: "DNSLink",
-            link: "/docs/dnslink",
+            text: 'DNSLink',
+            link: '/docs/dnslink',
           },
           {
-            text: "CI/CD",
-            link: "/docs/ci-cd",
+            text: 'CI/CD',
+            link: '/docs/ci-cd',
+          },
+          {
+            text: 'Kubo',
+            link: '/docs/kubo',
           },
         ],
       },
       {
-        text: "CLI Reference",
+        text: 'CLI Reference',
         items: [
           {
-            text: "Deploy",
-            link: "/cli",
+            text: 'Deploy',
+            link: '/cli',
           },
           {
-            text: "Status",
-            link: "/cli/status",
+            text: 'Status',
+            link: '/cli/status',
           },
           {
-            text: "ENS",
-            link: "/cli/ens",
+            text: 'ENS',
+            link: '/cli/ens',
           },
           {
-            text: "Ping",
-            link: "/cli/ping",
+            text: 'Ping',
+            link: '/cli/ping',
           },
           {
-            text: "DNSLink",
-            link: "/cli/dnslink",
+            text: 'DNSLink',
+            link: '/cli/dnslink',
           },
           {
-            text: "Pack",
-            link: "/cli/pack",
+            text: 'Pack',
+            link: '/cli/pack',
           },
           {
-            text: "Pin",
-            link: "/cli/pin",
+            text: 'Pin',
+            link: '/cli/pin',
           },
         ],
       },
     ],
     externalLinkIcon: true,
     socialLinks: [
-      { icon: "github", link: "https://github.com/StauroDEV/blumen" },
+      { icon: 'github', link: 'https://github.com/StauroDEV/blumen' },
       {
         icon: { svg: radicleIcon },
-        link: "https://app.radicle.xyz/nodes/seed.radicle.garden/rad%3Az2SqXAoWoZpnrqLxbeigSqjd2b2g2",
+        link: 'https://app.radicle.xyz/nodes/seed.radicle.garden/rad%3Az2SqXAoWoZpnrqLxbeigSqjd2b2g2',
       },
     ],
   },
-});
+})

@@ -8,7 +8,7 @@
   "files": {
     "ignoreUnknown": false,
     "includes": [
-      "docs/**/*.{md,ts,tsx}",
+      "docs/**/*.{md,ts,tsx,mts,css}",
       "src/**/*.ts",
       "test/**/*.ts",
       "scripts/*.ts",
