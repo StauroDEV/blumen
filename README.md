@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="logo.png" height="200" />
+<img src="logo.svg" height="75" width="75" />
 <h1>Blumen</h1>
 
 [![GitHub Workflow
@@ -10,16 +10,20 @@ Status][gh-actions-img]][github-actions] ![npm](https://img.shields.io/npm/dt/bl
 </div>
 
 
-**Blumen** is a CLI to deploy apps on the decentralized web with IPFS, Swarm and Ethereum.
-
-> Blumen has not undergone any security audits and is not thoroughly tested yet. Use with caution!
+**Blumen** is the ultimate command-line deployment tool with automatic replication of content to independent IPFS providers and multi-factor authorization of ENS updates. No sign up required. 
 
 ## Features
 
-- **Multi-Provider Deployment**: Deploy your web app simultaneously on multiple IPFS providers, including [Storacha](https://storacha.network), [Filebase](https://filebase.com) and many others.
-- **Multiple Storage Protocols**: Blumen supports both IPFS and Swarm first-class.
-- **ENS and DNSLink Integration**: Seamlessly integrate with [ENS](https://ens.domains) and [DNSLink](https://dnslink.dev) to update your decentralized website.
-- **Safe Integration**: Add an extra layer of security and decentralization with a [Safe](https://safe.global) multi-sig.
+- **Multi-Provider**. Replicate the website to various storage providers in one command.
+- **Multiple Storage Protocols**. Complete IPFS and Swarm integration.
+- **ENS and DNSLink Integration**. Automatic updates of [ENS](https://ens.domains) names and DNS names through [DNSLink](https://dnslink.dev).
+- **Secured by Safe**. Multi-factor authorization of ENS updates, powered by Safe.
+- **Tiny size**. Less than 1MB single file distribution.
+- **Minimal dependencies**. Hardened supply chain security.
+
+## Get Started
+
+Head over to the [Get Started](https://blumen.stauro.dev/docs/) guide on the docs site.
 
 ## Docs
 
