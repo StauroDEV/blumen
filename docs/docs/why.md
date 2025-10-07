@@ -4,14 +4,17 @@
 
 Decentralized web hosting is often an overlooked aspect with dApp infrastructure. While the underlying smart contracts are open, permissionless and verifiable, the front-end itself is usually hosted on some central hosting service, such as Vercel or Netlify.
 
-Crypto industry has faced numerous cases of different front-end attacks resulting in loss of millions of dollars, ranging from DNS hijacks to developer machine compromises.
+The crypto industry has faced numerous cases of different front-end attacks resulting in loss of millions of dollars, ranging from DNS hijacks to developer machine compromises.
 
 - [PancakeSwap DNS hijack in 2021](https://x.com/PancakeSwap/status/1371470368058183687)
 - [Convex Finance DNS hijack in 2022](https://x.com/ConvexFinance/status/1540104036229185536)
+- [Ribbon Finance DNS hijack in 2022](https://x.com/ribbonfinance/status/1540250826156871681)
+- [QuickSwap front-end attack in 2022](https://x.com/QuickswapDEX/status/1525590253217660930)
+- [Binance Labs Velvet Capital website compromise in 2024](https://cointelegraph.com/news/binance-labs-velvet-capital-offline-website-compromise)
 - [Curve Finance DNS hijack in 2025](https://news.curve.finance/curve-domain-incident)
 - [Safe front-end deployment compromise in 2025](https://www.ledger.com/blog-learning-from-the-bybit-safe-attack)
 
-Another serious issue is censorship. Governments or platforms may want to censor dApp front-ends for their own reasons, making it impossible to use the dApp other than manually sending transactions to a smart contract.
+Another serious issue is censorship. Governments or platforms may want to censor dApp front-ends for their own reasons (such as sanctions or repressions), making it impossible to use the dApp other than manually sending transactions to a smart contract.
 
 - [Uniswap GFW censorship in 2021](https://en.greatfire.org/uniswap.org)
 - [Curve Finance GFW censorship in 2021](https://en.greatfire.org/curve.fi)

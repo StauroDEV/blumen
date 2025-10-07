@@ -1,0 +1,105 @@
+<template>
+    <header class="my-hero">
+        <div class="container">
+            <img
+                class="logo"
+                src="/logo-text.svg"
+                alt="Blumen logo"
+                width="200"
+                height="200"
+            />
+            <h1 class="title">Self-custodial decentralized web deployments</h1>
+            <img src="/demo.png" alt="Blumen logo" />
+            <p class="subtitle">
+                Blumen is the ultimate command-line deployment tool with
+                automatic replication of content to independent IPFS providers
+                and multi-factor authorization of ENS updates. No sign up
+                required.
+            </p>
+            <div class="links">
+                <a href="/docs/">Get Started</a>
+                <a
+                    target="_blank"
+                    rel="noreferer"
+                    href="https://github.com/StauroDEV/blumen"
+                    >GitHub</a
+                >
+            </div>
+        </div>
+    </header>
+</template>
+
+<style scoped>
+.my-hero {
+    text-align: center;
+    margin: 0 auto;
+    padding: 2rem 0;
+    max-width: var(--vp-layout-max-width);
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+.title {
+    line-height: 1.2;
+    font-size: 1.25rem;
+}
+.subtitle {
+    font-size: 0.8rem;
+}
+
+.links {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.links a {
+    min-width: 140px;
+    width: 100%;
+}
+
+.links a:nth-child(1) {
+    border-radius: 99px;
+    padding: 0.6rem 0;
+}
+
+.links a:first-child {
+    transition-duration: 150ms;
+    background-color: var(--vp-button-brand-bg);
+    color: var(--vp-button-brand-text);
+}
+
+.links a:first-child:hover {
+    background-color: var(--vp-button-brand-hover-bg);
+    color: var(--vp-button-brand-hover-text);
+}
+
+.links a:nth-child(2):hover {
+    text-decoration: underline;
+}
+
+.links a:nth-child(2)::after {
+    mask-image: var(--icon);
+    content: "";
+    color: currentColor;
+    background-color: currentColor;
+    display: inline-block;
+    margin-top: -1px;
+    margin-left: 4px;
+    width: 11px;
+    height: 11px;
+    --icon: url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' %3E%3Cpath d='M0 0h24v24H0V0z' fill='none' /%3E%3Cpath d='M9 5v2h6.59L4 18.59 5.41 20 17 8.41V15h2V5H9z' /%3E%3C/svg%3E");
+}
+
+.my-hero > div:nth-child(1) > img:nth-child(3) {
+    width: 50%;
+}
+
+html.dark .my-hero .logo {
+    content: url("/logo-dark.svg");
+}
+</style>

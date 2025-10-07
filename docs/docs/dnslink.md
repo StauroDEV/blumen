@@ -1,6 +1,6 @@
 # DNSLink
 
-Blumen supports automatic DNS updates via [DNSLink](https://dnslink.dev). Right now only Cloudflare is supported.
+Blumen supports automatic DNS updates via [DNSLink](https://dnslink.dev).
 
 ## Setup
 

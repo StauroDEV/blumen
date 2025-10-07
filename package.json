@@ -12,6 +12,7 @@
     "@ipld/dag-cbor": "^9.2.4",
     "@ipld/dag-ucan": "^3.4.5",
     "@size-limit/file": "^11.2.0",
+    "@stauro/filebase-upload": "npm:@jsr/stauro__filebase-upload",
     "@storacha/blob-index": "^1.2.0",
     "@storacha/filecoin-client": "^1.0.11",
     "@types/bun": "^1.2.20",
@@ -34,7 +35,7 @@
     "tinyglobby": "^0.2.14",
     "typescript": "^5.9.2",
     "varint": "^6.0.0",
-    "@stauro/filebase-upload": "npm:@jsr/stauro__filebase-upload"
+    "vitepress": "^1.6.4"
   },
   "bin": {
     "blumen": "./dist/cli.js"
