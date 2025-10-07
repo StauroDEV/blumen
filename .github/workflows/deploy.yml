@@ -1,7 +1,7 @@
 name: Deploy with Blumen
 on:
   push:
-    branches: main
+    branches: [main]
   workflow_dispatch: {}
 jobs:
   deploy:
@@ -17,12 +17,10 @@ jobs:
         run: bun i -g blumen@1.2.1
       - name: Install deps
         run: cd docs && bun i
-      - name: Playwright
-        run: cd docs && bun playwright install chromium
       - name: Build website
-        run: cd docs && bun run build
+        run: cd docs && bun docs:build
       - name: Deploy the site
-        run: cd docs/docs && blumen deploy --strict --dnslink blumen.stauro.dev --ens ${{ vars.BLUMEN_ENS }} --safe ${{ vars.BLUMEN_SAFE }}
+        run: cd docs/.vitepress && blumen deploy --strict --dnslink blumen.stauro.dev --ens ${{ vars.BLUMEN_ENS }} --safe ${{ vars.BLUMEN_SAFE }}
         env:
           BLUMEN_CF_KEY: ${{ secrets.BLUMEN_CF_KEY }}
           BLUMEN_CF_ZONE_ID: ${{ secrets.BLUMEN_CF_ZONE_ID }}
