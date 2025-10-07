@@ -13,7 +13,7 @@ import {
   uploadOnFilebase,
 } from './providers/ipfs/filebase.js'
 import { pinOnLighthouse } from './providers/ipfs/lighthouse.js'
-import { pinOnPinata, statusOnPinata } from './providers/ipfs/pinata.js'
+import { statusOnPinata, uploadOnPinata } from './providers/ipfs/pinata.js'
 import { pinOnQuicknode } from './providers/ipfs/quicknode.js'
 import { uploadToSimplePage } from './providers/ipfs/simplepage.js'
 import { specPin, specStatus } from './providers/ipfs/spec.js'
@@ -58,9 +58,9 @@ export const PROVIDERS: Record<
   },
   PINATA_TOKEN: {
     name: 'Pinata',
-    upload: pinOnPinata,
+    upload: uploadOnPinata,
     status: statusOnPinata,
-    supported: 'pin',
+    supported: 'both',
     protocol: 'ipfs',
   },
   SPEC_TOKEN: {

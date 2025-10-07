@@ -135,7 +135,7 @@ BLUMEN_STORACHA_PROOF=mAYIEAJM...uIXm2rXyL...Zxe4Bh6g2RQZwjDUcw3qrvMNXzu2pg/rdd.
 - URL: https://pinata.cloud
 - API Docs: https://docs.pinata.cloud/files/uploading-files
 - API env variables: `BLUMEN_PINATA_TOKEN`
-- Supported methods: Pin, Status
+- Supported methods: Upload, Pin, Status
 
 Go to the dashboard page, then "API Keys" under "Developer" section. Click "New Key". An API key creation dialog should apppear. Select the checkboxes related to pinning. Click "Generate API Key".
 
@@ -159,7 +159,7 @@ Open 4EVERLAND dashboard. Navigate to Storage > 4Ever Pin. Click "Access token".
 - API env variables: `BLUMEN_QUICKNODE_TOKEN`
 - Supported methods: Pin
 
-Go to the dashboard and open the ["API Keys" page](https://dashboard.quicknode.com/api-keys). Click "Add API Key". In the "Applications" modal choose only "IPFS_REST". 
+Go to the dashboard and open the ["API Keys" page](https://dashboard.quicknode.com/api-keys). Click "Add API Key". In the "Applications" modal choose only "IPFS_REST".
 
 ![Quicknode API key modal](/quicknode.png)
 
