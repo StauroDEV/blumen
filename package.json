@@ -4,7 +4,7 @@
   "author": "v1rtl <hi@v1rtl.site>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/StauroDEV/blumen.git"
+    "url": "git+https://github.com/StauroDEV/blumen.git"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.0",
@@ -38,7 +38,7 @@
     "vitepress": "^1.6.4"
   },
   "bin": {
-    "blumen": "./dist/cli.js"
+    "blumen": "dist/cli.js"
   },
   "description": "🌸 Self-custodial decentralized deployments",
   "engineStrict": true,
