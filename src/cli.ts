@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import type { Address } from 'ox/Address'
 import { CLI } from 'spektr'
 import { colorPlugin } from 'spektr/plugins/color.js'
 import { type DeployActionArgs, deployAction } from './actions/deploy.js'
@@ -9,6 +10,7 @@ import { packAction } from './actions/pack.js'
 import { pinAction } from './actions/pin.js'
 import { pingAction } from './actions/ping.js'
 import { statusAction } from './actions/status.js'
+import { zodiacAction } from './actions/zodiac.js'
 import { isTTY } from './constants.js'
 
 const cli = new CLI({ name: 'blumen', plugins: isTTY ? [colorPlugin] : [] })
@@ -236,6 +238,21 @@ cli.command<[string]>('pin', ([cid], options) => pinAction({ cid, options }), {
   ] as const,
   description: 'Pin an IPFS CID on multiple providers',
 })
+
+cli.command<[Address]>(
+  'zodiac',
+  ([rolesModAddress], options) => zodiacAction({ rolesModAddress, options }),
+  {
+    options: [
+      ...ensOptions,
+      {
+        name: 'init',
+        description: 'Setup Safe Zodiac Roles module',
+        type: 'boolean',
+      },
+    ] as const,
+  },
+)
 
 cli.help()
 cli.handle(process.argv.slice(2))

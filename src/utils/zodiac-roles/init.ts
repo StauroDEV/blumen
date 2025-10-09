@@ -4,7 +4,6 @@ import { fromString, toHex } from 'ox/Bytes'
 import { keccak256 } from 'ox/Hash'
 import type { Hex } from 'ox/Hex'
 import type { Provider } from 'ox/Provider'
-import { sendTransaction, simulateTransaction } from '../tx.js'
 
 const SET_CONTENT_HASH_SIG = getSelector('setContenthash(bytes32,bytes)')
 
@@ -35,77 +34,46 @@ const allowFunctionAbi = {
   outputs: [],
 } as const
 
-export const createZodiacRole = async ({
-  rolesModAddress,
-  provider,
-  privateKey,
-  from,
-  deployerAddress,
+const scopeTargetAbi = {
+  name: 'scopeTarget',
+  type: 'function',
+  stateMutability: 'nonpayable',
+  inputs: [
+    { name: 'roleKey', type: 'bytes32' },
+    { name: 'targetAddress', type: 'address' },
+  ],
+  outputs: [],
+} as const
+
+export const createZodiacRoleData = async ({
+  roleAddress,
 }: {
-  rolesModAddress: Address
-  deployerAddress: Address
-  provider: Provider
-  privateKey: Hex
-  from: Address
+  roleAddress: Address
 }) => {
-  const data = encodeData(assignRolesAbi, [
-    deployerAddress,
+  return encodeData(assignRolesAbi, [
+    roleAddress,
     [toHex(ENS_DEPLOYER_ROLE)],
     [true],
   ])
-
-  await simulateTransaction({
-    provider,
-    to: rolesModAddress,
-    data,
-    abi: assignRolesAbi,
-    from,
-  })
-
-  await sendTransaction({
-    to: rolesModAddress,
-    provider,
-    chainId: 1,
-    from,
-    privateKey,
-    data,
-  })
 }
 
-export const allowSetContentHashForRole = async ({
-  provider,
+export const allowSetContentHashForRoleData = async ({
   resolverAddress,
-  from,
-  rolesModAddress,
-  privateKey,
 }: {
-  rolesModAddress: Address
-  provider: Provider
   resolverAddress: Address
-  from: Hex
-  privateKey: Hex
 }) => {
-  const data = encodeData(allowFunctionAbi, [
+  return encodeData(allowFunctionAbi, [
     toHex(ENS_DEPLOYER_ROLE),
     resolverAddress,
     SET_CONTENT_HASH_SIG,
     0, // CALL
   ])
+}
 
-  await simulateTransaction({
-    provider,
-    to: rolesModAddress,
-    data,
-    from,
-    abi: allowFunctionAbi,
-  })
-
-  await sendTransaction({
-    to: rolesModAddress,
-    provider,
-    chainId: 1,
-    from,
-    privateKey,
-    data,
-  })
+export const setENSResolverAsScopeTarget = async ({
+  resolverAddress,
+}: {
+  resolverAddress: Address
+}) => {
+  return encodeData(scopeTargetAbi, [toHex(ENS_DEPLOYER_ROLE), resolverAddress])
 }
