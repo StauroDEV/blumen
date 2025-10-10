@@ -114,7 +114,9 @@ export const sendTransaction = async ({
 }
 
 export const waitForTransaction = async (provider: Provider, hash: Hex) => {
-  for (let attempt = 0; attempt < 10; attempt++) {
+  const maxAttempts = 10
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const rawReceipt = await provider.request({
       method: 'eth_getTransactionReceipt',
       params: [hash],
@@ -122,14 +124,14 @@ export const waitForTransaction = async (provider: Provider, hash: Hex) => {
 
     if (rawReceipt) {
       if (rawReceipt.status === '0x0')
-        throw new Error(
-          `Transaction ${hash} reverted with status: ${rawReceipt.status}`,
-        )
+        throw new Error(`Transaction ${hash} reverted`)
 
-      return fromRpc({ ...rawReceipt, chainId: toHex })
+      const chainId = await provider.request({ method: 'eth_chainId' })
+      return fromRpc({ ...rawReceipt, chainId })
     }
 
-    const delay = 200000 ** attempt + Math.random()
+    // exponential backoff (1s → 2s → 4s → ... → max 30s)
+    const delay = Math.min(1000 * 2 ** attempt, 30000)
     await new Promise((resolve) => setTimeout(resolve, delay))
   }
 

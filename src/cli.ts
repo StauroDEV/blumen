@@ -15,7 +15,7 @@ import { isTTY } from './constants.js'
 
 const cli = new CLI({ name: 'blumen', plugins: isTTY ? [colorPlugin] : [] })
 
-const ensOptions = [
+const onchainOptions = [
   {
     name: 'chain',
     description: 'Chain to use for ENS',
@@ -42,10 +42,19 @@ const ensOptions = [
     type: 'boolean',
     short: 'v',
   },
+] as const
+
+const ensOptions = [
+  ...onchainOptions,
   {
     name: 'dry-run',
     description: 'Do not send a transaction',
     type: 'boolean',
+  },
+  {
+    name: 'roles-mod-address',
+    description: 'Zodiac Roles Module address',
+    type: 'string',
   },
 ] as const
 
@@ -243,14 +252,7 @@ cli.command<[Address]>(
   'zodiac',
   ([rolesModAddress], options) => zodiacAction({ rolesModAddress, options }),
   {
-    options: [
-      ...ensOptions,
-      {
-        name: 'init',
-        description: 'Setup Safe Zodiac Roles module',
-        type: 'boolean',
-      },
-    ] as const,
+    options: [...onchainOptions] as const,
   },
 )
 
