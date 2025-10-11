@@ -1,51 +1,43 @@
 # How it works
 
-Blumen stands out from other decentralized web deployment tools because it adds an extra factor of security to the deployment pipeline by utilizing [Safe](https://safe.global). Instead of relying on a single private key to authorize ENS updates or resorting to slow and insecure options such as IPNS, Blumen proposes a transaction to a Safe multisig via a separate Ethereum account (called "proposer"), while also requiring approval and execution by Safe owners before the ENS website content is updated. This method protects from CI/CD key leaks and access compromise.
+Blumen combines multiple technologies to provide the most secure, flexible and resilient website deployment tool.
 
-Such approach is superior to other common setups, since it does not compromise convenience and decentralization. The only central factor becomes the Safe transaction service which only serves as a queue for transaction proposals.
+## Re-pinning
 
-## With IPFS
+The primary feature is uploading and re-pinning to multiple decentralized storage providers.
 
-```mermaid
-sequenceDiagram
-    participant Dev as blumen deploy
-    participant IPFS as IPFS Providers
-    participant SafeTx as Safe Transaction Service
-    participant Owners as Safe Owners
-    participant ENS as ENS Name
-    participant Gateway as ENS Gateway<br/>(.eth.limo / .eth.link)
+Since content on IPFS and Swarm has deterministic immutable hashes, it is possible to seamlessly replicate content (in a form of files or a DAG) into as many copies as possible. The reason why you would want to replicate content is to provide a fallback in case the first provider fails or does not have certain chunks of the new website version, while it is able to serve pre-existing chunks.
 
-    Dev->>IPFS: Upload website content (CAR → CID)
-    Dev->>SafeTx: Propose transaction to update ENS contenthash
-
-    Note over SafeTx: Transaction stored<br/>in Safe service queue
-
-    Owners->>SafeTx: Approve transaction<br/>(until threshold reached)
-    Owners->>SafeTx: Execute transaction
-
-    SafeTx->>ENS: Update ENS resolver<br/>with new IPFS CID
-    ENS-->>Gateway: Resolve ENS → IPFS CID
+```jsonc
+// Example provider list for an IPFS-hosted website
+[
+  {
+    "ID": "QmUA9D3H7HeCYsirB3KmPSvZh3dNXMZas6Lwgr4fv1HTTp",
+    "Addrs": [
+      "/dns/dag.w3s.link/tcp/443/https"
+    ],
+    "Source": "IPNI"
+  },
+  {
+    "ID": "12D3KooWNy17sJ97GTcTYRsbrp9qA19EDNGMaRFAFuJfa9NX9woq",
+    "Addrs": [
+      "/ip4/51.79.228.206/udp/25594/quic-v1",
+      "/ip4/51.79.228.206/tcp/4000"
+    ],
+    "Source": "Amino DHT",
+    "AgentVersion": "kubo/0.36.0-dev/8c2c5009d-dirty"
+  }
+]
 ```
 
-## With Swarm
+## ENS Updates
 
-```mermaid
-sequenceDiagram
-    participant Dev as blumen deploy
-    participant Swarm as Swarm Nodes
-    participant SafeTx as Safe Transaction Service
-    participant Owners as Safe Owners
-    participant ENS as ENS Name
-    participant Gateway as ENS Gateway<br/>(.eth.limo / .eth.link)
+The forefront decentralized naming layer is ENS. It is an Ethereum-based alternative to DNS and it is possible to use ENS for serving websites. ENS has a special record type called [`contentHash`](https://docs.ens.domains/ensip/7). It contains an encoded hash which includes such information as protocol version, codec data and the content hash itself, usually a multiformats CID.
 
-    Dev->>Swarm: Upload website content (manifest → BZZ hash)
-    Dev->>SafeTx: Propose transaction to update ENS contenthash
+Blumen has multiple ways of integrating ENS, varying in security and UX properties:
 
-    Note over SafeTx: Transaction stored<br/>in Safe service queue
-
-    Owners->>SafeTx: Approve transaction<br/>(until threshold reached)
-    Owners->>SafeTx: Execute transaction
-
-    SafeTx->>ENS: Update ENS resolver<br/>with new Swarm hash
-    ENS-->>Gateway: Resolve ENS → Swarm hash
-```
+|  Type | Name theft protection  | Access to other records | Multi Factor Authorization | Restricted access
+|---|---|---|---|---|
+| EOA | No 🚨 | No 🚨 | No | No |
+| Proposer | Yes | Yes | Yes | No |
+| Zodiac Roles | Yes | Yes | No | Yes |
