@@ -35,18 +35,18 @@ One of the key features of Blumen is automatic re-pinning of content for IPFS on
 
 Certain platforms advertise themselves as "decentralized web hosting". While the app hosted on such platform itself might be somewhat decentralized (for example by pinning to multiple IPFS providers and utilizing ENS), it does not mean that such a platform can't take the website down or just go in vain (for example because of business not going well). The reliability of the application is bound to the platform.
 
-A few platforms additionally opt in for simpler solutions by sacrificing decentralization. One such example is Fleek. It uses IPNS which is not feasible for replication, and doesn't get pinned the same way IPFS hashes are pinned, even though it is possible.
+A few platforms additionally opt in for simpler solutions by sacrificing decentralization. One such example is Fleek. It uses IPNS which is not feasible for replication, and doesn't get pinned the same way IPFS hashes are pinned, even though the IPFS protocol allows it.
 
 Blumen does not impose such risks because it is not a platform. It is instead a tool that talks to infrastructure providers and protocols directly without middlemen. There is no "Sign Up" button. The underlying infrastucture is chosen by the user.
 
 Blumen never uses mutable references besides ENS, making sure all the content references are immutable and deterministic (IPFS CIDs and Swarm reference IDs). Such approach additionally provides a transparent and permanent history of website changes for an ENS name.
 
-## Dangers of automatic updates
+## Security implications of automatic updates
 
-The web is unstable. Any website may be updated at any time by pushing a new version without much notice or any required approval steps, by default. This is mostly how websites and web apps are updated.
+Any website may be updated at any time by pushing a new version without much notice or any required approval steps, by default. This is mostly how websites and web apps are updated, as a whole.
 
-While this is indeed very convenient, such approach is terrible for security. In case of developer machine compromise, there are almost no barriers for publishing an exploited version of the web app without anyone being able to stop the attacker before the damage is done. This is exactly what happened during the [Safe front-end hack](https://www.ledger.com/blog-learning-from-the-bybit-safe-attack).
+While this is indeed very convenient, such approach is not good for security. In case of developer machine compromise, there are almost no barriers for publishing an exploited version of the web app without anyone being able to stop the attacker before the damage is done. This is exactly what happened during the [Safe front-end hack](https://www.ledger.com/blog-learning-from-the-bybit-safe-attack).
 
-Such status quo should not apply to dApps, especially financially sensitive ones where security is of upmost importance. That is the primary reason why Blumen integrates with [Safe](https://safe.global) for ENS update management.
+Such status quo should not apply to dApps, especially financially sensitive ones where security is of upmost importance. That is the primary reason why Blumen integrates with the [Safe Proposer Flow](https://help.safe.global/en/articles/235770-proposers) for ENS update management.
 
 With a multi-sig wallet sitting on top of an ENS name it is possible to add an multi-factor authorization layer for website updates. It is also not required to be one of the wallet owners to propose ENS updates, which significantly minimizes potential damage from an owner account getting compromised.
