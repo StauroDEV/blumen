@@ -174,62 +174,12 @@ blumen deploy --ens blumen.stauro.eth
 
 Updating ENS Content-Hash record requires paying a network fee. The fee varies depending on network load.
 
-## MFA with Safe
+## Safe integration
 
 Using a private key of the ENS name manager account imposes significant security risks. In case of environment compromise, an attacker is able to update the ENS name to a malicious version.
 
-One of the unique features that Blumen offers is [Safe](https://safe.global) integration. Instead of EOA managing the ENS name, a multi-signature wallet is put in the front. Such approach adds an extra factor of authorisation before a website update is pushed onchain.
+One of the unique features that Blumen offers is [Safe](https://safe.global) integration. Instead of EOA managing the ENS name, a multi-signature wallet is put in the front. Such approach allows for advancing security for ENS update pipelines, such as multi-factor authorisation with the [Proposer Flow](/docs/how-it-works#proposer) or role-based permissions with [Zodiac Roles]().
 
-With Safe, ENS update process is split into two stages:
-1. An update transaction is created from a "proposer". Proposer is a special Ethereum account that does not have access to a Safe wallet but is allowed to propose transactions to a wallet without actually executing them.
-2. One (or whatever the threshold is) of the Safe owners approves the transaction sent by a proposer and updates an ENS name record.
-
-Head over to the [Safe app](https://app.safe.global) and create a new wallet, if you don't have a Safe wallet yet.
-
-Next, a proposer account is required to be added. A proposer is not allowed to approve transactions but can propose them to the wallet. To add a proposer, go to the Safe app > Settings > Setup. Scroll down to "Proposers" and click "Add Proposer". You can add multiple proposers to your Safe, but only one can be used at a time.
-
-![Proposer UI](/proposer.png)
-
-Once the account is added, put it's private key to environment variables:
-
-```sh [.env]
-BLUMEN_PK=0x...
-```
-
-With everything set up, a deployment can be triggered.
-
-```sh
-blumen deploy --ens=blumen.stauro.eth --safe=eth:0x...
-```
-
-```txt
-# 📦 Packing dist (4.43MB)
-# 🟢  Root CID: bafybei...lk4
-# 🟢  Deploying with providers: Storacha, Filebase
-# ✓ [>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>] Finished in 5s
-# ✔ Deployed across all providers
-
-# Open in a browser:
-# IPFS:      https://bafybei...lk4.ipfs.dweb.link
-# Providers: https://delegated-ipfs.dev/routing/v1/providers/bafybei...lk4
-
-# Validating transaction for wallet <0x...>
-# Preparing a transaction for Safe <eth:0x...>
-# Signing a Safe transaction
-# Proposing a Safe transaction
-# Transaction proposed to a Safe wallet.
-# Open in a browser: https://app.safe.global/transactions/queue?safe=<0x...>
-```
-
-The web app got deployed on IPFS. The last step is approving a transaction proposal to update the ENS name record that points to the version of the app.
-
-Click on the last link emitted by Blumen deployment logs to take you straight to the transaction queue:
-
-![Safe app](/safe.png)
-
-Verify the transaction data and click "Continue" and then "Execute".
-
-![Safe tx](/safe-tx-view.png)
 
 Once it finishes getting processed, the ENS Content-Hash record should start pointing to your new deployment. Now the web app should be discoverable through [any ENS gateway](https://docs.ens.domains/dweb/intro/#browser-support--gateways), for example eth.limo.
 

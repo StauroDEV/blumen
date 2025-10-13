@@ -11,10 +11,9 @@
             <h1 class="title">Self-custodial decentralized web deployments</h1>
             <img src="/demo.png" alt="Blumen logo" />
             <p class="subtitle">
-                Blumen is the ultimate command-line deployment tool with
-                automatic replication of content to independent IPFS providers
-                and multi-factor authorization of ENS updates. No sign up
-                required.
+                Blumen is the ultimate command-line website deployment tool with
+                automatic replication of content and secure ENS updates, powered
+                by Safe. No sign up required.
             </p>
             <div class="links">
                 <a href="/docs/">Get Started</a>
