@@ -50,3 +50,7 @@ While this is indeed very convenient, such approach is not good for security. In
 Such status quo should not apply to dApps, especially financially sensitive ones where security is of upmost importance. That is the primary reason why Blumen integrates with the [Safe Proposer Flow](https://help.safe.global/en/articles/235770-proposers) for ENS update management.
 
 With a multi-sig wallet sitting on top of an ENS name it is possible to add an multi-factor authorization layer for website updates. It is also not required to be one of the wallet owners to propose ENS updates, which significantly minimizes potential damage from an owner account getting compromised.
+
+However, such high security requirements do not apply to everybody. For that reason, Blumen alternatively integrates with the [Zodiac Roles](https://docs.roles.gnosisguild.org) module. The module allows creating a restricted role that is only allowed to call a specific function on a specific smart contract.
+
+Blumen uses Zodiac Roles to create a special role that is narrowed to only ENS website reference on an ENS name's resolver. Such integration provides moderate security benefits to users who do not wish to have a mult-factor authorization flow.
